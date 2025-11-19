@@ -27,14 +27,14 @@ const LoginScreen = () => {
   // const [userid, setuserid] = useState("MIS1004");
   // const [password, setPassword] = useState("Akdave22@#");
 
-  // const [userid, setuserid] = useState("MIS1033");
-  // const [password, setPassword] = useState("Shree@164$");
+  const [userid, setuserid] = useState("MIS1033");
+  const [password, setPassword] = useState("Shree@164$");
 
   // const [userid, setuserid] = useState("MIS10108");
   // const [password, setPassword] = useState("Saurabh@12345");
 
-  const [userid, setuserid] = useState("");
-  const [password, setPassword] = useState("");
+  // const [userid, setuserid] = useState("");
+  // const [password, setPassword] = useState("");
 
   // const [userid, setuserid] = useState("10000000");
   // const [password, setPassword] = useState("10000000");
@@ -473,10 +473,6 @@ const LoginScreen = () => {
         Alert.alert("Login Error", "Unable to determine user type.");
       }
 
-
-
-
-
     } catch (error) {
       const message = error?.message || "Try again";
       Alert.alert("OTP Verification Failed", message);
@@ -576,10 +572,12 @@ const LoginScreen = () => {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.inner}>
-            <Text style={styles.title}>E Krishi Pathsala 👋</Text>
-            <Text style={styles.subtitle}>
+            <Text style={styles.title}>PAATH VIGYAN</Text>
+
+            {/* <Text style={styles.subtitle}>
               {showOTP ? "Enter OTP" : "Login to your account"}
-            </Text>
+            </Text> */}
+
             <UpdateChecker />
             {!showOTP && !hasSavedCredentials && (
               <>
@@ -674,8 +672,6 @@ const LoginScreen = () => {
                 </Text>
               </>
             )}
-
-
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
@@ -684,7 +680,7 @@ const LoginScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: "#f2f2f2" },
+  safeArea: { flex: 1, backgroundColor: "#5b935950" },
   container: { flex: 1 },
   inner: {
     flex: 1,
@@ -695,10 +691,14 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: "bold",
+    fontFamily: "Arial, sans-serif",
+    fontStyle: "italic",
     color: "#333",
     marginBottom: 8,
     textAlign: "center",
+    marginBottom: 50
   },
+
   subtitle: {
     fontSize: 18,
     color: "#666",
@@ -706,7 +706,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   input: {
-    backgroundColor: "#fff",
+    backgroundColor: "#ffffffff",
     padding: 16,
     borderRadius: 12,
     marginBottom: 16,

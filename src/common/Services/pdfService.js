@@ -52,7 +52,7 @@ import alertService from '../Services/alert/AlertService';
 export const generateAndOpenPDF = async (
   fileName,
   content = [],
-  folderName = "E Krishi Pathsala"  // Default is now IGKV
+  folderName = "Pathsala"  // Default is now mguvv
 ) => {
   try {
     // Request permission (Android)
@@ -121,15 +121,17 @@ export const generateAndOpenPDF = async (
 
 
 
-export const downloadDF = async (transcriptUrl, fileIdentifier = 1, navigation) => {
+export const downloadFile = async (transcriptUrl, fileIdentifier = 1, navigation) => {
   if (!transcriptUrl) {
     Alert.alert("Download failed", "Invalid file URL");
     return;
   }
 
+
   const baseFileName = typeof fileIdentifier === "number" ? `SRC${fileIdentifier}` : `${fileIdentifier.replace(/\.pdf$/, "")}`;
   const fileName = `${baseFileName}.pdf`;
-  const folderName = "IGKV";
+  const folderName = "Mguvv";
+
 
   try {
     if (Platform.OS === "android") {
@@ -154,7 +156,7 @@ export const downloadDF = async (transcriptUrl, fileIdentifier = 1, navigation) 
     if (await RNFS.exists(localFile)) {
       // File exists, just open it
       await openPDF(localFile);
-      Alert.alert("File Already Exists", `Opening ${fileName} from IGKV folder.`);
+      Alert.alert("File Already Exists", `Opening ${fileName} from mguvv folder.`);
       return;
     }
 
@@ -165,7 +167,7 @@ export const downloadDF = async (transcriptUrl, fileIdentifier = 1, navigation) 
     }).promise;
 
     if (downloadResult.statusCode === 200) {
-      Alert.alert("Download Successful", `Saved as ${fileName} in IGKV folder.`);
+      Alert.alert("Download Successful", `Saved as ${fileName} in mguvv folder.`);
       await openPDF(localFile);  // Pass the file path (localFile)
     } else {
       throw new Error(`Failed with status code: ${downloadResult.statusCode}`);
@@ -177,8 +179,70 @@ export const downloadDF = async (transcriptUrl, fileIdentifier = 1, navigation) 
   }
 };
 
-const openPDF = async (filePath) => {
 
+
+
+
+export const downloadFileOther = async (transcriptUrl, fileIdentifier = 1, navigation) => {
+  if (!transcriptUrl) {
+    Alert.alert("Download failed", "Invalid file URL");
+    return;
+  }
+
+
+  const baseFileName = typeof fileIdentifier === "number" ? `_${fileIdentifier}` : `${fileIdentifier.replace(/\.pdf$/, "")}`;
+  const fileName = `${baseFileName}.pdf`;
+  const folderName = "MGUVV";
+
+
+  try {
+    if (Platform.OS === "android") {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
+      );
+      if (granted === false) {
+        Alert.alert("Permission Denied", "Cannot save file without storage access");
+        return;
+      }
+    }
+
+    const basePath = Platform.OS === "android" ? RNFS.DownloadDirectoryPath : RNFS.DocumentDirectoryPath;
+    const folderPath = `${basePath}/${folderName}`;
+    const localFile = `${folderPath}/${fileName}`;
+
+    if (!(await RNFS.exists(folderPath))) {
+      await RNFS.mkdir(folderPath);
+    }
+
+    // Check if the file already exists
+    if (await RNFS.exists(localFile)) {
+      // File exists, just open it
+      await openPDF(localFile);
+      Alert.alert("File Already Exists", `Opening ${fileName} from MGUVV folder.`);
+      return;
+    }
+
+    // File does not exist, proceed to download
+    const downloadResult = await RNFS.downloadFile({
+      fromUrl: transcriptUrl,
+      toFile: localFile,
+    }).promise;
+
+    if (downloadResult.statusCode === 200) {
+      Alert.alert("Download Successful", `Saved as ${fileName} in mguvv folder.`);
+      await openPDF(localFile);  // Pass the file path (localFile)
+    } else {
+      throw new Error(`Failed with status code: ${downloadResult.statusCode}`);
+    }
+  } catch (error) {
+    console.error("Download failed:", error);
+    Alert.alert("Download failed", "Try again after some time");
+    // Alert.alert("Download failed", error.message || "Failed to download file.");
+  }
+};
+
+
+const openPDF = async (filePath) => {
   try {
     const exists = await RNFS.exists(filePath);
     if (!exists) {
@@ -209,77 +273,3 @@ const openPDF = async (filePath) => {
 
 
 
-
-// import RNBlobUtil from 'react-native-blob-util';
-
-// export const downloadDF = async (transcriptUrl, fileIdentifier = 1, navigation) => {
-//   if (!transcriptUrl) {
-//     Alert.alert("Download failed", "Invalid file URL");
-//     return;
-//   }
-
-//   const baseFileName = typeof fileIdentifier === "number"
-//     ? `SRC${fileIdentifier}`
-//     : `${fileIdentifier.replace(/\.pdf$/, "")}`;
-//   const fileName = `${baseFileName}.pdf`;
-//   const folderName = "IGKV";
-
-//   try {
-//     // Handle permission (Android only)
-//     if (Platform.OS === "android" && Platform.Version <= 28) {
-//       const granted = await PermissionsAndroid.request(
-//         PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
-//       );
-//       if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
-//         Alert.alert("Permission Denied", "Cannot save file without storage access");
-//         return;
-//       }
-//     }
-
-//     // Use system Download Manager on Android 10+
-//     if (Platform.OS === 'android' && Platform.Version >= 29) {
-//       await RNBlobUtil.config({
-//         addAndroidDownloads: {
-//           useDownloadManager: true,
-//           notification: true,
-//           mime: 'application/pdf',
-//           title: fileName,
-//           description: 'Downloading PDF...',
-//           path: `${RNBlobUtil.fs.dirs.DownloadDir}/${fileName}`,
-//           mediaScannable: true,
-//         },
-//       }).fetch('GET', transcriptUrl);
-//       // await openPDF(transcriptUrl);
-//       Alert.alert("Download Complete", `Saved as ${fileName} in Downloads.`);
-//       return;
-//     }
-
-//     // For older Android and iOS
-//     const basePath =
-//       Platform.OS === "android"
-//         ? RNFS.DownloadDirectoryPath
-//         : RNFS.DocumentDirectoryPath;
-//     const folderPath = `${basePath}/${folderName}`;
-//     const localFile = `${folderPath}/${fileName}`;
-
-//     if (!(await RNFS.exists(folderPath))) {
-//       await RNFS.mkdir(folderPath);
-//     }
-
-//     const downloadResult = await RNFS.downloadFile({
-//       fromUrl: transcriptUrl,
-//       toFile: localFile,
-//     }).promise;
-//     console.log(downloadResult.statusCode === 200, "ok")
-//     if (downloadResult.statusCode === 200) {
-//       Alert.alert("Download Successful", `Saved as ${fileName}`);
-//       // console.log("ok")
-//       await openPDF(localFile);
-//     } else {
-//       throw new Error(`Failed with status code: ${downloadResult.statusCode}`);
-//     }
-//   } catch (error) {
-//     console.error("Download failed:", error);
-//     Alert.alert("Download failed", error.message || "Failed to download file.");
-//   }
-// };

@@ -7,6 +7,7 @@ import {
   StatusBar,
   Dimensions,
   Animated,
+  Image,
 } from 'react-native';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
@@ -44,8 +45,7 @@ export default function Header({ title, backgroundColor }) {
         <TouchableOpacity
           style={styles.overlay}
           activeOpacity={1}
-          onPress={toggleSidebar}
-        />
+          onPress={toggleSidebar} />
       )}
       <View style={[styles.header, { backgroundColor: dynamicBgColor }]}>
         {canGoBack ? (
@@ -56,8 +56,7 @@ export default function Header({ title, backgroundColor }) {
               borderRadius: 8,
               alignItems: 'center',
               justifyContent: 'center',
-            }}
-          >
+            }}>
             <FontAwesome6 name="chevron-left" size={26} color={colors.white} />
           </TouchableOpacity>
         ) : (
@@ -65,9 +64,11 @@ export default function Header({ title, backgroundColor }) {
             <EvilIcons name="navicon" size={30} color={colors.white} />
           </TouchableOpacity>
         )}
-        <Text style={[ styles.headerTitle, canGoBack ? styles.childTitle : styles.parentTitle, ]}>
-          {title || 'E Krishi Pathsala'}
+
+        <Text style={[styles.headerTitle, canGoBack ? styles.childTitle : styles.parentTitle,]}>
+          {title || 'PAATH VIGYAN'}
         </Text>
+
         <View style={styles.headerRight}>
           <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
             <FontAwesome6 name="bell" size={24} color={colors.white} />

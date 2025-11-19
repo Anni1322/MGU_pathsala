@@ -16,14 +16,14 @@ import {
 // import alertService from "../../../common/Services/alert/AlertService";
 import SessionService from "../../../common/Services/SessionService";
 
- 
+
 import getAdminApiList from '../../config/Api/adminApiList';
 import { HttpService } from "../../../common/Services/HttpService";
 import LinearGradient from 'react-native-linear-gradient';
 
 const { width } = Dimensions.get('window');
 
-const CARD_WIDTH = width - 90;
+const CARD_WIDTH = width - 150;
 
 const BirthdaySlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -85,22 +85,22 @@ const BirthdaySlider = () => {
           style={styles.card}
           imageStyle={styles.cardImage}
         > */}
-          <LinearGradient
-            colors={['rgba(255, 255, 255, 1)', 'rgba(168, 230, 255, 0.38)']}
-            style={styles.gradientOverlay}
-          />
-  
+        <LinearGradient
+          colors={['rgba(255, 255, 255, 1)', 'rgba(168, 230, 255, 0.38)']}
+          style={styles.gradientOverlay}
+        />
 
-          <View style={styles.content}>
-            <Image
-              source={{ uri: imageUri }}
-              style={styles.avatar}
-            />
-            <View style={styles.textBox}>
-              <Text style={styles.name}>{item.name || "Unnamed User"}</Text>
-              <Text style={styles.designation}>{item.designation || "No designation"}</Text>
-            </View>
+
+        <View style={styles.content}>
+          <Image
+            source={{ uri: imageUri }}
+            style={styles.avatar}
+          />
+          <View style={styles.textBox}>
+            <Text style={styles.name}>{item.name || "Unnamed User"}</Text>
+            <Text style={styles.designation}>{item.designation || "No designation"}</Text>
           </View>
+        </View>
         {/* </ImageBackground> */}
       </View>
     );
@@ -136,19 +136,21 @@ const BirthdaySlider = () => {
 
 const styles = StyleSheet.create({
   cardWrapper: {
+    backgroundColor: 'red',
+    marginBottom: 25,
     width: CARD_WIDTH,
     marginHorizontal: 10,
     borderRadius: 20,
     overflow: 'hidden',
   },
   card: {
-    height: CARD_WIDTH * 0.6,
+    // height: CARD_WIDTH * 0.6,
     justifyContent: 'flex-end',
     borderRadius: 20,
   },
   cardImage: {
     borderRadius: 20,
-    backgroundColor:'red'
+    backgroundColor: 'red'
   },
   gradientOverlay: {
     ...StyleSheet.absoluteFillObject,

@@ -32,11 +32,11 @@ const menuSections = [
       // { id: 1, title: "Home", icon: "🏠", screen: "AdminHomeLayout" },
       { id: 2, title: "Examination", icon: "💼", screen: "Maintenance" },
       // { id: 3, title: "Save Old Question Paper", icon: "📂", screen: "OldQuestionPapers" },
-      { id: 4, title: "Website", icon: "🌐", screen: "Website", link: "https://igkv.ac.in" },
-      { id: 5, title: "Tell your friends", icon: "📣", screen: "ShareApp", link: "https://play.google.com/store/apps/details?id=igkvmis.igkv" },
+      { id: 4, title: "Website", icon: "🌐", screen: "Website", link: "https://mguvv.ac.in/" },
+      { id: 5, title: "Tell your friends", icon: "📣", screen: "ShareApp", link: "https://play.google.com/store/apps/details?id=mguvvmis.mguvv" },
       // { id: 6, title: "User Manual", icon: "📄", screen: "UserManual" },
-      { id: 7, title: "Like e Krishi Path Shala? Rate it!", icon: "⭐", screen: "RateUs", link: "https://play.google.com/store/apps/details?id=igkvmis.igkv" },
-      { id: 8, title: "More Apps", icon: "📱", screen: "MoreApps", link: "https://play.google.com/store/apps/developer?id=IGKV" },
+      { id: 7, title: "Like PAATH VIGYAN? Rate it!", icon: "⭐", screen: "RateUs", link: "https://play.google.com/store/apps/details?id=mguvvmis.mguvv" },
+      { id: 8, title: "More Apps", icon: "📱", screen: "MoreApps", link: "https://play.google.com/store/apps/developer?id=MGUVV" },
     ]
   },
   {
@@ -62,7 +62,7 @@ const menuSections = [
   {
     title: "Privacy Policy",
     items: [
-      { id: 15, title: "Privacy Policy", icon: "📃", screen: "Privacy Policy", link: 'https://igkv.ac.in/site/#/' },
+      { id: 15, title: "Privacy Policy", icon: "📃", screen: "Privacy Policy", link: 'https://mguvv.ac.in/' },
     ]
   },
 ];
@@ -76,27 +76,27 @@ export default function SidebarMenu({ sidebarX }) {
   const [profileData, setProfileData] = useState(null);
 
   const handleLogoutPress = () => {
- 
 
-alertService.show({
-  title: "Logout",
-  message: "Are you sure you want to logout?",
-  type: "warn",
-  buttonText: "Yes",
-  cancelText: "No",
-  onPress: async () => {
-    await AuthService.logout();
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "Auth" }],
+
+    alertService.show({
+      title: "Logout",
+      message: "Are you sure you want to logout?",
+      type: "warn",
+      buttonText: "Yes",
+      cancelText: "No",
+      onPress: async () => {
+        await AuthService.logout();
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "Auth" }],
+        });
+      },
+      onCancel: () => console.log("Logout cancelled"),
     });
-  },
-  onCancel: () => console.log("Logout cancelled"),
-});
 
 
 
- 
+
 
   };
 
@@ -284,7 +284,6 @@ alertService.show({
           </View>
         ))}
       </ScrollView>
-
     </Animated.View>
   );
 }
@@ -296,7 +295,7 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     width: SIDEBAR_WIDTH,
-    backgroundColor: "#fff",
+    backgroundColor: "#e7ffffff",
     shadowColor: "#000",
     shadowOffset: { width: 2, height: 0 },
     shadowOpacity: 0.25,

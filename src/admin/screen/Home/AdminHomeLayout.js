@@ -6,7 +6,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 
 // Local Imports (assumed paths are correct)
 import { facultyMenu } from '../../config/Menu/MenuList';
-import Slider from '../../../student/layout/Sliders/Slider';
+import Slider from '../../layout/Sliders/Slider';
 import BirthdaySlider from '../../layout/Sliders/BirthdaySlider';
 // import { API_BASE_URL } from '../../../common/config/BaseUrl'; // Unused
 import getApiList from "../../config/Api/adminApiList";
@@ -125,6 +125,8 @@ const AdminHomeLayout = () => {
       }
     } catch (error) {
       console.error("fetchMystudents failed:", error);
+      // alert()
+
     }
   }, []);
 
@@ -289,7 +291,6 @@ const AdminHomeLayout = () => {
     fetchInitialDataAndSetup();
   }, [fetchInitialDataAndSetup]);
 
-
   if (loading && !profileData) { 
     return <View style={styles.spinnerWithText}>
       <CustomSpinner size={50} color="rgba(255, 99, 71, 1)" type="dots" />
@@ -347,6 +348,7 @@ const OfficeListModalContent = React.memo(({ closeModal }) => (
             title="Refreshing..."
           />}
       >
+      <View style={styles.topcard}>
         <View style={styles.userInfo}>
           <View style={{ flex: 1 }}>
             <Text style={styles.userName}>{profileData?.Emp_Name || 'Guest'} 👋</Text>
@@ -372,13 +374,14 @@ const OfficeListModalContent = React.memo(({ closeModal }) => (
             <OfficeListModalContent closeModal={closeModal} />
           </Modal>
         </View>
-
         <Slider />
-
-        <Text style={styles.sectionTitle}>Faculty Dashboard</Text>
+      </View>
+       
         
+        <View style={styles.topcard1}>
         {/* Dropdown Selectors */}
         <View style={styles.selectorContainer}>
+         <Text style={styles.sectionTitle}>Faculty Dashboard</Text>
           <DropdownSelector
             data={STATIC_SESSION_DATA}
             initValue={STATIC_SESSION_DATA.find(item => item.key === selectedSession)?.label || "Select a Session"}
@@ -393,11 +396,11 @@ const OfficeListModalContent = React.memo(({ closeModal }) => (
             style={styles.semesterDropdown}
           />
         </View>
-        
-        {/* Grid Menu */}
+
+                {/* Grid Menu */}
         <ScrollView horizontal={false} showsVerticalScrollIndicator={false} contentContainerStyle={styles.eCornerContainer}>
           <View style={styles.gridContainer}>
-            {updatedMenu.map(item => (
+            {updatedMenu?.map(item => (
               <TouchableOpacity
                 key={item.id}
                 style={styles.gridItem}
@@ -414,8 +417,18 @@ const OfficeListModalContent = React.memo(({ closeModal }) => (
             ))}
           </View>
         </ScrollView>
-        <Text style={styles.sectionTitle}>🎂 Today's Birthday</Text>
-        <BirthdaySlider />
+        {/* <Text style={styles.sectionTitle}>🎂 Today's Birthday</Text>
+        <BirthdaySlider /> */}
+        </View>
+        
+
+
+<View style={styles.topcard2}>
+<Text style={styles.sectionTitle}>Notification's</Text>
+        {/* <BirthdaySlider />   */}
+</View>
+
+
       </ScrollView>
       <Footer />
     </View>
@@ -496,7 +509,7 @@ officeListScrollView: {
 
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#EAEBF0', marginBottom: 0 },
+  container: { flex: 1, backgroundColor: '#dfe0e5ff', marginBottom: 0 },
   
   spinnerWithText: {
     flexDirection: "row",
@@ -512,6 +525,44 @@ const styles = StyleSheet.create({
   },
   
   content: { flex: 1, padding: 15 },
+
+topcard: {
+  marginTop:-15,
+  padding: 15,
+  // margin: -20,
+  marginLeft: -25,
+  marginRight: -25,
+  backgroundColor: '#ffffffff',   
+  marginVertical: 10,
+  marginHorizontal: 10,
+  borderBottomRightRadius: 10,
+  borderBottomRightRadius: 90,
+},
+topcard1: {
+  padding: 15,
+  margin: -20,
+  marginRight: -25,
+  marginLeft: -15,
+  backgroundColor: '#ffbda1ff',  
+  marginVertical: 10,
+  marginHorizontal: 10,
+  borderTopRightRadius: 10,
+  borderBottomLeftRadius: 1200,
+  borderTopLeftRadius: 100,
+},
+topcard2: {
+  marginTop:5,
+  padding: 15,
+  // margin: -20,
+  marginLeft: -25,
+  marginRight: -25,
+  backgroundColor: '#ffffffff',   
+  marginVertical: 10,
+  marginHorizontal: 10,
+  borderTopRightRadius: 100,
+  borderBottomRightRadius: 0,
+},
+
   userInfo: {
     marginLeft: 10,
     flexDirection: 'row',
@@ -534,9 +585,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   iconRectangle: {
-    width: 65,
-    height: 70,
-    borderRadius: 17,
+    width: 85,
+    height: 85,
+    borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 5,
@@ -555,13 +606,22 @@ const styles = StyleSheet.create({
   },
   
   gridContainer: {
+    margin:5,
+    padding:20,
+    backgroundColor:'#E7D4B5',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    borderRadius: 20,
+    borderRadius: 50,
     justifyContent: 'flex-start',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+  borderBottomleftRadius: 1200,
   },
   gridItem: {
-    width: '25%',
+    width: '20%',
     marginBottom: 15,
     borderRadius: 12,
   },
@@ -593,20 +653,21 @@ const styles = StyleSheet.create({
   selectorContainer: {
     flexDirection: 'row', 
     padding: 5, 
-    margin: 5
+    margin: 5,
+    justifyContent:'flex-end'
   },
   sessionDropdown: {
-    backgroundColor: '#d5bdaf', 
-    borderRadius: 10, 
-    marginRight: 5
+    // backgroundColor: '#d5bdaf', 
+    // borderRadius: 10, 
+    // marginRight: 5
   },
   sessionDropdownText: {
-    fontSize: 18, 
-    color: '#2a9d8f'
+    // fontSize: 18, 
+    // color: '#2a9d8f'
   },
   semesterDropdown: {
-    backgroundColor: '#457b9d', 
-    borderRadius: 10, 
+    // backgroundColor: '#457b9d', 
+    // borderRadius: 10, 
     marginRight: 5
   }
 });

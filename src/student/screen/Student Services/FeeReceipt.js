@@ -9,7 +9,7 @@ import Header from '../../layout/Header/Header2';
 import Footer from '../../layout/Footer/Footer';
 import { HttpService } from '../../../common/Services/HttpService';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { downloadDF } from "../../../common/Services/pdfService";
+import { downloadFile } from "../../../common/Services/pdfService";
 import alertService from '../../../common/Services/alert/AlertService';
 import { API_BASE_URL } from '../../../common/config/BaseUrl';
 
@@ -47,7 +47,7 @@ const FeeReceipt = () => {
       const filePath = API_BASE_URL + '/' + response?.data?.Response[0]?.FilePath;
       if (filePath) {
         setLoading(true);
-        await downloadDF(filePath, `${receipt?.Receipt_No}Semester_Examfees.pdf`);
+        await downloadFile(filePath, `${receipt?.Receipt_No}Semester_Examfees.pdf`);
         setLoading(false);
       } else {
         console.error('No file path returned from API.');
@@ -429,6 +429,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#a5d6a7',
   },
+  
   dropdown: {
     marginHorizontal: 15,
     marginBottom: 10,

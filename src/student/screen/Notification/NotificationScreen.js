@@ -21,22 +21,7 @@ export default function JobListingScreen() {
   const navigation = useNavigation();
 
 
-  // api name get
-  const getNotificationApi = async (payload) => {
-    try {
-      const apiList = getApiList();
-      const FeesReceiptAPI = apiList.FeeReceiptList;
-      if (!FeesReceiptAPI) throw new Error("Fees Receipt endpoint not found.");
-      const response = await HttpService.post(FeesReceiptAPI, payload);
-      if (!response || response?.status !== 200) {
-        throw new Error("Failed to fetch profile details.");
-      }
-      return response?.data?.FeeReceiptList || [];
-    } catch (error) {
-      Alert.alert("Fees Receipt Fetch Failed", error?.message || "Something went wrong");
-      throw error;
-    }
-  };
+ 
 
   useEffect(() => {
     const fetchProfile = async () => {

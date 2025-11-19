@@ -47,7 +47,7 @@ export default function MenuScreen({ sidebarX }) {
     {
       title: "CONTENT",
       items: [
-        { id: 9, title: "Library", icon: "📖", screen: "Library", link: 'https://igkv.ac.in/library/' },
+        { id: 9, title: "Library", icon: "📖", screen: "Library", link: 'https://mguvv.ac.in/' },
         // { id: 10, title: "My Downloads", icon: "⬇️", screen: "Downloads" },
       ]
     },
@@ -68,7 +68,7 @@ export default function MenuScreen({ sidebarX }) {
     {
       title: "Privacy Policy",
       items: [
-        { id: 15, title: "Privacy Policy", icon: "📃", screen: "Privacy Policy", link: 'https://igkv.ac.in/site/#/' },
+        { id: 15, title: "Privacy Policy", icon: "📃", screen: "Privacy Policy", link: 'https://mguvv.ac.in/' },
       ]
     },
 
@@ -82,7 +82,7 @@ export default function MenuScreen({ sidebarX }) {
     // {
     //   title: "                          NIC",
     //   items: [
-    //     { id: 14, title: "IGKV, Raipur (C.G.) | Designed & Developed By: National Informatics Centre Chhattisgarh State Centre, Raipur", }, 
+    //     { id: 14, title: "mguvv, Raipur (C.G.) | Designed & Developed By: National Informatics Centre Chhattisgarh State Centre, Raipur", }, 
     //   ]
     // }
 
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     width: SIDEBAR_WIDTH,
-    backgroundColor: "#f0f0f0ff",
+    backgroundColor: "#F8F6E3",
     shadowColor: "#000",
     shadowOffset: { width: 2, height: 0 },
     shadowOpacity: 0.25,

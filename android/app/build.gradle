@@ -82,10 +82,10 @@ android {
 
     defaultConfig {
         applicationId "igkvmis.igkv"
-        minSdkVersion 26
+        minSdkVersion 28
         targetSdkVersion 36
-        versionCode 76
-        versionName "5.0.5"
+        versionCode 1
+        versionName "1.0.0"
         multiDexEnabled true
         missingDimensionStrategy 'react-native-camera', 'general'
     }
@@ -123,7 +123,7 @@ android {
 
       applicationVariants.all { variant ->
         variant.outputs.all {
-            outputFileName = "ekrishipathsala-${variant.name}.apk"
+            outputFileName = "pathsala-${variant.name}.apk"
         }
     }
 

@@ -28,6 +28,12 @@ apiList = {
     "SaveComplain": "/Mobile_App_Services/EKrishiPathshala/Sangwari_Services_New.asmx/SaveComplain",
     "GetMyComplainList": "/Mobile_App_Services/EKrishiPathshala/Sangwari_Services_New.asmx/GetMyComplainList",
     "TrackComplain": "/Mobile_App_Services/EKrishiPathshala/Sangwari_Services_New.asmx/TrackComplain",
+
+
+    "GetCourseListForStudyMaterial": "/Mobile_App_Services/EKrishiPathshala/Sangwari_Services_New.asmx/GetCourseListForStudyMaterial",
+    "getMaterialLectureChapterListToApp": "/Mobile_App_Services/EKrishiPathshala/Sangwari_Services_New.asmx/getMaterialLectureChapterListToApp",
+    "getMaterialCountEmpListWiseToApp": "/Mobile_App_Services/EKrishiPathshala/Sangwari_Services_New.asmx/getMaterialCountEmpListWiseToApp",
+    "GetStudyMaterialList": "/Mobile_App_Services/EKrishiPathshala/Sangwari_Services_New.asmx/GetStudyMaterialList",
 }
 
 

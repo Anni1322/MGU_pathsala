@@ -1,4 +1,3 @@
-
 // ui 
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, ActivityIndicator, Alert, TouchableOpacity } from 'react-native';
@@ -92,7 +91,7 @@ const ProfileScreen = () => {
   const data = profileData[0] || {};
 
   return (
-    <LinearGradient colors={['#ffffff55', '#cfcfcf55']} style={styles.container}>
+    <LinearGradient colors={['#b9f94355', '#ff5b5b55']} style={styles.container}>
       <Header />
       <SafeAreaView style={styles.safeArea}>
         {/* User Card */}
@@ -105,7 +104,7 @@ const ProfileScreen = () => {
             }}
             style={styles.avatar}
           />
-          <View style={{ marginLeft: 15 }}>
+          <View style={styles.userInfo}>
             <Text style={styles.userName}>{data['Student Name'] || '—'}</Text>
             <Text style={styles.userRole}>{data.Degree_Programme_Name || '—'}</Text>
             <Text style={styles.userTag}>
@@ -115,12 +114,12 @@ const ProfileScreen = () => {
         </View>
 
         {/* Scrollable Profile Info */}
-        <ScrollView showsVerticalScrollIndicator={false} style={{ marginBottom: 20 }}>
+        <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
           <ProfileSection title="Basic Details">
             <ProfileItem label="Father's Name" value={data.Father_Name} icon="user" />
             <ProfileItem label="Mother's Name" value={data.Mother_Name} icon="user" />
-            <ProfileItem label="Date of Birth" value={data.DOB} icon="calendar-days" />
-            <ProfileItem label="Gender" value={data.Sex} icon="venus-mars" />
+            <ProfileItem label="Date of Birth" value={data.DOB + " 👉🏻 " + data.Sex} icon="calendar-days" />
+            {/* <ProfileItem label="" value={data.Sex}  /> */}
           </ProfileSection>
 
           <ProfileSection title="Admission Details">
@@ -146,8 +145,8 @@ const ProfileScreen = () => {
 
           <ProfileSection title="Address Details">
             <ProfileItem label="Address" value={data['Permanent Address']} icon="location-dot" />
-            <ProfileItem label="City" value={data.per_district} icon="location-pin" />
-            <ProfileItem label="Nationality" value={data.per_country} icon="flag" />
+            <ProfileItem label="City" value={data.per_district + " Nationality : " + data.per_country} icon="location-pin" />
+            {/* <ProfileItem label="Nationality" value={data.per_country} icon="flag" /> */}
           </ProfileSection>
         </ScrollView>
       </SafeAreaView>
@@ -167,127 +166,125 @@ const ProfileItem = ({ label, value, icon }) => (
   <View style={styles.itemRow}>
     <FontAwesome6 name={icon} size={16} color="#6e4bd8" style={styles.icon} />
     <Text style={styles.itemText}>
-      <Text style={{ fontWeight: 'bold' }}>{label}:</Text> {value || '—'}
+      <Text style={styles.labelText}>{label}:</Text> {value || '—'}
     </Text>
   </View>
 );
-
- 
-
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   safeArea: {
-    padding: 10,
     flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  iconBox: {
-    backgroundColor: '#ff9a2d',
-    padding: 10,
-    borderRadius: 10,
-    marginRight: 10,
-  },
-  iconDiamond: {
-    fontSize: 20,
-  },
-  headerText: {
-    color: '#fff',
-    fontSize: 22,
-    fontWeight: 'bold',
-  },
-  userCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    padding: 15,
-    borderRadius: 15,
-    marginBottom: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#370095ff',
-  },
-  avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-  },
-  userName: {
-    color: '#350000ff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  userRole: {
-    color: '#00206cff',
-    fontSize: 16,
-  },
-  userTag: {
-    color: '#560000ff',
-    fontSize: 14,
-  },
-  section: {
-    marginBottom: 15,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 15,
-    shadowColor: '#ffe1e1ff',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 15,
-    borderWidth: 0.2,
-    borderColor: "#ff00f2ff"
-  },
-
-
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#333',
-  },
-  itemRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  icon: {
-    marginRight: 10,
-  },
-  itemText: {
-    fontSize: 14,
-    color: '#555',
-  },
-  logoutCard: {
-    backgroundColor: '#f95f5f',
-    borderRadius: 15,
-    padding: 5,
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  logoutText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  logoutSub: {
-    color: '#fcecec',
-    fontSize: 12,
+    paddingHorizontal: 20,
   },
   loaderContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#f5f5f5',
   },
   loaderText: {
     marginTop: 10,
+    fontSize: 16,
     color: '#666',
   },
+  userCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 55,
+    padding: 10,
+    marginVertical: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5, // For Android shadow
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    borderRightWidth:14,
+    borderRightColor:'#ff9100ff'
+  },
+  avatar: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    borderWidth: 3,
+    borderColor: '#884DFF',
+  },
+  userInfo: {
+    flex: 1,
+    marginLeft: 15,
+  },
+  userName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 5,
+  },
+  userRole: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 3,
+  },
+  userTag: {
+    fontSize: 14,
+    color: '#888',
+  },
+  scrollView: {
+    flex: 1,
+    marginBottom: 20,
+  },
+  section: {
+    backgroundColor: '#ffffffff',
+    borderRadius: 12,
+    padding: 15,
+    marginBottom: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+    borderWidth: 1,
+    borderColor: '#f0f0f0',
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 10,
+    // borderBottomWidth: 3,
+    // borderBottomColor: '#ff6720ff',
+    paddingBottom: 5,
+    borderRadius:15,
+    backgroundColor:'#ffd5c1ff',
+    padding:10
+  },
+  sectionContent: {
+    // No additional styles needed, as children handle layout
+  },
+  itemRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#f0f0f0',
+  },
+  icon: {
+    marginRight: 10,
+  },
+  itemText: {
+    fontSize: 16,
+    color: '#555',
+    flex: 1,
+  },
+  labelText: {
+    fontWeight: '600',
+    color: '#333',
+  },
 });
+
 export default ProfileScreen;
+

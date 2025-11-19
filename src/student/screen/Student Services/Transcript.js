@@ -10,7 +10,7 @@ import SessionService from '../../../common/Services/SessionService';
 import Loading from '../../../common/Services/Loading'; // Assuming this is a spinner component
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { API_BASE_URL } from '../../../common/config/BaseUrl';
-import { downloadDF } from "../../../common/Services/pdfService";
+import { downloadFile } from "../../../common/Services/pdfService";
 
 const Transcript = () => {
   const [transcriptUrl, setTranscriptUrl] = useState(null);
@@ -35,7 +35,7 @@ const Transcript = () => {
       }
       const baseUrl = API_BASE_URL.replace(/\/$/, '');
       const fullUrl = `${baseUrl}/${filePath.replace(/^\//, '')}`;
-      const downloadResult = await downloadDF(fullUrl, 'transcript.pdf');
+      const downloadResult = await downloadFile(fullUrl, 'transcript.pdf');
       const newFile = {
         name: 'transcript.pdf',
         path: downloadResult?.localPath || fullUrl

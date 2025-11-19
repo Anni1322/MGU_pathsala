@@ -271,7 +271,7 @@ const AuthService = {
       const adminApiList = getAdminApiList();
       const loginApi = adminApiList.login;
       const response = await HttpService.get(loginApi, payload);
-      // console.log(response)
+      console.log(response)
       // console.log(response?.data?.Result?.[0]?.Success === "1")
       if (response?.data?.Result?.[0]?.Success === "1") {
         let userData = {
@@ -344,8 +344,8 @@ const AuthService = {
       const response = {
         OTPValid: payload.OTP === dummyOTP,
         // studentDetails: {
-        //   role: "IGKV",
-        //   name: "IGKV Raipur",
+        //   role: "mguvv",
+        //   name: "mguvv Raipur",
         // },
       };
       if (!response || typeof response.OTPValid === "undefined") {

@@ -1,68 +1,59 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { View, Text,FlatList,Dimensions,StyleSheet,TouchableOpacity,ImageBackground,} from 'react-native';
+import { View, Text, FlatList, Dimensions, StyleSheet, TouchableOpacity, ImageBackground, } from 'react-native';
 import Video from 'react-native-video';
 
 const { width } = Dimensions.get('window');
 
 const sliderData = [
-  // {
-  //   id: '0',
-  //   // title: 'IGKV',
-  //   // subtitle: 'Indira Gandhi Krishi Vishwavidyalaya Krishak Nagar, Raipur',
-  //   video: 'https://igkv.ac.in/images/AngWeb/Video/intro_Video.mp4',
-  // },
-
+  {
+    id: '0',
+    title: 'MGUVV Durg',
+    subtitle: 'Mahatma Gandhi Udyanikee Evam Vanikee Vishwavidyalaya, Durg',
+    video: 'https://mguvv.ac.in/angular/assets/video/home_video.mp4',
+    color: '#6a9f66db',  
+  },
   {
     id: '1',
-    title: 'IGKV',
-    subtitle: '2025 NIRF - Govt. of India',
-    image: require('../../../../assets/icons/igkv.jpg'),
+    title: 'MGUVV Durg: Pioneering Excellence',
+    subtitle: 'Mahatma Gandhi University of Horticulture and Forestry',
+    color: '#001168db', 
   },
-
-
-  //     id: '1',
-  //     title: 'RANKED IN AGRICULTURE AND ALLIED SECTORS',
-  //     subtitle: '2025 NIRF - Govt. of India',
-  //     image: require('../../assets/icons/igkv.jpg'),
-  //   },
-  // {
-  //   id: '2',
-  //   title: 'NAAC Accredited UniversityP',
-  //   subtitle: 'Save monthly in Gold',
-  //   // image: require('../../assets/icons/gold.png'),
-  // },
-  // {
-  //   id: '3',
-  //   title: 'NAAC Accredited University',
-  //   subtitle: 'Committed to Academic Excellence',
-  //   // image: require('../../assets/icons/certificate.png'),
-  // },
-  // {
-  //   id: '4',
-  //   title: 'ICAR Supported Programs',
-  //   subtitle: 'Empowering Agricultural Innovation',
-  //   // image: require('../../assets/icons/icar.png'),
-  // },
-  // {
-  //   id: '5',
-  //   title: 'Krishi Vigyan Kendras (KVKs)',
-  //   subtitle: 'Bridging Research & Farming Communities',
-  //   // image: require('../../assets/icons/farming.png'),
-  // },
-  // {
-  //   id: '6',
-  //   title: 'Student Innovations at IGKV',
-  //   subtitle: 'Driving Agri-Tech Startups',
-  //   // image: require('../../assets/icons/innovation.png'),
-  // },
-  // {
-  //   id: '7',
-  //   title: 'IGKV Raipur - Campus Life',
-  //   subtitle: 'A Green Campus with Cutting-edge Labs',
-  //   // image: require('../../assets/icons/campus.png'),
-  // },
-
-
+  {
+    id: '2',
+    title: 'Focus on Horticulture & Forestry',
+    subtitle: 'Specialized Academic Programs for Green Careers',
+    color: '#228B22', 
+  },
+  {
+    id: '3',
+    title: 'Committed to Academic Excellence',
+    subtitle: 'Dedicated Faculty & State-of-the-Art Research Facilities',
+    color: '#837211ff',  
+  },
+  {
+    id: '4',
+    title: 'Promoting Sustainable Practices',
+    subtitle: 'Research and Education for Environmental Stewardship',
+    color: '#128312ff',  
+  },
+  {
+    id: '5',
+    title: 'Central Chhattisgarh Location',
+    subtitle: 'Excellent Connectivity & Vibrant University Life in Durg',
+    color: '#8c2b1aff', // Tomato red for vibrancy
+  },
+  {
+    id: '6',
+    title: 'Hands-on Learning',
+    subtitle: 'Practical Field Exposure and Experiential Education',
+    color: '#8A2BE2', // Blue violet for hands-on
+  },
+  {
+    id: '7',
+    title: 'Empowering Rural Economy',
+    subtitle: 'Research Focused on Farmers and Local Producers',
+    color: '#DAA520', // Goldenrod for rural/economy
+  },
 ];
 
 const Slider = () => {
@@ -91,88 +82,37 @@ const Slider = () => {
   }, [currentIndex]);
 
   const renderItem = ({ item }) => {
-    if (item.image) {
+    const cardColor = item.color || '#6a9f66db'; // Fallback to default green if no color is provided
+
+    if (item.video) {
       return (
-        <ImageBackground
-          source={item.image}
-          style={styles.card}
-          imageStyle={{ borderRadius: 20 }}
-          resizeMode="contain">
+        <View style={[styles.card, { backgroundColor: cardColor }]}>
+          <Video
+            source={{ uri: item.video }}
+            style={styles.video}
+            resizeMode="cover"
+            repeat
+            paused={false}
+          />
           <View style={styles.overlay} />
           <View style={styles.textContainer}>
-            <Text style={styles.title} numberOfLines={2}>
-              {item.title}
-            </Text>
-            <Text style={styles.subtitle} numberOfLines={2}>
-              {item.subtitle}
-            </Text>
+            <Text style={styles.title}>{item.title}</Text>
+            <Text style={styles.subtitle}>{item.subtitle}</Text>
           </View>
-
-          {/* <TouchableOpacity style={styles.arrowButton}>
-            <Text style={styles.arrow}>→</Text>
-          </TouchableOpacity> */}
-
-        </ImageBackground>
-      );
-    } else {
-      return (
-        // <View style={[styles.card, { backgroundColor: '#001168db' }]}>
-        <View style={[styles.card, styles.userCard ]}>
-          <View style={styles.textContainer}>
-            <Text style={styles.title} numberOfLines={2}>
-              {item.title}
-            </Text>
-            <Text style={styles.subtitle} numberOfLines={2}>
-              {item.subtitle}
-            </Text>
-          </View>
-
-          {/* <TouchableOpacity style={styles.arrowButton}>
-            <Text style={styles.arrow}>→</Text>
-          </TouchableOpacity> */}
         </View>
       );
     }
+
+    // For non-video cards, use the dynamic color
+    return (
+      <View style={[styles.card, styles.userCard, { backgroundColor: cardColor }]}>
+        <View style={styles.textContainer}>
+          <Text style={styles.title}>{item.title}</Text>
+          <Text style={styles.subtitle}>{item.subtitle}</Text>
+        </View>
+      </View>
+    );
   };
-
-
-//  const renderItem = ({ item }) => {
-//   if (item.video) {
-//     return (
-//       <View style={styles.card}>
-//         <Video
-//           source={{ uri: item.video }}
-//           style={styles.video}
-//           resizeMode="cover"
-//           repeat
-//           paused={false}
-//           // controls={true}  // 👈 test playback
-//           // onError={(err) => console.log('Video Error:', err)}
-//           // onLoadStart={() =>console.log('Loading video...')}
-//           // onLoad={() => console.log('Video loaded')}
-//         />
-//         <View style={styles.overlay} />
-//         <View style={styles.textContainer}>
-//           <Text style={styles.title}>{item.title}</Text>
-//           <Text style={styles.subtitle}>{item.subtitle}</Text>
-//         </View>
-//       </View>
-//     );
-//   }
-
-//   // fallback for other cases
-//   return (
-//     <View style={[styles.card, styles.userCard]}>
-//       <View style={styles.textContainer}>
-//         <Text style={styles.title}>{item.title}</Text>
-//         <Text style={styles.subtitle}>{item.subtitle}</Text>
-//       </View>
-//     </View>
-//   );
-// };
-
-
-
 
   return (
     <View>
@@ -204,21 +144,19 @@ const Slider = () => {
 };
 
 const styles = StyleSheet.create({
-video: {
-  width: width - 50,
-  height: width * 0.45, 
-  borderRadius: 20,
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  zIndex: 1,
-},
-
-
+  video: {
+    width: width - 50,
+    height: width * 0.45,
+    borderRadius: 20,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1,
+  },
   card: {
-    backgroundColor: '#096800db',
+    // backgroundColor removed - now dynamic
     width: width - 50,
     borderRadius: 20,
     marginHorizontal: 8,
@@ -231,14 +169,14 @@ video: {
     overflow: 'hidden',
   },
   userCard: {
-    backgroundColor: 'rgba(0, 92, 95, 0.81)',
+    // backgroundColor removed - now dynamic
     padding: 20,
     borderRadius: 15,
     marginBottom: 20,
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: 'green'
+    borderColor: 'green',
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,

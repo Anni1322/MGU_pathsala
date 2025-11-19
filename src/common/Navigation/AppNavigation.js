@@ -24,6 +24,7 @@ import Examination from "../../student/screen/Student Services/Examination";
 import Transcript from "../../student/screen/Student Services/Transcript";
 import RegistraionCardList from "../../student/screen/Student Services/RegistraionCardList";
 import StudyScreen from "../../student/screen/StudyMaterial/StudyScreen";
+import StudyMaterialDetails from "../../student/screen/StudyMaterial/StudyMaterialDetails";
 import SyllabusScreen from "../../student/screen/StudyMaterial/SyllabusScreen";
 import Chapter from "../../student/screen/StudyMaterial/Chapter";
 import Assignment from "../../student/screen/StudyMaterial/Assignment";
@@ -90,6 +91,7 @@ const StudentNavigator = () => (
     <StudentStack.Screen name="Transcript" component={Transcript} />
     <StudentStack.Screen name="RegistraionCardList" component={RegistraionCardList} />
     <StudentStack.Screen name="Study" component={StudyScreen} />
+    <StudentStack.Screen name="StudyMaterialDetails" component={StudyMaterialDetails} />
     <StudentStack.Screen name="Syllabus" component={SyllabusScreen} />
     <StudentStack.Screen name="Chapter" component={Chapter} />
     <StudentStack.Screen name="Assignment" component={Assignment} />

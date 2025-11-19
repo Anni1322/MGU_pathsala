@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import {
   View, Text, StyleSheet, ScrollView, Image,
-  TouchableOpacity, Alert,RefreshControl
+  TouchableOpacity, Alert, RefreshControl
 } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
@@ -45,7 +45,7 @@ const IconText = React.memo(({
     </View>
   );
 });
- 
+
 
 const HomeLayout = () => {
   const navigation = useNavigation();
@@ -54,7 +54,7 @@ const HomeLayout = () => {
 
   const [profileData, setProfileData] = useState(null);
   const [profilePhoto, setProfilePhoto] = useState(null);
-  const [refreshing, setRefreshing] = useState(false);  
+  const [refreshing, setRefreshing] = useState(false);
 
   const getProfileDetails = useCallback(async (payload) => {
     try {
@@ -86,7 +86,7 @@ const HomeLayout = () => {
 
     const lastProfile = data?.StudentProfile[0] || {};
     // const lastProfile = data.StudentProfile?.slice(-1)[0] || {};
-  
+
     const updatedProfile = {
       ...lastProfile,
       student_name: lastProfile["Student Name"] || "No Name available",
@@ -106,7 +106,7 @@ const HomeLayout = () => {
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await fetchSession();  
+    await fetchSession();
     setRefreshing(false);
   };
 
@@ -127,31 +127,35 @@ const HomeLayout = () => {
         }
       >
         {/* User Info */}
-        <View style={styles.userInfo}>
-          <Image
-            source={{
-              uri:
-                profilePhoto ||
-                "https://t4.ftcdn.net/jpg/02/29/75/83/360_F_229758328_7x8jwCwjtBMmC6rgFzLFhZoEpLobB6L8.jpg",
-            }}
-            style={styles.avatar}
-          />
-          <View style={{ flex: 1 }}>
-            <Text style={styles.userName}>{profileData?.student_name} 👋</Text>
-            <Text style={styles.userHandle}>
-              {profileData?.Semester_Name || "Semester Info"}
-            </Text>
-            <Text style={styles.userHandle}>
-              {profileData?.Degree_Programme_Name || "Not Available"}
-            </Text>
+        <View style={styles.infocard}>
+          <View style={styles.userInfo}>
+            <Image
+              source={{
+                uri:
+                  profilePhoto ||
+                  "https://t4.ftcdn.net/jpg/02/29/75/83/360_F_229758328_7x8jwCwjtBMmC6rgFzLFhZoEpLobB6L8.jpg",
+              }}
+              style={styles.avatar}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.userName}>{profileData?.student_name} 👋</Text>
+              <Text style={styles.userHandle}>
+                {profileData?.Semester_Name || "Semester Info"}
+              </Text>
+              <Text style={styles.userHandle}>
+                {profileData?.Degree_Programme_Name || "Not Available"}
+              </Text>
+            </View>
           </View>
         </View>
 
         {/* Slider */}
         <Slider />
 
+
+
         {/* Pathshala Menu */}
-        <Text style={styles.sectionTitle}>Pathshala</Text>
+        <Text style={styles.sectionTitle}>PAATH VIGYAN</Text>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -159,8 +163,8 @@ const HomeLayout = () => {
         >
           {pathshalaMenu.map((item) => (
             <TouchableOpacity key={item.id} onPress={() => navigation.navigate(item.screen)}>
-              <View style={{ alignItems: "center", marginHorizontal: 8 }}>
-                <View style={styles.iconCircle}>
+              <View style={{ alignItems: "center", marginHorizontal: 8, margin:5 }}>
+                <View style={[styles.iconRectangle, { backgroundColor: item.color }]}>
                   <FontAwesome6 name={item.icon} size={20} color="white" />
                 </View>
                 <Text style={styles.iconLabel}>{item.name}</Text>
@@ -168,30 +172,33 @@ const HomeLayout = () => {
             </TouchableOpacity>
           ))}
         </ScrollView>
-
-        {/* Student E-Corner */}
-        <Text style={styles.sectionTitle}>Student E-Corner</Text>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.eCornerContainer}
-        >
-          <View style={styles.gridContainer}>
-            {studentMenu.map((item) => (
-              <TouchableOpacity
-                key={item.id}
-                style={styles.gridItem}
-                onPress={() => navigation.navigate(item.screen)}
-              >
-                <View style={{ alignItems: "center" }}>
-                  <View style={[styles.iconRectangle, { backgroundColor: item.color }]}>
-                    <FontAwesome6 name={item.icon} size={22} color="white" />
+        <View style={styles.cardmain}>
+          {/* Student E-Corner */}
+          <Text style={styles.sectionTitlestudent}>Student Corner</Text>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.eCornerContainer}
+          >
+            <View style={styles.gridContainer}>
+              {studentMenu.map((item) => (
+                <TouchableOpacity
+                  key={item.id}
+                  style={styles.gridItem}
+                  onPress={() => navigation.navigate(item.screen)}
+                >
+                  <View style={{ alignItems: "center" }}>
+                    <View style={[styles.iconRectangle, { backgroundColor: item.color }]}>
+                      <FontAwesome6 name={item.icon} size={22} color="white" />
+                    </View>
+                    <Text style={styles.iconLabel}>{item.name}</Text>
                   </View>
-                  <Text style={styles.iconLabel}>{item.name}</Text>
-                </View>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </ScrollView>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </ScrollView>
+
+        </View>
+
       </ScrollView>
 
       <Footer />
@@ -199,16 +206,37 @@ const HomeLayout = () => {
   );
 };
 
- 
+
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: 'white' },
+  container: { flex: 1, backgroundColor: '#e0dfdfff' },
   content: { flex: 1, padding: 15 },
-
+  infocard: {
+    marginLeft: -20,
+    // marginRight: 165,
+    marginTop: -5,
+    marginBottom: 10,
+    backgroundColor: '#F7F9F2',
+    // borderTopLeftRadius:60,
+    borderTopRightRadius: 80,
+    borderBottomRightRadius: 80,
+  },
+  cardmain: {
+    marginRight: -15,
+    // marginRight: 155,
+    marginTop: 25,
+    // marginBottom: 10,
+    backgroundColor: '#ffffffff',
+    borderTopLeftRadius: 80,
+    borderBottomLeftRadius: 80,
+  },
   userInfo: {
+    margin: 15,
+    // padding: 15,
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 15,
+
   },
   avatar: { width: 50, height: 50, borderRadius: 25, marginRight: 10 },
   userName: { fontWeight: 'bold', fontSize: 14, color: 'black' },
@@ -220,7 +248,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
     marginBottom: 8,
-    marginTop: 8
+    marginTop: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  sectionTitlestudent: {
+    color: 'green',
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginBottom: 8,
+    marginTop: 8,
+    marginRight:10,
+    textAlign: 'right', 
   },
 
   iconCircle: {
@@ -234,9 +273,9 @@ const styles = StyleSheet.create({
   },
 
   iconRectangle: {
-    width: 46,
-    height: 50,
-    borderRadius: 17,
+    width: 55,
+    height: 40,
+    borderRadius: 27,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 5,
@@ -261,6 +300,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: 'space-around',
     justifyContent: 'flex-start',
+    marginBottom:15
   },
   gridItem: {
     width: '25%',

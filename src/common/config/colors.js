@@ -1,15 +1,33 @@
 // theme 1
-export default {
-  primary: '#006d33ff',  // Main brand color (Header/Footer Background)
-  secondary: '#3a2d75',  // Secondary color (Icons/Text)
-  background: '#f5f7fa', // Background color for screens
-  textPrimary: '#1b001eff',
-  textSecondary: '#555',
-  white: '#ffffff',
-  danger: '#ff3b30',
-  success: '#4cd964',
-  warning: '#ffcc00',
-};
+// export default {
+//   primary: '#006d33ff',  // Main brand color (Header/Footer Background)
+//   secondary: '#3a2d75',  // Secondary color (Icons/Text)
+//   background: '#f5f7fa', // Background color for screens
+//   textPrimary: '#1b001eff',
+//   textSecondary: '#555',
+//   white: '#ffffff',
+//   danger: '#ff3b30',
+//   success: '#4cd964',
+//   warning: '#ffcc00',
+// };
+
+
+// export default {
+//   primary: '#880c5bff',
+//   secondary: '#3a2d75',
+//   background: '#f5f7fa',
+//   textPrimary: '#1b001eff',
+//   textSecondary: '#555',
+//   white: '#ffffff',
+//   danger: '#ff3b30',
+//   success: '#4cd964',
+//   warning: '#ffcc00',
+
+//   // ✅ Add gradient sets
+//   gradientPrimary: ['#45bc41', '#3a2d75'],   
+//   gradientSuccess: ['#4cd964', '#34c759'],
+//   gradientWarning: ['#ffcc00', '#ff9500'],
+// };
 
 
 
@@ -42,23 +60,24 @@ export default {
 
 
 // // ### ☀️ **Theme 4 – Warm & Friendly**
-// export default {
-//   primary: '#ff6f00',  // Warm Amber (Header/Footer)
-//   secondary: '#d84315', // Burnt Orange (Icons/Text)
-//   background: '#fff8e1', // Soft Cream Background
-//   textPrimary: '#3e2723',
-//   textSecondary: '#6d4c41',
-//   white: '#ffffff',
-//   danger: '#e53935',
-//   success: '#43a047',
-//   warning: '#fbc02d',
-// };
+export default {
+  primary: '#004D40',
+  secondary: '#FFB300',
+  background: '#F9FBE7',
+  textPrimary: '#212121',
+  textSecondary: '#4CAF50',
+  white: '#ffffff',
+  danger: '#D32F2F',
+  success: '#388E3C',
+  warning: '#FBC02D',
+  lite: '#3c939090',
+};
 
 // // ### 🎨 **Theme 5 – Soft Pastels**
 // export default {
-//   primary: '#a29bfe',  // Light Purple (Header/Footer)
-//   secondary: '#fd79a8', // Pink Accent (Icons/Text)
-//   background: '#fceefc', // Soft Pink Background
+//   primary: '#a29bfe',
+//   secondary: '#fd79a8',
+//   background: '#fceefc',
 //   textPrimary: '#2d3436',
 //   textSecondary: '#636e72',
 //   white: '#ffffff',
@@ -70,9 +89,9 @@ export default {
 
 // // ### 🖤 **Theme 6 – Minimal & Modern**
 // export default {
-//   primary: '#000000',  // Pure Black (Header/Footer)
-//   secondary: '#4a90e2', // Blue Accent (Icons/Text)
-//   background: '#f9f9f9', // Light Gray Background
+//   primary: '#000000',
+//   secondary: '#4a90e2',
+//   background: '#f9f9f9',
 //   textPrimary: '#212121',
 //   textSecondary: '#757575',
 //   white: '#ffffff',
@@ -80,6 +99,5 @@ export default {
 //   success: '#4caf50',
 //   warning: '#ff9800',
 // };
- 
 
- 
+

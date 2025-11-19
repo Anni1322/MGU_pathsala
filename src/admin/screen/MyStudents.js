@@ -10,7 +10,8 @@ import MyModal from '../layout/MyModal';
 import { HttpService } from '../../common/Services/HttpService';
 import * as Keychain from 'react-native-keychain';
 import CustomSpinner from '../../common/Services/alert/CustomSpinner';
-const badgeColors = ['#f9741675', '#8a5cf688', '#aecdfeff', '#ef444474'];
+const badgeColors = ['#f916a275', '#8a5cf688', '#aecdfeff', '#ef444474'];
+import { LinearGradient } from 'react-native-linear-gradient';
 
 
 const MyStudents = () => {
@@ -138,11 +139,11 @@ const MyStudents = () => {
           </View>
           <View style={styles.studentInfo}>
             <View
-              style={[styles.badge,
-              { backgroundColor: badgeColors[idx % badgeColors.length] },]}>
+              // style={[styles.badge,{ backgroundColor: badgeColors[idx % badgeColors.length] },]}>
+              style={[styles.badge,]}>
               <Text style={styles.studentName}>{student.Name || student.name}</Text>
             </View>
-            <Text style={styles.studentDetails}>{student.Degree_Programme_Short_Name_E || student.degree}</Text>
+            <Text style={styles.studentDetails}>{student.Degree_Programme_Short_Name_E || student.degree} </Text>
             <Text style={styles.studentDetails}>{student.Year_semester || `${student.year} ${student.semester}`}</Text>
           </View>
         </View>
@@ -150,231 +151,241 @@ const MyStudents = () => {
     ));
   }, [StudentsList, badgeColors]);
 
+
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.container}>
-        <Header />
-        <View style={styles.header}>
-          <Text style={styles.headerText}>My Students</Text>
-        </View>
-        <ScrollView horizontal contentContainerStyle={styles.tableScrollContainer}>
-          <View style={styles.tableContainer}>
-            <Text style={styles.headertable}>Degree Type Wise Count</Text>
-            <View style={styles.tableHeader}>
-              <Text style={[styles.tableCell, styles.tableCellSN]}>SN</Text>
-              <Text style={[styles.tableCell, styles.tableCellStudents]}> </Text>
-              <Text style={[styles.tableCell, styles.tableCellDept]}></Text>
-              <Text style={[styles.tableCell, styles.tableCellStudents]}>DPT</Text>
-              <Text style={[styles.tableCell, styles.tableCellStudents]}></Text>
-              <Text style={[styles.tableCell, styles.tableCellStudents]}>Students</Text>
-            </View>
-            {students.map((course, index) => (
-              <TouchableOpacity
-                onPress={() => handleCourseClick(course)}>
-                <View key={course.Degree_Programme_Type_Id} style={styles.tableRow}>
-                  <Text style={[styles.tableCell, styles.tableCellSN]}>{index + 1}</Text>
-                  <Text style={[styles.tableCell, styles.tableCellDept]}>
-                    {course.Degree_Programme_Type_Name_E}
-                  </Text>
-                  <View style={[styles.tableCell, styles.tableCellStudents]}>
-                    <View
-                      style={[
-                        styles.badge,
-                        { backgroundColor: badgeColors[index % badgeColors.length] },
-                      ]}>
-                      <Text style={styles.badgeText}>{course.TotalStudents}</Text>
-                    </View>
-                  </View>
+      <LinearGradient
+        colors={['#9fabdeff', '#e3cef9ff']}
+        style={styles.gradientBackground}
+      >
+        <ScrollView style={styles.scrollContainer}>
+          <Header />
 
+          <View style={styles.containerCard}>
+            <View style={styles.header}>
+              <Text style={styles.headerText}>My Students</Text>
+            </View>
+            <ScrollView contentContainerStyle={styles.tableScrollContainer}>
+              <View style={styles.tableContainer}>
+                <Text style={styles.headertable}>Degree Type Wise Count</Text>
+                <View style={styles.tableHeader}>
+                  <Text style={[styles.tableCell, styles.tableCellSN]}>SN</Text>
+                  <Text style={[styles.tableCell, styles.tableCellStudents]}>DPT</Text>
+                  <Text style={[styles.tableCell, styles.tableCellStudents]}>Students</Text>
                 </View>
-              </TouchableOpacity>
-            ))}
+
+
+                {students.map((course, index) => (
+                  <TouchableOpacity
+                    onPress={() => handleCourseClick(course)}
+                    key={course.Degree_Programme_Type_Id}>
+                    <View style={styles.tableRow}>
+                      <Text style={[styles.tableCell, styles.tableCellSN]}>{index + 1}</Text>
+                      <Text style={[styles.tableCell, styles.tableCellDept]}>
+                        {course.Degree_Programme_Type_Name_E}
+                      </Text>
+                      <View style={[styles.tableCell, styles.tableCellStudents]}>
+                        <View
+                          style={[
+                            styles.badge,
+                            { backgroundColor: badgeColors[index % badgeColors.length] },
+                          ]}>
+                          <Text style={styles.badgeText}> 👉🏻{course.TotalStudents}</Text>
+                        </View>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </ScrollView>
+          </View>
+
+
+          {selectedCourseId && (
+            <View style={styles.studentListContainer}>
+              <View style={styles.header}>
+                <Text style={styles.studentListTitle}>Student List</Text>
+              </View>
+              {studentLoading ? (
+                <View style={styles.spinnerWithText}>
+                  <CustomSpinner size={50} color="rgba(255, 99, 71, 1)" type="dots" />
+                  <Text style={styles.text}>Loading...</Text>
+                </View>
+              ) : StudentsList.length === 0 ? (
+                <Text style={styles.noStudents}>No student data available</Text>
+              ) : (
+                memoizedStudentList
+              )}
+            </View>
+          )}
+
+          <View style={{
+             flex: 1, justifyContent: 'center', alignItems: 'center', 
+             backgroundColor:'red'
+             }}>
+            <MyModal
+              visible={modalVisible}
+              onClose={() => setModalVisible(false)}
+              studentData={selectedStudent}
+            />
           </View>
         </ScrollView>
-
-        {selectedCourseId && (
-          <View style={styles.studentListContainer}>
-            <Text style={styles.studentListTitle}>Student List</Text>
-            {studentLoading ? (
-              <View style={styles.spinnerWithText}>
-                <CustomSpinner size={50} color="rgba(255, 99, 71, 1)" type="dots" />
-                <Text style={styles.text}>Loading...</Text>
-              </View>
-
-
-            ) : StudentsList.length === 0 ? (
-              <Text style={styles.noStudents}>No student data available</Text>
-            ) : (
-              memoizedStudentList
-            )}
-          </View>
-        )}
-
-
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          {/* <Button title="Open Modal" onPress={() => setModalVisible(true)} /> */}
-          <MyModal
-            visible={modalVisible}
-            onClose={() => setModalVisible(false)}
-            studentData={selectedStudent}
-          />
-        </View>
-      </ScrollView>
+      </LinearGradient>
       <FooterNav />
     </SafeAreaView>
   );
+
 };
 
+
+export default MyStudents;
+
 const styles = StyleSheet.create({
-
-  spinnerWithText: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100%",
-    width: "100%",
+  containerCard: {
+    flex: 1,
+    backgroundColor: '#ffbda1ff',
+    borderBottomEndRadius: 55,
+    borderBottomStartRadius: 55,
+    // borderTopStartRadius:35,
   },
-  text: {
-    marginLeft: 10,
-    fontSize: 16,
-    color: "#ff6347",
-  },
-
-
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
-  loadingContainer: {
+  gradientBackground: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
-  loadingText: {
-    fontSize: 18,
-    color: '#666',
+  scrollContainer: {
+    flex: 1,
   },
   header: {
-    padding: 20,
-    backgroundColor: '#fff',
+    margin: 10,
+    padding: 5,
     alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 1)',
+    borderRadius: 20
   },
   headerText: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#000000ff',
   },
-  studentListContainer: {
-    margin: 10,
+  headerCard: {
+    backgroundColor: 'rgba(255, 255, 255, 1)',
+    borderRadius: 20
   },
   tableScrollContainer: {
-    padding: 15,
-    alignItems: 'center',
+    // margin:10,
+    paddingHorizontal: 10,
     justifyContent: 'center',
-  }
-  ,
+    alignItems: 'center',
+  },
   tableContainer: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    overflow: 'hidden',
-    elevation: 2,
+    backgroundColor: 'rgba(255, 255, 255, 1)',
+    borderRadius: 10,
+    padding: 10,
+    marginVertical: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.3,
     shadowRadius: 4,
-    width: '100%',
+    elevation: 5,
   },
   headertable: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#000000ff',
     textAlign: 'center',
-    padding: 10,
-    backgroundColor: '#f0f0f0',
+    marginBottom: 10,
   },
   tableHeader: {
     flexDirection: 'row',
-    backgroundColor: '#f0f0f0',
-    paddingVertical: 1,
-    paddingHorizontal: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    paddingVertical: 10,
+    borderRadius: 5,
+    marginBottom: 5,
   },
   tableRow: {
     flexDirection: 'row',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     paddingVertical: 10,
-    paddingHorizontal: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderRadius: 5,
+    marginBottom: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 3,
   },
   tableCell: {
+    flex: 1,
     textAlign: 'center',
+    color: '#000000ff',
     fontSize: 14,
-    color: '#333',
   },
   tableCellSN: {
-    width: 40,
+    flex: 0.5,
   },
   tableCellDept: {
-    flex: 1, // Changed to flex: 1 to take remaining space
+    flex: 2,
   },
   tableCellStudents: {
-    width: 80,
+    flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   badge: {
     paddingHorizontal: 10,
     paddingVertical: 5,
-    borderRadius: 15,
+    borderRadius: 20,
+    // alignItems: 'center',
     justifyContent: 'center',
-    alignItems: 'center',
   },
   badgeText: {
     color: '#fff',
-    fontSize: 14,
     fontWeight: 'bold',
+  },
+  studentListContainer: {
+    padding: 20,
   },
   studentListTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
+    color: '#ff0000ff',
     marginBottom: 10,
-    color: '#333',
-  },
-  noStudents: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
-    marginTop: 20,
   },
   studentCard: {
     flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    marginVertical: 5,
+    backgroundColor: 'rgba(255, 255, 255, 1)',
+    borderBottomEndRadius: 35,
+    borderTopStartRadius: 35,
+    borderRightWidth: 18,
+    borderRightColor: '#ce6969ba',
     padding: 15,
-    borderRadius: 8,
-    elevation: 3,
+    marginBottom: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.3,
     shadowRadius: 4,
+    elevation: 5,
   },
   avatarContainer: {
     marginRight: 15,
   },
-  avatar: {
-    width: 55,
-    height: 80,
-    borderRadius: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   avatarImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
   },
   avatarText: {
-    color: '#000a29ff',
-    fontSize: 17,
-    fontWeight: 'bold',
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    paddingHorizontal: 5,
+    fontSize: 12,
+    color: '#000',
   },
   studentInfo: {
     flex: 1,
@@ -382,12 +393,29 @@ const styles = StyleSheet.create({
   studentName: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    // color: '#4f0000ff',
   },
   studentDetails: {
     fontSize: 14,
-    color: '#666',
+    color: '#000000ff',
+    flexDirection: 'row',
+  },
+  spinnerWithText: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  text: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#fff',
+  },
+  noStudents: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#fff',
+    padding: 20,
   },
 });
 
-export default MyStudents;
+

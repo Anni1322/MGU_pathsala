@@ -19,7 +19,7 @@
 //         source={require('../../assets/logo.png')} // your app logo
 //         style={styles.logo}
 //       /> */}
-//       <Text style={styles.title}>E KRISHI PATHSALA</Text>
+//       <Text style={styles.title}>Pathsala</Text>
 //     </View>
 
 
@@ -108,10 +108,10 @@ const SplashScreen = ({ navigation }) => {
         resizeMode="contain"
       />
 
-      <Text style={styles.appTitle}>E KRISHI PATHSALA</Text>
+      <Text style={styles.appTitle}>Pathsala</Text>
 
       <View style={styles.banner}>
-        <Text style={styles.bannerText}>E KRISHI PATHSALA</Text>
+        <Text style={styles.bannerText}>Pathsala</Text>
       </View>
 
       <Text style={styles.subtitle}>The learning App</Text>

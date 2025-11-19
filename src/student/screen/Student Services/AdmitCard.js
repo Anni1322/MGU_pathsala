@@ -8,7 +8,7 @@ import Footer from "../../layout/Footer/Footer";
 import { HttpService } from "../../../common/Services/HttpService";
 import getApiList from "../../config/Api/ApiList";
 import SessionService from "../../../common/Services/SessionService";
-import { downloadDF } from "../../../common/Services/pdfService";
+import { downloadFile } from "../../../common/Services/pdfService";
 import alertService from '../../../common/Services/alert/AlertService';
 import { API_BASE_URL } from '../../../common/config/BaseUrl'
 
@@ -70,7 +70,7 @@ const AdmitCard = () => {
       const filePath = API_BASE_URL + "/" + response?.data?.Response[0]?.FilePath;
 
       if (filePath) {
-        await downloadDF(filePath, `${item.Registration_Id}_admitCard.pdf`);
+        await downloadFile(filePath, `${item.Registration_Id}_admitCard.pdf`);
       } else {
         alertService.show({
           title: "Error",

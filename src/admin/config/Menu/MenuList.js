@@ -6,9 +6,9 @@ export const Menu = [
     icon: 'user',
     screen: 'AdminProfile',
     color: '#007362ff',
- 
+
   },
-    {
+  {
     id: 2,
     name: 'Examination',
     iconLib: 'FontAwesome6',
@@ -19,29 +19,18 @@ export const Menu = [
 ];
 
 
- 
+
 // 
 export const facultyMenu = [
-    {
-    id: 8,
-    name: 'My Profile',
-    iconLib: 'FontAwesome6',
-    icon: 'user',
-    screen: 'AdminProfile',
-    color: '#007362ff',
-    data: '',
- 
-  },
   {
     id: 1,
     name: 'My Courses',
     iconLib: 'FontAwesome6',
     icon: 'book',
     screen: 'MyCourses',
-    color: '#b197fc',
-    count:'',
+    color: '#6D94C5',
+    count: '',
     data: 'MyCourses',
-    
   },
   {
     id: 2,
@@ -49,10 +38,9 @@ export const facultyMenu = [
     iconLib: 'FontAwesome6',
     icon: 'users',
     screen: 'MyStudents',
-    color: '#fab005',
-    count:'',
-    data: 'MyStudent', 
-
+    color: '#A2AADB',
+    count: '',
+    data: 'MyStudent',
   },
   {
     id: 3,
@@ -60,17 +48,17 @@ export const facultyMenu = [
     iconLib: 'FontAwesome6',
     icon: 'book-open',
     screen: 'StudyMaterials',
-    color: '#4dabf7',
-    data: 'StudyMaterials', 
+    color: '#237306ff',
+    data: 'StudyMaterials',
   },
   {
     id: 4,
     name: 'My Assignment',
     iconLib: 'FontAwesome6',
-    icon: 'file-lines',  
+    icon: 'file-lines',
     screen: 'MyAssignment',
-    color: '#ff922b',
-    count:'',
+    color: '#3498DB',
+    count: '',
     data: 'MyAssignment',
   },
   {
@@ -79,7 +67,7 @@ export const facultyMenu = [
     iconLib: 'FontAwesome6',
     icon: 'video',
     screen: 'MyVideoLecture',
-    color: '#ff6b6b',
+    color: '#9B59B6',
     data: ''
   },
   {
@@ -88,7 +76,7 @@ export const facultyMenu = [
     iconLib: 'FontAwesome6',
     icon: 'envelope-open-text',
     screen: 'Maintenance',
-    color: '#3bdbff',
+    color: '#1ABC9C',
     data: ''
   },
   {
@@ -97,8 +85,17 @@ export const facultyMenu = [
     iconLib: 'FontAwesome6',
     icon: 'question-circle',
     screen: 'Maintenance',
-    color: '#ff3be8ff',
+    color: '#E67E22',
     data: ''
+  },
+  {
+    id: 8,
+    name: 'My Profile',
+    iconLib: 'FontAwesome6',
+    icon: 'user',
+    screen: 'AdminProfile',
+    color: '#af5806ff',
+    data: '',
   },
 
   //   {
@@ -118,7 +115,7 @@ export const facultyMenu = [
   //   screen: 'StudyDashScreen',
   //   color: '#6501a8ff',
   // },
-  
+
   //   {
   //   id: 11,
   //   name: 'QRScanner',
@@ -128,7 +125,7 @@ export const facultyMenu = [
   //   color: '#888600ff',
   //   data: 'QRScannerr',
   // },
- 
+
   //   {
   //   id: 12,
   //   name: 'Splash',
@@ -138,5 +135,5 @@ export const facultyMenu = [
   //   color: '#888600ff',
   //   data: 'Splash',
   // },
- 
+
 ];

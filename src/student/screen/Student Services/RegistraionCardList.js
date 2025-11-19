@@ -1,7 +1,7 @@
 // import React, { useEffect, useState } from "react";
 // import {Platform,View,Text,StyleSheet,ScrollView,TouchableOpacity,Alert,} from "react-native";
 // import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
-// import { downloadDF } from "../../../common/Services/pdfService";  
+// import { downloadFile } from "../../../common/Services/pdfService";  
 // import alertService from '../../../common/Services/alert/AlertService';
 // import { HttpService } from '../../../common/Services/HttpService';
 // import requestAndroidPermission from "../../../common/Services/requestStoragePermission";
@@ -54,7 +54,7 @@
 //       if (filePath) {
 //         console.log('RegistrationCard Path:', filePath);
 //         setLoading(true)
-//         await downloadDF(filePath, `${reg_no}_registration_card.pdf`);
+//         await downloadFile(filePath, `${reg_no}_registration_card.pdf`);
 //         setLoading(false)
 //       } else {
 //         console.error('No file path returned from API.');
@@ -190,7 +190,7 @@
 import React, { useEffect, useState } from "react";
 import { Platform, View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from "react-native";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
-import { downloadDF } from "../../../common/Services/pdfService";
+import { downloadFile } from "../../../common/Services/pdfService";
 import alertService from '../../../common/Services/alert/AlertService';
 import { HttpService } from '../../../common/Services/HttpService';
 import requestAndroidPermission from "../../../common/Services/requestStoragePermission";
@@ -242,7 +242,7 @@ export default function RegistraionCardList() {
       if (filePath) {
         // console.log('RegistrationCard Path:', filePath);
         setLoading(true);
-        await downloadDF(filePath, `${reg_no}_registration_card.pdf`);
+        await downloadFile(filePath, `${reg_no}_registration_card.pdf`);
         setLoading(false);
       } else {
         console.error('No file path returned from API.');

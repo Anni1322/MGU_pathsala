@@ -56,21 +56,22 @@ const AdminProfile = () => {
     <SafeAreaView style={styles.container}>
       <Header title="Admin Profile" />
 
-      {/* <LinearGradient
-        colors={['#c9ceffff', '#d6f5ffff']}
+      <LinearGradient
+        colors={['#fffbe1ff', '#fee8deff']}
         style={styles.card}
-      > */}
+      >
 
       <View style={styles.cardhead}>
         <View style={styles.header}>
           <View style={styles.profileCircle} />
           <Text style={styles.profileText}>Profile</Text>
+          <Text style={styles.name}>MR. {profileData.Emp_Name?.toUpperCase()}</Text>
         </View>
       </View>
-      {/* </LinearGradient> */}
+    
 
       <ScrollView contentContainerStyle={styles.contentContainer}>
-        <Text style={styles.name}>MR. {profileData.Emp_Name?.toUpperCase()}</Text>
+        
 
         {/* Basic Detail */}
         <View style={styles.card}>
@@ -101,12 +102,15 @@ const AdminProfile = () => {
           </View>
         </View>
       </ScrollView>
+        </LinearGradient>
     </SafeAreaView>
   );
 };
 
 export default AdminProfile;
 
+
+ 
 // Styling
 const styles = StyleSheet.create({
   container: {
@@ -114,7 +118,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ECEDF2",
   },
   header: {
-    // backgroundColor: "#4B55C1",
+    backgroundColor: "#d8dbffff",
     alignItems: "center",
     paddingVertical: 10,
     borderBottomLeftRadius: 50,
@@ -163,19 +167,19 @@ const styles = StyleSheet.create({
 
   card: {
     backgroundColor: "#FFFFFF",
-    marginHorizontal: 5,
+    // marginHorizontal: 5,
     marginVertical: 5,
     padding: 5,
     borderRadius: 12,
     shadowColor: "#000",
     shadowOpacity: 1.5,
     shadowRadius: 10,
-    // borderWidth:1,
-    // borderColor:'#008136ff',
-    // elevation: 1,
-    // borderLeftWidth: 4,
-    // borderBottomWidth:1,
-    // borderBottomColor: "#ff922b",
+    borderWidth:1,
+    borderColor:'#008136ff',
+    elevation: 1,
+    borderLeftWidth: 4,
+    borderBottomWidth:1,
+    borderBottomColor: "#ff922b",
 
   },
 
@@ -295,6 +299,7 @@ const styles = StyleSheet.create({
 //     </LinearGradient>
 //   );
 // };
+
 
 // const styles = StyleSheet.create({
 //   header: {

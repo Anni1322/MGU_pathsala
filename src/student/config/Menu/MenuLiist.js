@@ -4,37 +4,38 @@ export const pathshalaMenu = [
     name: 'Study Material',
     icon: 'book',
     screen: 'Study',
-    color: '#4a90e2',
+    color: '#70b0f1', // Lighter blue
   },
   {
     id: 2,
     name: 'Assignment',
     icon: 'file-pen',
     screen: 'Assignment',
-    color: '#50c878',
+    color: '#8cd9a2', // Lighter green
   },
   {
     id: 3,
     name: 'Doubt Session',
     icon: 'comments',
     screen: 'DoubtSession',
-    color: '#ff8c00',
+    color: '#ffb84d', // Lighter orange
   },
   {
     id: 4,
     name: 'Video Lecture',
     icon: 'video',
     screen: 'VideoLecture',
-    color: '#9932cc',
+    color: '#b76bcc', // Lighter purple
   },
   {
     id: 5,
     name: 'Examination',
     icon: 'clipboard-check',
     screen: 'Examination',
-    color: '#dc143c',
+    color: '#f66c6b', // Lighter red
   },
 ];
+
 
 
 
@@ -132,6 +133,21 @@ export const pathshalaMenu = [
 
 
 
+const getColorForMenuItem = (name) => {
+  const colors = {
+    'Profile': '#66d9b7',   
+    'Registraion Card': '#7ec8f1',   
+    'Admit Card': '#a89eff',   
+    'FeeReceipt': '#f8d26e',  
+    'Syllabus': '#7ab8f7',  
+    'Transcript': '#ffb96e',  
+    'Notification': '#ff8c8c',   
+    'Complaint': '#f67effff',   
+  };
+  
+  return colors[name] || '#ffffff';   
+};
+
 export const studentMenu = [
   {
     id: 1,
@@ -139,8 +155,8 @@ export const studentMenu = [
     iconLib: 'FontAwesome6',
     icon: 'user',
     screen: 'Profile',
-    color: '#20c997',
-    data:''
+    color: getColorForMenuItem('Profile'),
+    data: ''
   },
   {
     id: 2,
@@ -148,24 +164,15 @@ export const studentMenu = [
     iconLib: 'FontAwesome6',
     icon: 'users',
     screen: 'RegistraionCardList',
-    color: '#3498db',
+    color: getColorForMenuItem('Registraion Card'),
   },
-  // {
-  //   id: 2,
-  //   name: 'Registration Card',
-  //   iconLib: 'FontAwesome6',
-  //   icon: 'id-card',
-  //   screen: 'RegistrationCard',
-  //   color: '#ffa94d',
-  // },
-
   {
     id: 3,
     name: 'Admit Card',
     iconLib: 'FontAwesome6',
     icon: 'ticket',
     screen: 'AdmitCard',
-    color: '#b197fc',
+    color: getColorForMenuItem('Admit Card'),
   },
   {
     id: 4,
@@ -173,23 +180,15 @@ export const studentMenu = [
     iconLib: 'FontAwesome6',
     icon: 'file-invoice-dollar',
     screen: 'FeeReceipt',
-    color: '#fab005',
+    color: getColorForMenuItem('FeeReceipt'),
   },
-  // {
-  //   id: 5,
-  //   name: 'SRC',
-  //   iconLib: 'FontAwesome6',
-  //   icon: 'users',
-  //   screen: 'SRC',
-  //   color: '#69db7c',
-  // },
   {
     id: 6,
     name: 'Syllabus',
     iconLib: 'FontAwesome6',
     icon: 'book-open',
     screen: 'Syllabus',
-    color: '#4dabf7',
+    color: getColorForMenuItem('Syllabus'),
   },
   {
     id: 7,
@@ -197,7 +196,7 @@ export const studentMenu = [
     iconLib: 'FontAwesome6',
     icon: 'file-alt',
     screen: 'Transcript',
-    color: '#ff922b',
+    color: getColorForMenuItem('Transcript'),
   },
   {
     id: 8,
@@ -205,42 +204,14 @@ export const studentMenu = [
     iconLib: 'EvilIcons',
     icon: 'bell',
     screen: 'Notification',
-    color: '#ff6b6b',
+    color: getColorForMenuItem('Notification'),
   },
-  //   {
-  //   id: 9,
-  //   name: 'PDC',
-  //   iconLib: 'FontAwesome6',
-  //   icon: 'graduation-cap',
-  //   screen: 'PDC',
-  //   color: '#ffd43b',  
-  // },
   {
     id: 10,
     name: 'Complaint',
     iconLib: 'FontAwesome6',
     icon: 'graduation-cap',
     screen: 'ComplaintScreen',
-    color: '#3bdbffff',
+    color: getColorForMenuItem('Complaint'),
   },
-
-  // {
-  //   id: 11,
-  //   name: 'Resistraion CardList',
-  //   iconLib: 'FontAwesome6',
-  //   icon: 'users',
-  //   screen: 'RegistraionCardList',
-  //   color: '#ff3b9aff',
-  // },
-
-  //   {
-  //   id: 11,
-  //   name: 'FilePickerScreen',
-  //   iconLib: 'FontAwesome6',
-  //   icon: 'graduation-cap',
-  //   screen: 'FilePickerScreen',
-  //   color: '#ffd43b',  
-  // },
-
-
 ];

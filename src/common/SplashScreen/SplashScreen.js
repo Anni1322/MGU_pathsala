@@ -1,67 +1,5 @@
-// import React, { useEffect } from 'react';
-// import { View, Text, StyleSheet, Image, StatusBar } from 'react-native';
-
-// const SplashScreen = ({ navigation }) => {
-//   useEffect(() => {
-//     // Wait 3 seconds and navigate to Home
-//     const timer = setTimeout(() => {
-//       navigation.replace('Login');
-//     }, 3000);
-//     return () => clearTimeout(timer);
-//   }, [navigation]);
-
-//   return (
-
-
-//     <View style={styles.container}>
-//       <StatusBar barStyle="light-content" backgroundColor="#FFFFFF" />
-//       {/* <Image
-//         source={require('../../assets/logo.png')} // your app logo
-//         style={styles.logo}
-//       /> */}
-//       <Text style={styles.title}>E KRISHI PATHSALA</Text>
-//     </View>
-
-
-
-//   );
-// };
-
-// export default SplashScreen;
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#4CAF50', // splash background color
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   logo: {
-//     width: 150,
-//     height: 150,
-//     marginBottom: 20,
-//   },
-//   title: {
-//     color: 'white',
-//     fontSize: 28,
-//     fontWeight: 'bold',
-//   },
-// });
-
-
-
-
-
-
 import React, { useEffect, useRef } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  StatusBar,
-  Animated,
-} from 'react-native';
+import { View, Text, StyleSheet, Image, StatusBar, Animated, } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const SplashScreen = ({ navigation }) => {
@@ -100,29 +38,29 @@ const SplashScreen = ({ navigation }) => {
       <Animated.Text
         style={[styles.tagline, { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}
       >
-        "Digital Learning. Anytime. Anywhere."
+        "Cultivating Knowledge. Nurturing Future."
       </Animated.Text>
 
-      {/* Animated Image */}
+      {/* Animated Image (Placeholder for MGUVV Logo/App Icon) */}
       <Animated.Image
-        source={require('../../../assets/logo.png')}
-        style={[styles.illustration, {marginTop:50, opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}
+        source={require('../../../assets/logo_mgu.png')}  
+        style={[styles.illustration, { marginTop: 50, opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}
         resizeMode="contain"
       />
 
-     <Animated.View
-          style={[styles.bottomAnimatedContainer, { marginTop:30, opacity: fadeAnim, transform: [{ scale: scaleAnim }], }]}
-        >
-      <Text style={styles.appTitle}>E KRISHI PATHSALA</Text>
+      <Animated.View
+        style={[styles.bottomAnimatedContainer, { marginTop: 30, opacity: fadeAnim, transform: [{ scale: scaleAnim }], }]}
+      >
+        <Text style={styles.appTitle}>PAATH VIGYAN</Text>
 
-      <View style={styles.banner}>
-        <Text style={styles.bannerText}>E KRISHI PATHSALA</Text>
-      </View>
+        <View style={styles.banner}>
+          <Text style={styles.bannerText}>M.G.U.V.V., DURG</Text>
+        </View>
 
-      <Text style={styles.subtitle}>The learning App</Text>
-      <Text style={styles.description}>
-        Empowering students through digital{'\n'}agriculture education.
-      </Text>
+        <Text style={styles.subtitle}>The e-Learning Portal</Text>
+        <Text style={styles.description}>
+          Empowering careers in Horticulture, Forestry,{'\n'}and allied sciences.
+        </Text>
       </Animated.View>
 
       <View style={styles.bottomContainer}>
@@ -131,7 +69,7 @@ const SplashScreen = ({ navigation }) => {
         >
           <View style={styles.logoRow}>
             <Image
-              source={require('../../../assets/igkv-min.png')}
+              source={require('../../../assets/logo_mgu.png')} 
               style={styles.logo}
               resizeMode="contain"
             />
@@ -141,7 +79,7 @@ const SplashScreen = ({ navigation }) => {
               resizeMode="contain"
             />
           </View>
-          <Text style={styles.footerText}>इंदिरा गांधी कृषि विश्वविद्यालय</Text>
+          <Text style={styles.footerText}>महात्मा गांधी बागवानी एवं वानिकी विश्वविद्यालय</Text>
         </Animated.View>
       </View>
     </SafeAreaView>
@@ -154,15 +92,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',  
-    justifyContent: 'center',  
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingTop: 50,
   },
   tagline: {
-    color: '#E6861A',
+    color: '#00796B', 
     fontSize: 18,
-    textAlign: 'center',  
+    textAlign: 'center',
     marginBottom: 20,
+    fontWeight: '500', 
   },
   illustration: {
     width: 200,
@@ -170,49 +109,51 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   appTitle: {
-    fontSize: 22,
+    fontSize: 28,  
     fontWeight: 'bold',
-    color: '#4B1E0E',
+    color: '#4B1E0E',  
     marginBottom: 15,
-    textAlign: 'center', 
+    textAlign: 'center',
   },
   banner: {
-    backgroundColor: '#A78BFA',
+    backgroundColor: '#2E7D32',  
     paddingHorizontal: 40,
     paddingVertical: 12,
     borderRadius: 10,
     marginBottom: 15,
-    alignItems: 'center',  
+    alignItems: 'center',
+    elevation: 5,  
   },
   bannerText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
-    textAlign: 'center', 
+    textAlign: 'center',
   },
   subtitle: {
     fontSize: 16,
-    color: '#4B1E0E',
+    color: '#4B1E0E',  
     fontWeight: '500',
-    textAlign: 'center',  
+    textAlign: 'center',
   },
   description: {
-    textAlign: 'center', 
-    color: '#4B1E0E',
+    textAlign: 'center',
+    color: '#4B1E0E',  
     marginTop: 5,
     marginBottom: 30,
+    lineHeight: 22,  
   },
   bottomContainer: {
-    alignItems: 'center',  
-    marginTop: 'auto', 
+    alignItems: 'center',
+    marginTop: 'auto',
     marginBottom: 30,
   },
-  bottomAnimatedContainer: {  
-    alignItems: 'center',  
+  bottomAnimatedContainer: {
+    alignItems: 'center',
   },
   logoRow: {
     flexDirection: 'row',
-    justifyContent: 'center',  
+    justifyContent: 'center',
     marginBottom: 10,
   },
   logo: {
@@ -221,9 +162,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   footerText: {
-    color: '#E6861A',
+    color: '#00796B',  
     fontSize: 18,
     fontWeight: 'bold',
-    textAlign: 'center',  
+    textAlign: 'center',
+    paddingHorizontal: 10,  
   },
 });

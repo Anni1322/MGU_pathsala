@@ -37,7 +37,8 @@ export default function Header({ title, backgroundColor }) {
     setSidebarOpen(!isSidebarOpen);
   };
 
-  const dynamicBgColor = backgroundColor || colors.primary;
+  // const dynamicBgColor = backgroundColor || colors.primary;
+  const dynamicBgColor = backgroundColor || '#e2e2e2ff';
 
   return (
     <>
@@ -61,11 +62,11 @@ export default function Header({ title, backgroundColor }) {
               justifyContent: 'center',
             }}
           >
-            <FontAwesome6 name="chevron-left" size={26} color={colors.white} />
+            <FontAwesome6 name="chevron-left" size={26} color={colors.primary} />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity onPress={toggleSidebar}>
-            <EvilIcons name="navicon" size={30} color={colors.white} />
+            <EvilIcons name="navicon" size={30} color={colors.primary} />
           </TouchableOpacity>
         )}
         <Text
@@ -74,14 +75,14 @@ export default function Header({ title, backgroundColor }) {
             canGoBack ? styles.childTitle : styles.parentTitle,
           ]}
         >
-          {title || 'E Krishi Pathsala'}
+          {title || 'PAATH VIGYAN'}
         </Text>
         <View style={styles.headerRight}>
           <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
-            <FontAwesome6 name="bell" size={24} color={colors.white} />
+            <FontAwesome6 name="bell" size={24} color={colors.primary} />
           </TouchableOpacity>
           <View
-            style={[styles.notificationDot, { backgroundColor: colors.white }]}
+            style={[styles.notificationDot, { backgroundColor: colors.primary }]}
           />
         </View>
       </View>
@@ -104,11 +105,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   parentTitle: {
-    color: colors.white,
+    color: colors.primary,
     fontSize: 20,
   },
   childTitle: {
-    color: colors.white,
+    color: colors.primary,
     fontSize: 18,
   },
   headerRight: {
