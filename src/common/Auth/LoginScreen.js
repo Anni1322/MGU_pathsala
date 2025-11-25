@@ -12,6 +12,7 @@ import {
   Keyboard,
   Alert,
   ActivityIndicator,
+  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -564,6 +565,26 @@ const LoginScreen = () => {
   };
 
 
+  const colors = [
+    // '#FF5733',   
+    // '#33FF57',   
+    // '#3357FF',   
+    // '#FF33A1',   
+    // '#e98101ff',   
+    // '#8A2BE2',   
+    // '#FFFF00',   
+    // '#FF1493',  
+    // '#00BFFF',  
+    // '#8B0000',   
+    // '#FFB823',   
+    '#612e07ff',
+    // '#FFF6DA',   
+  ];
+
+
+
+  const word = "MOR-GURUKUL";
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
@@ -572,7 +593,30 @@ const LoginScreen = () => {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.inner}>
-            <Text style={styles.title}>PAATH VIGYAN</Text>
+
+            {/* <Image
+          source={require('../../../assets/signin.png')}
+          width={300}
+          height={300}
+           >
+
+          </Image> */}
+
+
+            {/* <View style={styles.textContainer}> */}
+            <View style={styles.card}>
+              <Text style={styles.bannerText}>
+                {word.split('').map((letter, index) => (
+                  <Text key={index} style={{ color: colors[index % colors.length] }}>
+                    {letter}
+                  </Text>
+                ))}
+              </Text>
+            </View>
+            {/* </View> */}
+
+
+            {/* <Text style={styles.title}>MOR-GURUKUL</Text> */}
 
             {/* <Text style={styles.subtitle}>
               {showOTP ? "Enter OTP" : "Login to your account"}
@@ -662,7 +706,7 @@ const LoginScreen = () => {
                   style={styles.fingerprintCircle}
                   onPress={handleBiometricLogin}
                 >
-                  <FontAwesome6 name="fingerprint" size={40} color="#4CAF50" />
+                  <FontAwesome6 name="house" size={40} color="#b22707ff" />
 
                 </TouchableOpacity>
                 <Text style={styles.fingerprintText}>
@@ -680,7 +724,7 @@ const LoginScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: "#5b935950" },
+  safeArea: { flex: 1, backgroundColor: "#F8F5E9" },
   container: { flex: 1 },
   inner: {
     flex: 1,
@@ -706,28 +750,34 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   input: {
-    backgroundColor: "#ffffffff",
+    backgroundColor: "#D9E9CF",
     padding: 16,
     borderRadius: 12,
     marginBottom: 16,
     fontSize: 16,
+    borderWidth: 1,
+    borderColor: '#ffffffff'
   },
   passwordContainer: {
     flexDirection: "row",
-    backgroundColor: "#fff",
+    backgroundColor: "#D9E9CF",
     padding: 16,
     borderRadius: 12,
     marginBottom: 16,
     alignItems: "center",
+    borderWidth: 1,
+    borderColor: '#ffffffff'
   },
   passwordInput: { flex: 1, fontSize: 16 },
   toggle: { marginLeft: 10, fontSize: 18 },
   button: {
-    backgroundColor: "#4CAF50",
+    backgroundColor: "#007E6E",
     padding: 16,
     borderRadius: 12,
     alignItems: "center",
     marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#ffffffff'
   },
   buttonText: { color: "#fff", fontSize: 16, fontWeight: "bold" },
   otpContainer: {
@@ -737,7 +787,7 @@ const styles = StyleSheet.create({
   },
   otpInput: {
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#ffbdbdff",
     borderRadius: 8,
     padding: 10,
     fontSize: 18,
@@ -760,6 +810,35 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 14,
     color: "#777",
+  },
+  card:{
+    // backgroundColor:'#fff',
+    borderRadius:10,
+  },
+
+   textContainer: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)', // Semi-transparent white for a card-like effect
+    borderRadius: 20,
+    paddingVertical: 15,
+    paddingHorizontal: 25,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 5,  
+  },
+  bannerText: {
+    color: '#FF9800',  
+    fontSize: 22,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontFamily: 'serif', 
+    letterSpacing: 1,
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+    padding:20
   },
 });
 

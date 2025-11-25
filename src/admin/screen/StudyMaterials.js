@@ -12,6 +12,7 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import { downloadFile } from "../../common/Services/pdfService";
 import alertService from '../../common/Services/alert/AlertService';
 import { API_BASE_URL } from '../../common/config/BaseUrl';
+import colors from '../../common/config/colors';
 
 
 
@@ -247,14 +248,14 @@ const StudyMaterials = () => {
                         style={styles.actionIcon}
                         onPress={() => handleDownloadPDF(item.Study_Material_File)}  // Fixed to use actual file path
                       >
-                        <FontAwesome6 name="download" solid size={26} color="#007aff" />
+                        <FontAwesome6 name="download" solid size={26} color={colors.background} />
                       </TouchableOpacity>
 
                       <TouchableOpacity
                         style={styles.actionIcon}
                         onPress={() => handleLike(itemId)}
                       >
-                        <FontAwesome6 name="heart" solid size={26} color="#888" />
+                        <FontAwesome6 name="heart" solid size={26} color={colors.background} />
                         <Text style={styles.counter}>{likes[itemId] || 0} </Text>
                       </TouchableOpacity>
 
@@ -262,7 +263,7 @@ const StudyMaterials = () => {
                         style={styles.actionIcon}
                         onPress={() => handleComment(itemId)}
                       >
-                        <FontAwesome6 name="comment" solid size={26} color="#888" />
+                        <FontAwesome6 name="comment" solid size={26} color={colors.background} />
                         <Text style={styles.counter}>{comments[itemId] || 0}</Text>
                       </TouchableOpacity>
                     </View>
@@ -273,10 +274,10 @@ const StudyMaterials = () => {
           />
         )}
 
-        <TouchableOpacity style={styles.fab} onPress={() => navigation.navigate('Maintenance')}>
+        {/* <TouchableOpacity style={styles.fab} onPress={() => navigation.navigate('Maintenance')}>
           <FontAwesome6 name="plus" solid size={16} color="#fff" />
           <Text style={styles.fabText}>Upload</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <FooterNav />
     </View>
@@ -289,24 +290,27 @@ export default StudyMaterials;
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    backgroundColor: '#f6f9ff',
+    backgroundColor: '#F5EFE6',
     // paddingTop: 50,
     // paddingHorizontal: 10,
   },
   container: {
     flex: 1,
-    backgroundColor: '#f2f6ffff',
+    backgroundColor: '#F5EFE6',
     paddingTop: 10,
     paddingHorizontal: 15,
   },
   header: {
+    padding:8,
     fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 15,
     textAlign: 'center',
     color: '#ffffffff',
-    backgroundColor: '#f57a7aff',
-    borderRadius: 10
+    backgroundColor: '#EDA35A',
+    borderRadius: 10,
+    borderWidth:2,
+    borderColor:'#fff'
   },
   filters: {
     flexDirection: 'row',
@@ -338,12 +342,14 @@ const styles = StyleSheet.create({
   },
   card: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffffff',
     padding: 12,
     borderRadius: 10,
     marginBottom: 12,
     alignItems: 'flex-start',
     elevation: 2,
+    borderWidth:1,
+    borderColor:colors.lite2
   },
   cardIcon: {
     marginRight: 10,
@@ -379,6 +385,9 @@ const styles = StyleSheet.create({
     marginTop: 8,
     justifyContent: 'flex-end',
     alignItems: 'center',
+    backgroundColor:colors.lite2,
+    padding:5,
+    borderRadius:8
   },
   actionIcon: {
     flexDirection: 'row',

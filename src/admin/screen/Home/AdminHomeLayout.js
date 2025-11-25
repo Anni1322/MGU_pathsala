@@ -20,6 +20,7 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import DropdownSelector from '../../Other/DropdownSelector';
 import UpdateChecker from "../../../common/UpdateChecker";
+import colors from '../../../common/config/colors';
 
 // --- Memoized Sub-Component ---
 const IconMap = {
@@ -293,7 +294,7 @@ const AdminHomeLayout = () => {
 
   if (loading && !profileData) { 
     return <View style={styles.spinnerWithText}>
-      <CustomSpinner size={50} color="rgba(255, 99, 71, 1)" type="dots" />
+      <CustomSpinner size={50} color="rgba(251, 0, 0, 1)" type="bars" />
       <Text style={styles.text}>Loading...</Text>
     </View>
   }
@@ -333,6 +334,20 @@ const OfficeListModalContent = React.memo(({ closeModal }) => (
   </View>
 ));
 
+
+  const colors = [
+    // '#FF5733',  
+    // '#33FF57',   
+    // '#3357FF',  
+    // '#FF33A1',  
+    '#e98101ff',  
+    // '#8A2BE2',   
+    // '#FFFF00',   
+    // '#FF1493',   
+    // '#00BFFF',  
+    // '#8B0000',  
+  ];
+
   return (
     <View style={styles.container}>
       <Header />
@@ -348,7 +363,7 @@ const OfficeListModalContent = React.memo(({ closeModal }) => (
             title="Refreshing..."
           />}
       >
-      <View style={styles.topcard}>
+      
         <View style={styles.userInfo}>
           <View style={{ flex: 1 }}>
             <Text style={styles.userName}>{profileData?.Emp_Name || 'Guest'} 👋</Text>
@@ -374,6 +389,7 @@ const OfficeListModalContent = React.memo(({ closeModal }) => (
             <OfficeListModalContent closeModal={closeModal} />
           </Modal>
         </View>
+        <View style={styles.topcard}>
         <Slider />
       </View>
        
@@ -406,10 +422,11 @@ const OfficeListModalContent = React.memo(({ closeModal }) => (
                 style={styles.gridItem}
                 onPress={() => navigation.navigate(item.screen, { data: item.data })}
               >
+         
                 <View style={{ alignItems: 'center' }}>
                   <View style={[styles.iconRectangle, { backgroundColor: item.color }]}>
                     <Text style={styles.cont}>{item.count}</Text>
-                    <FontAwesome6 name={item.icon} size={22} color="white" />
+                    <FontAwesome6 name={item.icon} size={22} color={item.iconColor || 'white'}  />
                   </View>
                   <Text style={styles.iconLabel}>{item.name}</Text>
                 </View>
@@ -510,7 +527,6 @@ officeListScrollView: {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#dfe0e5ff', marginBottom: 0 },
-  
   spinnerWithText: {
     flexDirection: "row",
     justifyContent: "center",
@@ -527,28 +543,36 @@ const styles = StyleSheet.create({
   content: { flex: 1, padding: 15 },
 
 topcard: {
-  marginTop:-15,
+  marginTop:15,
   padding: 15,
   // margin: -20,
   marginLeft: -25,
   marginRight: -25,
-  backgroundColor: '#ffffffff',   
+  backgroundColor: '#f9e687ff',   
   marginVertical: 10,
   marginHorizontal: 10,
-  borderBottomRightRadius: 10,
-  borderBottomRightRadius: 90,
+  borderStartWidth:2,
+  borderColor:'red'
+  // borderTopLeftRadius: 40,
+  // borderTopRightRadius: 40,
+  // borderBottomLeftRadius: 40,
+  // borderBottomRightRadius: 40,
+
 },
 topcard1: {
   padding: 15,
   margin: -20,
   marginRight: -25,
   marginLeft: -15,
-  backgroundColor: '#ffbda1ff',  
+  backgroundColor: colors.cardcolor,  
   marginVertical: 10,
   marginHorizontal: 10,
   borderTopRightRadius: 10,
-  borderBottomLeftRadius: 1200,
+  // borderBottomLeftRadius: 1200,
+  borderBottomLeftRadius: 70,
   borderTopLeftRadius: 100,
+  borderWidth:1.5,
+  borderColor:'#ffffffff'
 },
 topcard2: {
   marginTop:5,
@@ -564,10 +588,18 @@ topcard2: {
 },
 
   userInfo: {
-    marginLeft: 10,
+    // margin:10,
+    padding:15,
+    // marginLeft: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: 1,
+    backgroundColor: '#BCCEF8',   
+    borderRadius:30,
+    borderWidth:1,
+    borderColor:'#ffffffff'
+    // borderTopRightRadius: 100,
+    // borderBottomRightRadius: 100,
   },
   userName: { fontWeight: 'bold', fontSize: 18, color: 'black' },
   userHandle: { color: 'gray', fontSize: 14 },
@@ -585,8 +617,8 @@ topcard2: {
     fontWeight: 'bold',
   },
   iconRectangle: {
-    width: 85,
-    height: 85,
+    width: 55,
+    height: 65,
     borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
@@ -608,7 +640,7 @@ topcard2: {
   gridContainer: {
     margin:5,
     padding:20,
-    backgroundColor:'#E7D4B5',
+    backgroundColor:'#FAF7F0',
     flexDirection: 'row',
     flexWrap: 'wrap',
     borderRadius: 50,
@@ -619,11 +651,13 @@ topcard2: {
     shadowOpacity: 0.2,
     shadowRadius: 5,
   borderBottomleftRadius: 1200,
+    borderWidth:1,
+    borderColor:'#009a98ff'
   },
   gridItem: {
-    width: '20%',
-    marginBottom: 15,
-    borderRadius: 12,
+    width: '30%',
+    // marginBottom: 15,
+    // borderRadius: 12,
   },
   
   

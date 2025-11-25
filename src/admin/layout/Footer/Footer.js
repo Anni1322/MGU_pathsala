@@ -47,12 +47,7 @@ const menuItems = [
 export default function FooterNav() {
   const navigation = useNavigation();
 
-  /**
-   * Renders a single menu item based on its properties.
-   * @param {object} item - The menu item object.
-   */
   const renderMenuItem = (item) => {
-    // Determine the style and navigation action based on the 'isHome' flag
     const buttonStyle = item.isHome ? styles.homeBtn : styles.bottomNavItem;
     const navAction = item.isHome ? 
       () => navigation.replace(item.routeName) : 
@@ -89,7 +84,7 @@ export default function FooterNav() {
   };
 
   return (
-    <View style={[styles.bottomNav, { backgroundColor: colors.primary }]}>
+    <View style={[styles.bottomNav, { backgroundColor: colors.lite2 }]}>
       {menuItems.map(renderMenuItem)}
     </View>
   );
@@ -101,7 +96,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 85,
+    height: 70,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
@@ -113,6 +108,10 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 8,
     paddingHorizontal: 10,
+    borderTopWidth:2,
+    borderEndWidth:2,
+    borderStartWidth:2,
+    borderColor:"#ffffffff"
   },
   bottomNavItem: {
     alignItems: 'center',
@@ -127,6 +126,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop:50
     // marginBottom: 20,
   },
   homeBtnCircle: {

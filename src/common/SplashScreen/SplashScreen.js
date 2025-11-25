@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Image, StatusBar, Animated, } from 'react-native';
+import { View, Text, StyleSheet, Image, StatusBar, Animated, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+const { width, height } = Dimensions.get('window');
 
 const SplashScreen = ({ navigation }) => {
   // Create animated values
@@ -12,144 +14,131 @@ const SplashScreen = ({ navigation }) => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 3000,
+        duration: 2000, // Slightly faster for better UX
         useNativeDriver: true,
       }),
       Animated.spring(scaleAnim, {
         toValue: 1,
-        friction: 5,
+        friction: 4, // Smoother spring
         useNativeDriver: true,
       }),
     ]).start();
 
-    // Navigate after 3 seconds
+    // Navigate after 4 seconds (adjusted for animation duration)
     const timer = setTimeout(() => {
       navigation.replace('Login');
-    }, 4500);
+    }, 4000);
 
     return () => clearTimeout(timer);
   }, [fadeAnim, scaleAnim, navigation]);
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <StatusBar barStyle="light-content" backgroundColor="#4CAF50" /> {/* Changed to match theme */}
 
-      {/* Animated Text (Tagline) */}
-      <Animated.Text
-        style={[styles.tagline, { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}
-      >
-        "Cultivating Knowledge. Nurturing Future."
-      </Animated.Text>
-
-      {/* Animated Image (Placeholder for MGUVV Logo/App Icon) */}
-      <Animated.Image
-        source={require('../../../assets/logo_mgu.png')}  
-        style={[styles.illustration, { marginTop: 50, opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}
-        resizeMode="contain"
-      />
-
-      <Animated.View
-        style={[styles.bottomAnimatedContainer, { marginTop: 30, opacity: fadeAnim, transform: [{ scale: scaleAnim }], }]}
-      >
-        <Text style={styles.appTitle}>PAATH VIGYAN</Text>
-
-        <View style={styles.banner}>
-          <Text style={styles.bannerText}>M.G.U.V.V., DURG</Text>
-        </View>
-
-        <Text style={styles.subtitle}>The e-Learning Portal</Text>
-        <Text style={styles.description}>
-          Empowering careers in Horticulture, Forestry,{'\n'}and allied sciences.
+      {/* Top Tagline */}
+      <Animated.View style={[styles.taglineContainer, { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}>
+        <Text style={styles.tagline}>
+          "Cultivating Knowledge. Nurturing Future."
         </Text>
       </Animated.View>
 
-      <View style={styles.bottomContainer}>
-        <Animated.View
-          style={[styles.bottomAnimatedContainer, { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}
-        >
-          <View style={styles.logoRow}>
-            <Image
-              source={require('../../../assets/logo_mgu.png')} 
-              style={styles.logo}
-              resizeMode="contain"
-            />
-            <Image
-              source={require('../../../assets/nic.png')}
-              style={styles.logo}
-              resizeMode="contain"
-            />
-          </View>
-          <Text style={styles.footerText}>महात्मा गांधी बागवानी एवं वानिकी विश्वविद्यालय</Text>
+      {/* Central Content */}
+      <View style={styles.centerContainer}>
+        <Animated.Image
+          source={require('../../../assets/morgurukul.png')}
+          style={[styles.logoImage, { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}
+          resizeMode="contain"
+        />
+        <Animated.View style={[styles.textContainer, { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}>
+          <Text style={styles.bannerText}>M.G.U.V.V., DURG</Text>
+          <Text style={styles.subtitle}>The e-Learning Portal</Text>
         </Animated.View>
       </View>
+
+      {/* Bottom Logos and Footer */}
+      <Animated.View style={[styles.bottomContainer, { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}>
+        <View style={styles.logoRow}>
+          <Image
+            source={require('../../../assets/logo_mgu.png')}
+            style={styles.logo}
+            resizeMode="contain"
+          />
+          <Image
+            source={require('../../../assets/nic.png')}
+            style={styles.logo}
+            resizeMode="contain"
+          />
+        </View>
+        <Text style={styles.footerText}>महात्मा गांधी बागवानी एवं वानिकी विश्वविद्यालय</Text>
+      </Animated.View>
     </SafeAreaView>
   );
 };
 
 export default SplashScreen;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#E8F5E8', 
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 50,
+    justifyContent: 'space-between',
+    paddingVertical: 20,
+  },
+  taglineContainer: {
+    marginTop: 20,
   },
   tagline: {
-    color: '#00796B', 
-    fontSize: 18,
+    color: '#2E7D32',  
+    fontSize: 20,
     textAlign: 'center',
-    marginBottom: 20,
-    fontWeight: '500', 
+    fontWeight: '600',
+    fontStyle: 'italic',  
+    paddingHorizontal: 20,
   },
-  illustration: {
-    width: 200,
-    height: 200,
-    marginBottom: 20,
-  },
-  appTitle: {
-    fontSize: 28,  
-    fontWeight: 'bold',
-    color: '#4B1E0E',  
-    marginBottom: 15,
-    textAlign: 'center',
-  },
-  banner: {
-    backgroundColor: '#2E7D32',  
-    paddingHorizontal: 40,
-    paddingVertical: 12,
-    borderRadius: 10,
-    marginBottom: 15,
+  centerContainer: {
+    flex: 1,
     alignItems: 'center',
-    elevation: 5,  
+    justifyContent: 'center',
+  },
+  logoImage: {
+    width: width * 0.6,  
+    height: height * 0.3,  
+    marginBottom: 20,
+  },
+  textContainer: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)', 
+    borderRadius: 20,
+    paddingVertical: 15,
+    paddingHorizontal: 25,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 5, 
   },
   bannerText: {
-    color: '#fff',
-    fontSize: 18,
+    color: '#FF9800', 
+    fontSize: 22,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontFamily: 'serif', 
+    letterSpacing: 1,
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   subtitle: {
     fontSize: 16,
-    color: '#4B1E0E',  
+    color: '#424242',  
     fontWeight: '500',
     textAlign: 'center',
-  },
-  description: {
-    textAlign: 'center',
-    color: '#4B1E0E',  
     marginTop: 5,
-    marginBottom: 30,
-    lineHeight: 22,  
   },
   bottomContainer: {
     alignItems: 'center',
-    marginTop: 'auto',
-    marginBottom: 30,
-  },
-  bottomAnimatedContainer: {
-    alignItems: 'center',
+    marginBottom: 20,
   },
   logoRow: {
     flexDirection: 'row',
@@ -157,15 +146,16 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   logo: {
-    width: 60,
-    height: 60,
-    marginHorizontal: 10,
+    width: 70,
+    height: 70,
+    marginHorizontal: 15,
   },
   footerText: {
-    color: '#00796B',  
-    fontSize: 18,
+    color: '#2E7D32',
+    fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
-    paddingHorizontal: 10,  
+    paddingHorizontal: 20,
+    lineHeight: 22,
   },
 });

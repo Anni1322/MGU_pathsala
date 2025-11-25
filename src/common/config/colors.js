@@ -71,6 +71,11 @@ export default {
   success: '#388E3C',
   warning: '#FBC02D',
   lite: '#3c939090',
+  // lite2: '#48A6A7',
+  lite2: '#1d6d6eff',
+  cardcolor:'#DEF5E5',
+  tableheader:'#86B0BD',
+  tablerow:'#F2EAD3',
 };
 
 // // ### 🎨 **Theme 5 – Soft Pastels**

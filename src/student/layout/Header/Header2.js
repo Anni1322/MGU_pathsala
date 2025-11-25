@@ -1,13 +1,5 @@
 import React, { useState, useRef } from 'react';
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Text,
-  StatusBar,
-  Dimensions,
-  Animated,
-} from 'react-native';
+import { View,StyleSheet,TouchableOpacity,Text,StatusBar,Dimensions,Animated,} from 'react-native';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { useNavigation } from '@react-navigation/native';
@@ -38,7 +30,7 @@ export default function Header({ title, backgroundColor }) {
   };
 
   // const dynamicBgColor = backgroundColor || colors.primary;
-  const dynamicBgColor = backgroundColor || '#e2e2e2ff';
+  const dynamicBgColor = backgroundColor || '#05a0abff';
 
   return (
     <>
@@ -62,11 +54,11 @@ export default function Header({ title, backgroundColor }) {
               justifyContent: 'center',
             }}
           >
-            <FontAwesome6 name="chevron-left" size={26} color={colors.primary} />
+            <FontAwesome6 name="chevron-left" size={26} color={colors.background} />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity onPress={toggleSidebar}>
-            <EvilIcons name="navicon" size={30} color={colors.primary} />
+            <EvilIcons name="navicon" size={30} color={colors.background} />
           </TouchableOpacity>
         )}
         <Text
@@ -79,10 +71,10 @@ export default function Header({ title, backgroundColor }) {
         </Text>
         <View style={styles.headerRight}>
           <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
-            <FontAwesome6 name="bell" size={24} color={colors.primary} />
+            <FontAwesome6 name="bell" size={24} color={colors.background} />
           </TouchableOpacity>
           <View
-            style={[styles.notificationDot, { backgroundColor: colors.primary }]}
+            style={[styles.notificationDot, { backgroundColor: colors.background }]}
           />
         </View>
       </View>
@@ -109,7 +101,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   childTitle: {
-    color: colors.primary,
+    color: colors.background,
     fontSize: 18,
   },
   headerRight: {

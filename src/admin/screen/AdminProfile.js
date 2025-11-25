@@ -12,6 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import Header from "../layout/Header/Header";
 import SessionService from "../../common/Services/SessionService";
 import LinearGradient from 'react-native-linear-gradient';
+import colors from "../../common/config/colors";
 
 const AdminProfile = () => {
   const navigation = useNavigation();
@@ -58,51 +59,49 @@ const AdminProfile = () => {
 
       <LinearGradient
         colors={['#fffbe1ff', '#fee8deff']}
-        style={styles.card}
+        style={styles.cardd}
       >
 
-      <View style={styles.cardhead}>
-        <View style={styles.header}>
-          <View style={styles.profileCircle} />
-          <Text style={styles.profileText}>Profile</Text>
-          <Text style={styles.name}>MR. {profileData.Emp_Name?.toUpperCase()}</Text>
-        </View>
-      </View>
-    
-
-      <ScrollView contentContainerStyle={styles.contentContainer}>
-        
-
-        {/* Basic Detail */}
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Basic Detail</Text>
-          <Text style={styles.item}><Text style={styles.label}>MIS ID :</Text> {profileData.Emp_Id || "-"}</Text>
-          <Text style={styles.item}><Text style={styles.label}>Office Name :</Text> {profileData.Office_Name || "-"}</Text>
-          <Text style={styles.item}><Text style={styles.label}>Designation :</Text> {profileData.Organization_Unit_Name_no || "-"}</Text>
-        </View>
-
-        {/* Contact Detail */}
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Contact Detail</Text>
-          <Text style={styles.item}><Text style={styles.label}>Address :</Text> {profileData.emp_address || "-"}</Text>
-          <Text style={styles.item}><Text style={styles.label}>Mobile :</Text> {profileData.Contact_No_1 || "-"}</Text>
-          <Text style={styles.item}><Text style={styles.label}>Email Id :</Text> {profileData.Email_Id || "-"}</Text>
-        </View>
-
-        {/* Posting Detail */}
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Posting Detail</Text>
-          <View style={styles.tableHeader}>
-            <Text style={styles.tableCellHeader}>OFFICE</Text>
-            <Text style={styles.tableCellHeader}>POSTING</Text>
-          </View>
-          <View style={styles.tableRow}>
-            <Text style={styles.tableCell}>{profileData.Head_Office_Name || "-"}</Text>
-            <Text style={styles.tableCell}>{profileData.Office_Name || "-"}</Text>
+        <View style={styles.cardhead}>
+          <View style={styles.header}>
+            <View style={styles.profileCircle} />
+            <Text style={styles.profileText}>Profile</Text>
+            <Text style={styles.name}>MR. {profileData.Emp_Name?.toUpperCase()}</Text>
           </View>
         </View>
-      </ScrollView>
-        </LinearGradient>
+
+        <ScrollView contentContainerStyle={styles.contentContainer}>
+
+          {/* Basic Detail */}
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>Basic Detail</Text>
+            <Text style={styles.item}><Text style={styles.label}>MIS ID :</Text> {profileData.Emp_Id || "-"}</Text>
+            <Text style={styles.item}><Text style={styles.label}>Office Name :</Text> {profileData.Office_Name || "-"}</Text>
+            <Text style={styles.item}><Text style={styles.label}>Designation :</Text> {profileData.Organization_Unit_Name_no || "-"}</Text>
+          </View>
+
+          {/* Contact Detail */}
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>Contact Detail</Text>
+            <Text style={styles.item}><Text style={styles.label}>Address :</Text> {profileData.emp_address || "-"}</Text>
+            <Text style={styles.item}><Text style={styles.label}>Mobile :</Text> {profileData.Contact_No_1 || "-"}</Text>
+            <Text style={styles.item}><Text style={styles.label}>Email Id :</Text> {profileData.Email_Id || "-"}</Text>
+          </View>
+
+          {/* Posting Detail */}
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>Posting Detail</Text>
+            <View style={styles.tableHeader}>
+              <Text style={styles.tableCellHeader}>OFFICE</Text>
+              <Text style={styles.tableCellHeader}>POSTING</Text>
+            </View>
+            <View style={styles.tableRow}>
+              <Text style={styles.tableCell}>{profileData.Head_Office_Name || "-"}</Text>
+              <Text style={styles.tableCell}>{profileData.Office_Name || "-"}</Text>
+            </View>
+          </View>
+        </ScrollView>
+      </LinearGradient>
     </SafeAreaView>
   );
 };
@@ -110,7 +109,7 @@ const AdminProfile = () => {
 export default AdminProfile;
 
 
- 
+
 // Styling
 const styles = StyleSheet.create({
   container: {
@@ -118,25 +117,30 @@ const styles = StyleSheet.create({
     backgroundColor: "#ECEDF2",
   },
   header: {
-    backgroundColor: "#d8dbffff",
+    marginTop: 25,
+    backgroundColor: '#AEDEFC',
     alignItems: "center",
-    paddingVertical: 10,
-    borderBottomLeftRadius: 50,
-    borderBottomRightRadius: 50,
-    shadowColor: "#000",
-    shadowOpacity: 1.5
+    borderRadius: 10,
+    // borderBottomLeftRadius: 50,
+    // borderBottomRightRadius: 50,
+    shadowColor: "#ffffffff",
+    shadowOpacity: 15,
+    elevation: 30
   },
   profileCircle: {
-    width: 60,
-    height: 60,
-    backgroundColor: "#e6eeffff",
+    width: 100,
+    height: 100,
+    backgroundColor: "#FFF8DE",
     borderRadius: 50,
-    shadowColor: "#000",
     shadowOpacity: 1.5,
     shadowRadius: 10,
+    marginTop: -25,
+    shadowColor: "#ffffffff",
+    shadowOpacity: 15,
+    elevation: 30
   },
   profileText: {
-    color: "#590034ff",
+    color: "#ffffffff",
     marginTop: 10,
     fontSize: 16,
   },
@@ -146,8 +150,8 @@ const styles = StyleSheet.create({
   name: {
     textAlign: "center",
     fontWeight: "bold",
-    fontSize: 20,
-    color: "#2F3241",
+    fontSize: 16,
+    color: "#ffffffff",
     marginBottom: 10,
   },
 
@@ -162,6 +166,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOpacity: 1.5,
     shadowRadius: 10,
+
   },
 
 
@@ -174,11 +179,11 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOpacity: 1.5,
     shadowRadius: 10,
-    borderWidth:1,
-    borderColor:'#008136ff',
+    // borderWidth:1,
+    // borderColor:'#3cc8ffff',
     elevation: 1,
-    borderLeftWidth: 4,
-    borderBottomWidth:1,
+    // borderLeftWidth: 4,
+    borderBottomWidth: 1,
     borderBottomColor: "#ff922b",
 
   },
@@ -186,7 +191,7 @@ const styles = StyleSheet.create({
 
 
   cardTitle: {
-    backgroundColor: "#007362ff",
+    backgroundColor: "#1eb5f1ff",
     color: "#fff",
     paddingVertical: 8,
     paddingHorizontal: 10,

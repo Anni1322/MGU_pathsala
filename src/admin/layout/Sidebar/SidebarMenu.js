@@ -30,21 +30,32 @@ const menuSections = [
     title: "MAIN MENU",
     items: [
       // { id: 1, title: "Home", icon: "🏠", screen: "AdminHomeLayout" },
-      { id: 2, title: "Examination", icon: "💼", screen: "Maintenance" },
+      // { id: 2, title: "Examination", icon: "💼", screen: "Maintenance" },
       // { id: 3, title: "Save Old Question Paper", icon: "📂", screen: "OldQuestionPapers" },
       { id: 4, title: "Website", icon: "🌐", screen: "Website", link: "https://mguvv.ac.in/" },
-      { id: 5, title: "Tell your friends", icon: "📣", screen: "ShareApp", link: "https://play.google.com/store/apps/details?id=mguvvmis.mguvv" },
+      { id: 5, title: "Tell your friends", icon: "🤹🏻‍♂️", screen: "ShareApp", link: "https://play.google.com/store/apps/details?id=mguvvmis.mguvv" },
       // { id: 6, title: "User Manual", icon: "📄", screen: "UserManual" },
-      { id: 7, title: "Like PAATH VIGYAN? Rate it!", icon: "⭐", screen: "RateUs", link: "https://play.google.com/store/apps/details?id=mguvvmis.mguvv" },
-      { id: 8, title: "More Apps", icon: "📱", screen: "MoreApps", link: "https://play.google.com/store/apps/developer?id=MGUVV" },
+      { id: 7, title: "Like MOR GURUKUL ? Rate it!", icon: "⭐", screen: "RateUs", link: "https://play.google.com/store/apps/details?id=mguvvmis.mguvv" },
+      // { id: 8, title: "More Apps", icon: "📱", screen: "MoreApps", link: "https://play.google.com/store/apps/developer?id=MGUVV" },
     ]
   },
+
+  // {
+  //   title: "faculty",
+  //   items: [
+  //     { id: 9, title: "My Course", icon: "👨‍🎓", screen: "MyCourse" },
+  //     { id: 9, title: "My Students", icon: "👨‍🎓", screen: "MyStudents" },
+  //     // { id: 10, title: "Change theme", icon: "🎨", screen: "Maintenance" },
+  //     // { id: 11, title: "Set App Lock", icon: "🔒", screen: "Maintenance" },
+  //   ]
+  // },
+
   {
-    title: "SETTINGS",
+    // title: "SETTINGS",
     items: [
       // { id: 9, title: "My Students", icon: "👨‍🎓", screen: "MyStudents" },
-      { id: 10, title: "Change theme", icon: "🎨", screen: "Maintenance" },
-      { id: 11, title: "Set App Lock", icon: "🔒", screen: "Maintenance" },
+      // { id: 10, title: "Change theme", icon: "🎨", screen: "Maintenance" },
+      // { id: 11, title: "Set App Lock", icon: "🔒", screen: "Maintenance" },
     ]
   },
   {
@@ -186,7 +197,7 @@ export default function SidebarMenu({ sidebarX }) {
       const updatedProfile = {
         ...data,
       };
-
+      // console.log(updatedProfile,sessionData,"updatedProfile")
       if (!data || !isMounted) return;
       if (isMounted) {
         setProfileData(updatedProfile);
@@ -215,8 +226,8 @@ export default function SidebarMenu({ sidebarX }) {
         <TouchableOpacity
           style={styles.profileSectionWrapper} onPress={() => handleMenuItemPress(menuSections[0].items)} >
           <LinearGradient
-            //  colors={['#dfe9f3', '#ffffff']}
-            colors={['#f0caffff', '#c1e0ffff']}
+             colors={['#ffffffff', '#e4efffff', '#d4f1ffff', '#ffd1faff']}
+            // colors={['#f0caffff', '#c1e0ffff']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
             style={styles.profileSection}

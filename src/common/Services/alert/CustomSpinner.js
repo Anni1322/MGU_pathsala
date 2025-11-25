@@ -2,9 +2,9 @@ import React, { useEffect, useRef } from "react";
 import { Animated, View, Text, StyleSheet } from "react-native";
 
 export default function CustomSpinner({
-  size = 50,
+  size = 90,
   color = "#ffffff",
-  thickness = 4,
+  thickness = 8,
   type = "border", // "border", "dots", "bars"
   text = "", // New prop for text
 }) {

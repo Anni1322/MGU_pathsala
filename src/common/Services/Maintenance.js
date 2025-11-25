@@ -11,7 +11,7 @@ const Maintanance = () => {
       <View style={styles.card}>
         <Image source={{ uri: 'https://cdn-icons-png.flaticon.com/512/7486/7486791.png',}} style={styles.image} />
 
-        <Text style={styles.title}>Under Maintenance</Text>
+        <Text style={styles.title}>coming soon</Text>
         <Text style={styles.subtitle}>
           This module is currently under development. Please check back soon!
         </Text>

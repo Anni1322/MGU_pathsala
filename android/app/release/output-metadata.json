@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "igkvmis.igkv",
+  "applicationId": "mguvvmis",
   "variantName": "release",
   "elements": [
     {
@@ -13,7 +13,7 @@
       "attributes": [],
       "versionCode": 76,
       "versionName": "5.0.5",
-      "outputFile": "pathsala-release.apk"
+      "outputFile": "paathvigyan-release.apk"
     }
   ],
   "elementType": "File",
@@ -22,14 +22,14 @@
       "minApi": 28,
       "maxApi": 30,
       "baselineProfiles": [
-        "baselineProfiles/1/pathsala-release.dm"
+        "baselineProfiles/1/paathvigyan-release.dm"
       ]
     },
     {
       "minApi": 31,
       "maxApi": 2147483647,
       "baselineProfiles": [
-        "baselineProfiles/0/pathsala-release.dm"
+        "baselineProfiles/0/paathvigyan-release.dm"
       ]
     }
   ],

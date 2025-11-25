@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert, Image, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../layout/Header/Header';
 import FooterNav from '../layout/Footer/Footer';
@@ -8,8 +8,9 @@ import getAdminApiList from '../config/Api/adminApiList';
 import { HttpService } from '../../common/Services/HttpService';
 import MyModal from '../layout/MyModal';
 import CustomSpinner from '../../common/Services/alert/CustomSpinner';
-const badgeColors = ['#f9741675', '#8a5cf688', '#aecdfeff', '#ef444474'];
+import colors from '../../common/config/colors';
 
+const badgeColors = ['#f9741675', '#8a5cf688', '#aecdfeff', '#ef444474'];
 
 const MyCourses = ({ route }) => {
   const MyCourse = route.params?.data || [];
@@ -23,7 +24,6 @@ const MyCourses = ({ route }) => {
   const [studentCache, setStudentCache] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
-  const [student, setstudent] = useState([])
 
   // Memoize courses derivation
   const memoizedCourses = useMemo(() => MyCourse?.CourseWiseStudentCount || [], [MyCourse]);
@@ -33,7 +33,7 @@ const MyCourses = ({ route }) => {
       try {
         const sessionData = await SessionService.getSession();
         const profile = sessionData?.LoginDetail?.[0];
-        setParams(sessionData)
+        setParams(sessionData);
         setEmpId(profile?.Emp_Id);
       } catch (error) {
         console.error('Error loading initial data:', error);
@@ -45,9 +45,9 @@ const MyCourses = ({ route }) => {
 
     fetchInitialData();
     setCourses(memoizedCourses);
-  }, [memoizedCourses,]);
+  }, [memoizedCourses]);
 
-  const handleStudentClick = async (student) => {
+  const handleStudentClick = useCallback(async (student) => {
     setSelectedStudent(student);
     try {
       const currentSession = await SessionService.getSession();
@@ -65,8 +65,7 @@ const MyCourses = ({ route }) => {
       console.error("Failed to update session:", error);
     }
     setModalVisible(true);
-  };
-
+  }, []);
 
   const getCourseWiseStudentList = useCallback(async (data) => {
     if (!EmpId) {
@@ -90,7 +89,7 @@ const MyCourses = ({ route }) => {
       const response = await HttpService.get(CourseWiseStudentListApi, payload);
       const studentList = response?.data.StudentList || [];
       // Update cache and state
-      setStudentCache((prevCache) => ({ ...prevCache, [selectedCourseId]: studentList }));
+      setStudentCache((prevCache) => ({ ...prevCache, [data?.course_id]: studentList }));
       setStudents(studentList);
     } catch (error) {
       Alert.alert('Failed to Load', error?.message || 'Something went wrong');
@@ -98,47 +97,78 @@ const MyCourses = ({ route }) => {
     } finally {
       setStudentLoading(false);
     }
-  }, [EmpId, params, studentCache]);
+  }, [EmpId, params]);
 
-  const handleCourseClick = (course) => {
-    getCourseWiseStudentList(course);
-  };
+  const handleCourseClick = useCallback((course) => {
+    setSelectedCourseId(course?.course_id);
+    // Check cache first to avoid unnecessary API calls
+    if (studentCache[course?.course_id]) {
+      setStudents(studentCache[course?.course_id]);
+    } else {
+      getCourseWiseStudentList(course);
+    }
+  }, [studentCache, getCourseWiseStudentList]);
 
-
-  // Memoize the rendered student list
-  const memoizedStudentList = useMemo(() => {
-    return students?.map((student, idx) => (
-      <TouchableOpacity
-        onPress={() => {
-          handleStudentClick(student);
-          setModalVisible(true)
-        }} >
-
-        <View key={student.id} style={styles.studentCard}>
-          <View style={styles.avatarContainer}>
-
-            <View style={[styles.avatar, { backgroundColor: badgeColors[idx % badgeColors.length] }]}>
-              <Image source={{ uri: student.PhotoString + student.Student_Photo }} style={styles.avatarImage} />
-              <Text style={styles.avatarText}>{idx + 1}</Text>
+  // Memoize the rendered course list
+  const memoizedCourseList = useMemo(() => {
+    return courses.map((course, index) => (
+      <TouchableOpacity key={course.course_id} onPress={() => handleCourseClick(course)}>
+        <View style={styles.tableRow}>
+          <Text style={[styles.tableCell, styles.tableCellSN]}>{index + 1}</Text>
+          <Text style={[styles.tableCell, styles.tableCellCourse]}>{course.Course_code}</Text>
+          <Text style={[styles.tableCell, styles.tableCellDept]}>
+            {course.Degree_Programme_Type_Name_E}
+          </Text>
+          <Text style={[styles.tableCell, styles.tableCellDegree]}>
+            {course.Degree_Programme_Name_E}
+          </Text>
+          <View style={[styles.tableCell, styles.tableCellStudents]}>
+            <View
+              style={[styles.badge, { backgroundColor: badgeColors[index % badgeColors.length] }]}
+            >
+              <Text style={styles.badgeText}>{course.TotalStudents}</Text>
             </View>
           </View>
-          <View style={styles.studentInfo}>
-            <Text style={styles.studentName}>{student.Name} </Text>
-            <Text style={styles.studentDetails}>{student.Degree_Programme_Short_Name_E}</Text>
-            <Text style={styles.studentDetails}>{student.Year_semester}</Text>
-          </View>
         </View>
-
       </TouchableOpacity>
     ));
-  }, [students, badgeColors]);
+  }, [courses, handleCourseClick]);
+
+  // Render student item for FlatList - Further optimized for large lists
+  const renderStudentItem = useCallback(({ item: student, index }) => (
+    <TouchableOpacity onPress={() => handleStudentClick(student)} activeOpacity={0.7}>
+      <View style={styles.studentCard}>
+        <View style={styles.avatarImage}>
+          {/* <View style={[styles.avatar, { backgroundColor: badgeColors[index % badgeColors.length] }]}>
+            <Image
+              source={{ uri: student.PhotoString + student.Student_Photo }}
+              style={styles.avatarImage}
+              resizeMode="cover"
+              onError={() => {}}  
+            />
+            
+            <Text style={styles.avatarText}>{index + 1}</Text>
+          </View> */}
+          <View style={[styles.avatarImage, { backgroundColor: badgeColors[index % badgeColors.length] }]}>
+            <Text style={styles.avatarText}>{index + 1}</Text>
+          </View>
 
 
+        </View>
+        <View style={styles.studentInfo}>
+          <Text style={styles.studentName}>{student.Name}</Text>
+          <Text style={styles.studentDetails}>{student.Degree_Programme_Short_Name_E}</Text>
+          <Text style={styles.studentDetails}>{student.Year_semester}</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  ), [handleStudentClick]);
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.container}>
-        <Header />
+       <Header />
+      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+     
         {loading ? (
           <View style={styles.loadingContainer}>
             <Text style={styles.loadingText}>Loading...</Text>
@@ -149,7 +179,7 @@ const MyCourses = ({ route }) => {
               <Text style={styles.headerText}>My Courses</Text>
             </View>
 
-            <ScrollView horizontal style={styles.studentListContainer} >
+            <View style={styles.studentListContainer}>
               <View style={styles.tableContainer}>
                 <View style={styles.tableHeader}>
                   <Text style={[styles.tableCell, styles.tableCellSN]}>SN</Text>
@@ -158,50 +188,51 @@ const MyCourses = ({ route }) => {
                   <Text style={[styles.tableCell, styles.tableCellDegree]}>Degree</Text>
                   <Text style={[styles.tableCell, styles.tableCellStudents]}>Students</Text>
                 </View>
-                {courses.map((course, index) => (
-                  <TouchableOpacity onPress={() => handleCourseClick(course)}>
-                    <View key={course.course_id} style={styles.tableRow}>
-                      <Text style={[styles.tableCell, styles.tableCellSN]}>{index + 1}</Text>
-                      <Text style={[styles.tableCell, styles.tableCellCourse]}>{course.Course_code}</Text>
-                      <Text style={[styles.tableCell, styles.tableCellDept]}>
-                        {course.Degree_Programme_Type_Name_E}
-                      </Text>
-                      <Text style={[styles.tableCell, styles.tableCellDegree]}>
-                        {course.Degree_Programme_Name_E}
-                      </Text>
-
-                      <View style={[styles.tableCell, styles.tableCellStudents]}>
-                        <View
-                          style={[styles.badge, { backgroundColor: badgeColors[index % badgeColors.length] },]} >
-                          <Text style={styles.badgeText}>{course.TotalStudents}</Text>
-                        </View>
-
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                ))}
+                {memoizedCourseList}
               </View>
-            </ScrollView>
-            {(
-              <View style={styles.studentListContainer}>
-                <Text style={styles.studentListTitle}>Student List</Text>
-                {studentLoading ? (
-                  <View style={styles.spinnerWithText}>
-                    <CustomSpinner size={50} color="rgba(255, 99, 71, 1)" type="dots" />
-                    <Text style={styles.text}>Loading...</Text>
-                  </View>
-                ) : students.length === 0 ? (
-                  <Text style={styles.noStudents}>No student data available</Text>
-                ) : (
-                  memoizedStudentList
-                )}
-              </View>
-            )}
+            </View>
+
+            <View style={styles.studentListContainer}>
+              <Text style={styles.studentListTitle}>Student List</Text>
+              {studentLoading ? (
+                <View style={styles.spinnerWithText}>
+                  <CustomSpinner size={50} color="rgba(0, 63, 198, 1)" type="dots" />
+                  <Text style={styles.text}>Loading...</Text>
+                </View>
+              ) : students.length === 0 ? (
+                <Text style={styles.noStudents}>No student data available</Text>
+              ) : (
+                <FlatList
+                  data={students}
+                  keyExtractor={(item, index) => {
+                    const id = typeof item.Student_ID === 'string' || typeof item.Student_ID === 'number'
+                      ? item.Student_ID.toString()
+                      : `fallback-${index}`;
+                    return `${id}-${index}`;  
+                  }}
+                  renderItem={renderStudentItem}
+                  showsVerticalScrollIndicator={false}
+                  initialNumToRender={10}
+                  maxToRenderPerBatch={3}
+                  updateCellsBatchingPeriod={50}
+                  windowSize={5}
+                  removeClippedSubviews={true}
+                  getItemLayout={(data, index) => ({
+                    length: 80,
+                    offset: 80 * index,
+                    index,
+                  })}
+                  onEndReached={() => {
+                    console.log('End reached - load more if applicable');
+                  }}
+                  onEndReachedThreshold={0.1}
+                />
+              )}
+            </View>
           </>
         )}
 
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          {/* <Button title="Open Modal" onPress={() => setModalVisible(true)} /> */}
           <MyModal
             visible={modalVisible}
             onClose={() => setModalVisible(false)}
@@ -210,159 +241,166 @@ const MyCourses = ({ route }) => {
         </View>
       </ScrollView>
       <FooterNav />
-    </SafeAreaView >
+    </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
-  spinnerWithText: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100%",
-    width: "100%",
-  },
-  text: {
-    marginLeft: 10,
-    fontSize: 16,
-    color: "#ff6347",
-  },
 
+const styles = StyleSheet.create({
+  containerCard: {
+    flex: 1,
+    backgroundColor: '#ffbda1ff',
+    borderBottomEndRadius: 55,
+    borderBottomStartRadius: 55,
+    // borderTopStartRadius:35,
+  },
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+      backgroundColor: '#F8EDED',
   },
-
-
-
-
-
-
-  // loadingContainer: {
-  //   flex: 1,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  // },
-  // loadingText: {
-  //   fontSize: 18,
-  //   color: '#666',
-  // },
-
-
-
+  gradientBackground: {
+    flex: 1,
+  },
+  scrollContainer: {
+    flex: 1,
+  },
   header: {
-    padding: 20,
-    backgroundColor: '#fff',
+    margin: 10,
+    padding: 8,
     alignItems: 'center',
+     borderRadius: 10,
+    backgroundColor: '#EFE9E3',
+    borderWidth:2,
+    borderColor:'#ffffffff'
+   
   },
   headerText: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#000000ff',
   },
-  studentListContainer: {
-    margin: 10,
+  headerCard: {
+    backgroundColor: 'rgba(255, 255, 255, 1)',
+    borderRadius: 20
+  },
+  tableScrollContainer: {
+    // margin:10,
+    paddingHorizontal: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   tableContainer: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    overflow: 'hidden',
-    elevation: 2, // Shadow for Android
-    shadowColor: '#000', // Shadow for iOS
+    backgroundColor: 'rgba(255, 255, 255, 1)',
+    borderRadius: 10,
+    padding: 10,
+    marginVertical: 10,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.3,
     shadowRadius: 4,
+    elevation: 5,
+  },
+  headertable: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#000000ff',
+    textAlign: 'center',
+    marginBottom: 10,
   },
   tableHeader: {
     flexDirection: 'row',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: colors.tableheader,
     paddingVertical: 10,
-    paddingHorizontal: 5,
+    borderRadius: 5,
+    marginBottom: 5,
   },
   tableRow: {
     flexDirection: 'row',
+    backgroundColor: colors.tablerow,
     paddingVertical: 10,
-    paddingHorizontal: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderRadius: 5,
+    marginBottom: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 3,
   },
   tableCell: {
+    flex: 1,
     textAlign: 'center',
+    color: '#000000ff',
     fontSize: 14,
-    color: '#333',
   },
   tableCellSN: {
-    width: 40,
-  },
-  tableCellCourse: {
-    width: 100,
+    flex: 0.5,
   },
   tableCellDept: {
-    width: 80,
-  },
-  tableCellDegree: {
-    width: 120,
+    flex: 2,
   },
   tableCellStudents: {
-    width: 80,
+    flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   badge: {
     paddingHorizontal: 10,
     paddingVertical: 5,
-    borderRadius: 15,
+    borderRadius: 20,
+    // alignItems: 'center',
     justifyContent: 'center',
-    alignItems: 'center',
   },
   badgeText: {
     color: '#fff',
-    fontSize: 14,
     fontWeight: 'bold',
+  },
+  studentListContainer: {
+    padding: 10,
+    marginTop:-15
   },
   studentListTitle: {
-    fontSize: 20,
+    padding:10,
+    fontSize: 18,
     fontWeight: 'bold',
+    color: '#ff0000ff',
+    backgroundColor: 'rgba(255, 255, 255, 1)',
     marginBottom: 10,
-    color: '#333',
-  },
-  noStudents: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
-    marginTop: 20,
   },
   studentCard: {
     flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    marginVertical: 5,
+    backgroundColor: '#F5D3C4',
+    // borderBottomEndRadius: 35,
+    borderTopStartRadius: 35,
+    borderRightWidth: 8,
+    borderRightColor: '#F4991A',
     padding: 15,
-    borderRadius: 8,
-    elevation: 3,
+    marginBottom: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.3,
     shadowRadius: 4,
+    borderWidth:1,
+    borderColor:'#ffffffff',
+    elevation: 5,
   },
   avatarContainer: {
     marginRight: 15,
   },
-  avatar: {
-    width: 50,
-    height: 80,
-    borderRadius: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   avatarImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 10
   },
   avatarText: {
-    color: '#000a29ff',
-    fontSize: 17,
-    fontWeight: 'bold',
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    paddingHorizontal: 5,
+    fontSize: 12,
+    color: '#000',
   },
   studentInfo: {
     flex: 1,
@@ -370,11 +408,28 @@ const styles = StyleSheet.create({
   studentName: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    // color: '#4f0000ff',
   },
   studentDetails: {
     fontSize: 14,
-    color: '#666',
+    color: '#000000ff',
+    flexDirection: 'row',
+  },
+  spinnerWithText: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  text: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#fff',
+  },
+  noStudents: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#fff',
+    padding: 20,
   },
 });
 

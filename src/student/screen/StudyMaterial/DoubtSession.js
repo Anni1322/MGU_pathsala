@@ -6,7 +6,7 @@ const DoubtSession = () => {
   return (
     <View style={styles.container}>
         <Maintenance/>
-      {/* <Text style={styles.title}>Under Maintenance</Text>
+      {/* <Text style={styles.title}>coming soon</Text>
       <Text style={styles.subtitle}>This module is currently under development. Please check back soon!</Text> */}
     </View>
   );

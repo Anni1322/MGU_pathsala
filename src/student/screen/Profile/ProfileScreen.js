@@ -12,6 +12,7 @@ import Header from "../../layout/Header/Header2";
 import Footer from "../../layout/Footer/Footer";
 import { HttpService } from "../../../common/Services/HttpService";
 import SessionService from '../../../common/Services/SessionService';
+import colors from '../../../common/config/colors';
 
 const ProfileScreen = () => {
   const route = useRoute();
@@ -74,7 +75,7 @@ const ProfileScreen = () => {
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" color="#884DFF" />
+        <ActivityIndicator size="large" color="#c5a7ffff" />
         <Text style={styles.loaderText}>Loading your profile...</Text>
       </View>
     );
@@ -91,10 +92,13 @@ const ProfileScreen = () => {
   const data = profileData[0] || {};
 
   return (
-    <LinearGradient colors={['#b9f94355', '#ff5b5b55']} style={styles.container}>
+    <LinearGradient colors={[colors.lite2, colors.background]}
+    
+     style={styles.container}>
       <Header />
       <SafeAreaView style={styles.safeArea}>
         {/* User Card */}
+       
         <View style={styles.userCard}>
           <Image
             source={{
@@ -112,6 +116,7 @@ const ProfileScreen = () => {
             </Text>
           </View>
         </View>
+      
 
         {/* Scrollable Profile Info */}
         <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
@@ -174,6 +179,10 @@ const ProfileItem = ({ label, value, icon }) => (
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  
+  },
+  topcard:{
+    backgroundColor:colors.lite2
   },
   safeArea: {
     flex: 1,
@@ -191,23 +200,27 @@ const styles = StyleSheet.create({
     color: '#666',
   },
   userCard: {
-    flexDirection: 'row',
+    // flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#fff',
-    borderRadius: 55,
+    // borderRadius: 55,
     padding: 10,
     marginVertical: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
+    shadowColor: '#ffffffff',
+    borderRadius:10,
+    height:150,
+    // shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
-    elevation: 5, // For Android shadow
+    elevation: 55,  
     borderWidth: 1,
     borderColor: '#e0e0e0',
-    borderRightWidth:14,
-    borderRightColor:'#ff9100ff'
+    marginTop:45,
+    // borderRightWidth:14,
+    // borderRightColor:'#ff9100ff'
   },
   avatar: {
+     marginTop:-45,
     width: 80,
     height: 80,
     borderRadius: 40,
@@ -238,16 +251,16 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   section: {
-    backgroundColor: '#ffffffff',
+    // backgroundColor: '#ffffffff',
     borderRadius: 12,
     padding: 15,
     marginBottom: 15,
-    shadowColor: '#000',
+    // shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
-    borderWidth: 1,
+    shadowOpacity: 8.05,
+    // shadowRadius: 15,
+    // elevation: 2,
+    borderWidth: 3,
     borderColor: '#f0f0f0',
   },
   sectionTitle: {

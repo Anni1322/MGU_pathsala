@@ -1,13 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  Dimensions,
-  StyleSheet,
-  TouchableOpacity,
-  ImageBackground,
-} from 'react-native';
+import { View, Text, FlatList, Dimensions, StyleSheet, TouchableOpacity, ImageBackground, } from 'react-native';
 
 const { width } = Dimensions.get('window');
 
@@ -109,7 +101,7 @@ const Slider = () => {
     } else {
       return (
         // <View style={[styles.card, { backgroundColor: '#001168db' }]}>
-        <View style={[styles.card, styles.userCard ]}>
+        <View style={[styles.card, styles.userCard]}>
           <View style={styles.textContainer}>
             <Text style={styles.title} numberOfLines={2}>
               {item.title}
@@ -159,7 +151,7 @@ const Slider = () => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#096800db',
+    // backgroundColor: '#096800db',
     width: width - 50,
     borderRadius: 20,
     marginHorizontal: 8,
@@ -167,28 +159,30 @@ const styles = StyleSheet.create({
     padding: width * 0.04,
     flexDirection: 'row',
     alignItems: 'center',
-    minHeight: width * 0.45,
+    height: width * 0.40,
+    // minHeight: width * 0.15,
     position: 'relative',
-    overflow: 'hidden',  
+    overflow: 'hidden',
   },
-    userCard: {
-    backgroundColor: 'rgba(184, 231, 114, 0.81)',
+  userCard: {
+    // backgroundColor: 'rgba(184, 231, 114, 0.81)',
     padding: 20,
     borderRadius: 15,
     marginBottom: 20,
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor:'green'
+    borderColor: 'green'
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',  
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
     borderRadius: 20,
   },
   textContainer: {
     flex: 1,
-    marginTop:90,
+    // marginTop:70,
+
     paddingRight: 5,
     zIndex: 2, // above overlay
   },
@@ -198,7 +192,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   subtitle: {
-    color: '#d0d0d0',
+    color: '#006a00ff',
     marginTop: 5,
     fontSize: width * 0.035,
   },
@@ -222,12 +216,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     marginTop: 10,
+    backgroundColor: '#5D866C',
+    padding: 8,
+    marginLeft: 40,
+    marginRight: 40,
+    borderRadius: 30
   },
   dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: '#ccc',
+    width: 10,
+    height: 10,
+    borderRadius: 6,
+    backgroundColor: '#fffbfaff',
     marginHorizontal: 5,
   },
   activeDot: {

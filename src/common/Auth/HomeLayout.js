@@ -113,7 +113,6 @@ const HomeLayout = () => {
   return (
     <View style={styles.container}>
       <Header />
-
       <ScrollView
         style={styles.content}
         refreshControl={

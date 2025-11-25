@@ -77,11 +77,11 @@ project.ext.react = [
     enableHermes: true  
 ]
 android {
-    namespace "igkvmis.igkv"
+    namespace "com.mguvvmis"
     compileSdkVersion 36
 
     defaultConfig {
-        applicationId "igkvmis.igkv"
+        applicationId "com.mguvvmis"
         minSdkVersion 28
         targetSdkVersion 36
         versionCode 1

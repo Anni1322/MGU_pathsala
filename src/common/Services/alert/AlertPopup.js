@@ -14,7 +14,7 @@ const { width, height } = Dimensions.get("window");
 const TYPE_STYLES = {
   success: { backgroundColor: "#047857" },
   info: { backgroundColor: "#0ea5e9" },
-  warn: { backgroundColor: "#f59e0b" },
+  warn: { backgroundColor: "#D04925" },
   error: { backgroundColor: "#dc2626" },
   default: { backgroundColor: "#111827" },
 };

@@ -11,6 +11,7 @@ import {
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { useNavigation } from '@react-navigation/native';
 import SessionService from '../../common/Services/SessionService';
+import colors from '../../common/config/colors';
 
 const MyModal = ({ visible, onClose, studentData }) => {
   const navigation = useNavigation();
@@ -58,8 +59,8 @@ const MyModal = ({ visible, onClose, studentData }) => {
                     navigation.navigate('Student', { student: studentData });
                     onClose();
                   }}>
-                  <FontAwesome6 name="user" size={24} color="#333" />
-                  <Text style={styles.cardText}>Student Pathsala</Text>
+                  <FontAwesome6 name="user" size={24} color={colors.background}  />
+                  <Text style={styles.cardText}>Student MorGurukul</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
@@ -68,7 +69,7 @@ const MyModal = ({ visible, onClose, studentData }) => {
                     navigation.navigate('adminStudentHome', { student: studentData });
                     onClose();
                   }}>
-                  <FontAwesome6 name="eye" size={24} color="#333" />
+                  <FontAwesome6 name="eye" size={24} color={colors.background} />
                   <Text style={styles.cardText}>View Other Details</Text>
                 </TouchableOpacity>
               </View>
@@ -85,7 +86,7 @@ const MyModal = ({ visible, onClose, studentData }) => {
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)', // Dim background
+    backgroundColor: 'rgba(0, 0, 0, 0.73)', // Dim background
     justifyContent: 'flex-end',         // Push modal to bottom
   },
 
@@ -116,7 +117,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 15,
     marginBottom: 12,
-    backgroundColor: '#f7f7f7',
+    backgroundColor: colors.lite2,
     borderRadius: 10,
   },
 
@@ -124,6 +125,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 16,
     fontWeight: 'bold',
+    color:'#fff'
   },
 });
 

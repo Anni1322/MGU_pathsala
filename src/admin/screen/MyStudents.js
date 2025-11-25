@@ -12,6 +12,7 @@ import * as Keychain from 'react-native-keychain';
 import CustomSpinner from '../../common/Services/alert/CustomSpinner';
 const badgeColors = ['#f916a275', '#8a5cf688', '#aecdfeff', '#ef444474'];
 import { LinearGradient } from 'react-native-linear-gradient';
+import colors from '../../common/config/colors';
 
 
 const MyStudents = () => {
@@ -129,14 +130,21 @@ const MyStudents = () => {
         }} >
 
         <View key={student.id} style={styles.studentCard}>
-          <View style={styles.avatarContainer}>
+
+          {/* <View style={styles.avatarContainer}>
             <View
               style={[styles.badge,
               { backgroundColor: badgeColors[idx % badgeColors.length] },]}>
               <Image source={{ uri: student.PhotoString + student.Student_Photo }} style={styles.avatarImage} />
               <Text style={styles.avatarText}>{idx + 1}</Text>
             </View>
+          </View> */}
+          <View style={[styles.avatarImage, { backgroundColor: badgeColors[idx % badgeColors.length] }]}>
+            <Text style={styles.avatarText}>{idx + 1}</Text>
           </View>
+
+
+
           <View style={styles.studentInfo}>
             <View
               // style={[styles.badge,{ backgroundColor: badgeColors[idx % badgeColors.length] },]}>
@@ -156,11 +164,12 @@ const MyStudents = () => {
   return (
     <SafeAreaView style={styles.container}>
       <LinearGradient
-        colors={['#9fabdeff', '#e3cef9ff']}
+        colors={['#F3E8DF', '#EFE9E3']}
         style={styles.gradientBackground}
       >
+       <Header />
         <ScrollView style={styles.scrollContainer}>
-          <Header />
+         
 
           <View style={styles.containerCard}>
             <View style={styles.header}>
@@ -209,7 +218,7 @@ const MyStudents = () => {
               </View>
               {studentLoading ? (
                 <View style={styles.spinnerWithText}>
-                  <CustomSpinner size={50} color="rgba(255, 99, 71, 1)" type="dots" />
+                  <CustomSpinner size={50} color="rgba(255, 99, 71, 1)" type="border" />
                   <Text style={styles.text}>Loading...</Text>
                 </View>
               ) : StudentsList.length === 0 ? (
@@ -221,9 +230,9 @@ const MyStudents = () => {
           )}
 
           <View style={{
-             flex: 1, justifyContent: 'center', alignItems: 'center', 
-             backgroundColor:'red'
-             }}>
+            flex: 1, justifyContent: 'center', alignItems: 'center',
+            backgroundColor: 'red'
+          }}>
             <MyModal
               visible={modalVisible}
               onClose={() => setModalVisible(false)}
@@ -244,10 +253,12 @@ export default MyStudents;
 const styles = StyleSheet.create({
   containerCard: {
     flex: 1,
-    backgroundColor: '#ffbda1ff',
+    backgroundColor: colors.lite2,
     borderBottomEndRadius: 55,
     borderBottomStartRadius: 55,
     // borderTopStartRadius:35,
+    borderWidth:1,
+    borderColor:'#fff'
   },
   container: {
     flex: 1,
@@ -260,58 +271,63 @@ const styles = StyleSheet.create({
   },
   header: {
     margin: 10,
-    padding: 5,
+    padding: 10,
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 1)',
-    borderRadius: 20
+    borderRadius: 20,
+    backgroundColor: '#FCECDD',
+    borderWidth:2,
+    borderColor: '#ffffffff',
+ 
   },
   headerText: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#000000ff',
+  
   },
   headerCard: {
     backgroundColor: 'rgba(255, 255, 255, 1)',
     borderRadius: 20
   },
   tableScrollContainer: {
+    padding:-10,
     // margin:10,
     paddingHorizontal: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
   tableContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 1)',
+    backgroundColor: '#3D365C',
     borderRadius: 10,
     padding: 10,
     marginVertical: 10,
-    shadowColor: '#000',
+    shadowColor: '#AEDEFC',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
+    shadowOpacity: 5.3,
     shadowRadius: 4,
-    elevation: 5,
+    elevation: 35,
   },
   headertable: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#000000ff',
+    color: '#ffffffff',
     textAlign: 'center',
     marginBottom: 10,
   },
   tableHeader: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    backgroundColor: '#FEEBF6',
     paddingVertical: 10,
     borderRadius: 5,
     marginBottom: 5,
   },
   tableRow: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: '#FCD8CD',
     paddingVertical: 10,
     borderRadius: 5,
     marginBottom: 5,
-    shadowColor: '#000',
+    shadowColor: '#ffffffff',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
@@ -346,36 +362,37 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   studentListContainer: {
-    padding: 20,
+    padding: 10,
   },
   studentListTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#ff0000ff',
+    color: '#a90000ff',
     marginBottom: 10,
   },
   studentCard: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(255, 255, 255, 1)',
-    borderBottomEndRadius: 35,
-    borderTopStartRadius: 35,
-    borderRightWidth: 18,
-    borderRightColor: '#ce6969ba',
-    padding: 15,
-    marginBottom: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    backgroundColor: '#B2C6D5',
+    borderRadius:15,
+    borderWidth:2,
+    borderColor: '#ffffffff',
+    padding: 10,
+    margin:5,
     shadowOpacity: 0.3,
+    shadowColor: '#fdc1f2ff',
     shadowRadius: 4,
-    elevation: 5,
+    elevation: 20,
   },
   avatarContainer: {
     marginRight: 15,
+
+
   },
   avatarImage: {
     width: 50,
     height: 50,
     borderRadius: 25,
+    marginRight:10
   },
   avatarText: {
     position: 'absolute',
