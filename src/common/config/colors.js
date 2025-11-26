@@ -67,7 +67,9 @@ export default {
   textPrimary: '#212121',
   textSecondary: '#4CAF50',
   white: '#ffffff',
+  whiteD: '#fcf1f1ff',
   danger: '#D32F2F',
+  dangerD: '#ff2828ff',
   success: '#388E3C',
   warning: '#FBC02D',
   lite: '#3c939090',
@@ -76,6 +78,7 @@ export default {
   cardcolor:'#DEF5E5',
   tableheader:'#86B0BD',
   tablerow:'#F2EAD3',
+  footercolor:'#030337',
 };
 
 // // ### 🎨 **Theme 5 – Soft Pastels**
