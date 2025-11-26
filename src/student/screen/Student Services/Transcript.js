@@ -17,7 +17,7 @@ const Transcript = () => {
   const [studentdetail, setStudentdetail] = useState(null);
   const [loading, setLoading] = useState(false);
   const [files, setFiles] = useState([]);
-  
+
   const handleDownloadPDF = async (id) => {
     setLoading(true);
     try {
@@ -54,12 +54,12 @@ const Transcript = () => {
 
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#f5f6fa' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF1DC' }}>
       <Header />
       <Text style={styles.header}>Transcript Download</Text>
       <View style={styles.container}>
         <View style={styles.card}>
-          <Text style={styles.title}>Click to Download</Text>
+
           <View style={styles.infoRow}>
             <TouchableOpacity
               onPress={handleDownloadPDF}
@@ -71,6 +71,7 @@ const Transcript = () => {
               <FontAwesome6 name="download" size={30} color={loading ? "#ccc" : "#c70000ff"} />
               {loading && <Text style={styles.buttonText}>Downloading...</Text>}
             </TouchableOpacity>
+            <Text style={styles.title}>Click to Download</Text>
           </View>
 
           {loading ? (
@@ -108,38 +109,38 @@ const Transcript = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f6fa',
+    backgroundColor: '#FFF1DC',
     justifyContent: 'center',
     alignItems: 'center',
     // paddingHorizontal: 20,
   },
   header: {
-    backgroundColor: '#b19702ff',
-    fontSize: 20,
+    backgroundColor: '#3A98B9',
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#ffffff',
-    borderRadius: 10,
+    borderRadius: 20,
     margin: 10,
     padding: 15,
     textAlign: 'center',
-    elevation: 3,
+    elevation: 13,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
   },
   card: {
-    backgroundColor: '#eeeeeeff',
+    backgroundColor: '#FEFAE0',
     borderRadius: 15,
     padding: 20,
     width: '90%', // More responsive
     flex: 1, // Dynamic height
     elevation: 5,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.1,
+    // shadowOffset: { width: 0, height: 5 },
+    // shadowOpacity: 0.1,
     shadowRadius: 6,
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   title: {
     fontSize: 18,

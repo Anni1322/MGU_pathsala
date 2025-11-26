@@ -77,11 +77,11 @@ project.ext.react = [
     enableHermes: true  
 ]
 android {
-    namespace "com.mguvvmis"
+    namespace "mguvvmis.mguvv"
     compileSdkVersion 36
 
     defaultConfig {
-        applicationId "com.mguvvmis"
+        applicationId "mguvvmis.mguvv"
         minSdkVersion 28
         targetSdkVersion 36
         versionCode 1
@@ -123,7 +123,7 @@ android {
 
       applicationVariants.all { variant ->
         variant.outputs.all {
-            outputFileName = "pathsala-${variant.name}.apk"
+            outputFileName = "Morgurukul-${variant.name}.apk"
         }
     }
 

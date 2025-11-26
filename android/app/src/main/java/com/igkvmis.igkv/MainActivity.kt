@@ -1,4 +1,4 @@
-package com.mguvvmis
+package mguvvmis.mguvv
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

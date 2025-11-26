@@ -541,11 +541,15 @@ const optimizedStyles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 8,
     overflow: 'hidden',
-    elevation: 3,
+    elevation: 23,
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 2 },
+    backgroundColor: '#F3E8DF',
+    borderWidth:2,
+    borderColor:'#ffffffff',
+    padding:8,
   },
   tab: {
     flex: 1,
@@ -556,23 +560,25 @@ const optimizedStyles = StyleSheet.create({
     borderBottomColor: 'transparent',
   },
   activeTab: {
-    borderBottomColor: '#2e7d32',
-    backgroundColor: '#e6ffe6',
+    // borderBottomColor: '#2e7d32',
+     borderRadius: 10,
+    backgroundColor: '#E67E22',
   },
   tabText: { color: '#6B6B81', fontWeight: '600', fontSize: 14 },
-  activeTabText: { color: '#2e7d32', fontWeight: 'bold' },
+  activeTabText: { color: '#ffffffff', fontWeight: 'bold' },
 
   // Form
   formContainer: { flex: 1, paddingHorizontal: 16, marginTop: 10 },
   sectionTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#1f2937',
+    color: '#f1f6fcff',
     marginTop: 15,
     marginBottom: 10,
     borderLeftWidth: 4,
-    borderLeftColor: '#2e7d32',
+    borderLeftColor: '#efc800ff',
     paddingLeft: 8,
+    backgroundColor:'#53629E'
   },
   inputGroup: { marginBottom: 15 },
   label: { fontWeight: '600', fontSize: 14, marginBottom: 5, color: '#374151' },
@@ -643,7 +649,7 @@ const optimizedStyles = StyleSheet.create({
 
   // Submit Button
   submitButton: {
-    backgroundColor: '#2e7d32',
+    backgroundColor: '#FF8040',
     width: '80%',
     maxWidth: 300,
     borderRadius: 8,

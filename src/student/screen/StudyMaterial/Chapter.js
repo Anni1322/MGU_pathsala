@@ -124,14 +124,14 @@ const Chapter = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F3F4F6' },
+  container: { flex: 1, backgroundColor: '#FEFAE0' },
   header: { backgroundColor: '#6c63ff', paddingVertical: 18, paddingHorizontal: 16, elevation: 4 },
   headerText: { fontSize: 20, fontWeight: 'bold', color: '#fff' },
   card: {
-    backgroundColor: '#fceade',
+    backgroundColor: '#FBF9F1',
     borderWidth: 1,
-    borderColor: '#fca311',
-    borderRadius: 12,
+    borderColor: '#3A98B9',
+    borderRadius: 15,
     padding: 16,
     marginBottom: 12,
     flexDirection: 'row',
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
 
   textContainer: { flex: 1, paddingRight: 10 },
   chapterTitle: {
-    fontSize: 18, fontWeight: 'bold', color: '#003d23ff'
+    fontSize: 18, fontWeight: 'bold', color: '#d53007ff'
   },
   bulletPoint: {
     fontSize: 16,

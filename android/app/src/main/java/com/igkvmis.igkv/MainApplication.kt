@@ -1,4 +1,4 @@
-package com.mguvvmis
+package mguvvmis.mguvv
 
 import android.app.Application
 import com.facebook.react.PackageList

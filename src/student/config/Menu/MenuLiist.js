@@ -24,7 +24,7 @@ export const pathshalaMenu = [
     id: 4,
     name: 'Video Lecture',
     icon: 'video',
-    screen: 'VideoLecture',
+    screen: 'Examination',
     color: '#b76bcc', // Lighter purple
   },
   {
@@ -135,14 +135,14 @@ export const pathshalaMenu = [
 
 const getColorForMenuItem = (name) => {
   const colors = {
-    'Profile': '#66d9b7',   
+    'Profile': '#432323',   
     'Registraion Card': '#7ec8f1',   
     'Admit Card': '#a89eff',   
-    'FeeReceipt': '#f8d26e',  
-    'Syllabus': '#7ab8f7',  
+    'FeeReceipt': '#E67E22',  
+    'Syllabus': '#FE4F2D',  
     'Transcript': '#ffb96e',  
-    'Notification': '#ff8c8c',   
-    'Complaint': '#f67effff',   
+    'Notification': '#3A98B9',   
+    'Complaint': '#FFACAC',   
   };
   
   return colors[name] || '#ffffff';   
@@ -157,14 +157,6 @@ export const studentMenu = [
     screen: 'Profile',
     color: getColorForMenuItem('Profile'),
     data: ''
-  },
-  {
-    id: 2,
-    name: 'Registraion Card',
-    iconLib: 'FontAwesome6',
-    icon: 'users',
-    screen: 'RegistraionCardList',
-    color: getColorForMenuItem('Registraion Card'),
   },
   {
     id: 3,
@@ -183,12 +175,20 @@ export const studentMenu = [
     color: getColorForMenuItem('FeeReceipt'),
   },
   {
-    id: 6,
-    name: 'Syllabus',
+    id: 8,
+    name: 'Notification',
+    iconLib: 'EvilIcons',
+    icon: 'bell',
+    screen: 'Notification',
+    color: getColorForMenuItem('Notification'),
+  },
+  {
+    id: 2,
+    name: 'Registraion Card',
     iconLib: 'FontAwesome6',
-    icon: 'book-open',
-    screen: 'Syllabus',
-    color: getColorForMenuItem('Syllabus'),
+    icon: 'users',
+    screen: 'RegistraionCardList',
+    color: getColorForMenuItem('Registraion Card'),
   },
   {
     id: 7,
@@ -199,12 +199,12 @@ export const studentMenu = [
     color: getColorForMenuItem('Transcript'),
   },
   {
-    id: 8,
-    name: 'Notification',
-    iconLib: 'EvilIcons',
-    icon: 'bell',
-    screen: 'Notification',
-    color: getColorForMenuItem('Notification'),
+    id: 6,
+    name: 'Syllabus',
+    iconLib: 'FontAwesome6',
+    icon: 'book-open',
+    screen: 'Syllabus',
+    color: getColorForMenuItem('Syllabus'),
   },
   {
     id: 10,

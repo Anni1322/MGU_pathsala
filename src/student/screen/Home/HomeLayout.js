@@ -155,7 +155,7 @@ const HomeLayout = () => {
 
 
         {/* Pathshala Menu */}
-        <Text style={styles.sectionTitle}>PAATH VIGYAN</Text>
+        <Text style={styles.sectionTitle}>MOR GURUKUL</Text>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -244,13 +244,16 @@ const styles = StyleSheet.create({
   greeting: { color: 'darkred', fontWeight: '600' },
 
   sectionTitle: {
-    color: 'green',
+    color: '#510303ff',
     fontWeight: 'bold',
     fontSize: 16,
     marginBottom: 8,
     marginTop: 8,
     justifyContent: 'center',
+    backgroundColor:'#ffffff5c',
     alignItems: 'center',
+    padding:5,
+    borderRadius:10
   },
   sectionTitlestudent: {
     color: 'green',

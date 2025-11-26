@@ -28,14 +28,14 @@ const LoginScreen = () => {
   // const [userid, setuserid] = useState("MIS1004");
   // const [password, setPassword] = useState("Akdave22@#");
 
-  const [userid, setuserid] = useState("MIS1033");
-  const [password, setPassword] = useState("Shree@164$");
+  // const [userid, setuserid] = useState("MIS1033");
+  // const [password, setPassword] = useState("Shree@164$");
 
   // const [userid, setuserid] = useState("MIS10108");
   // const [password, setPassword] = useState("Saurabh@12345");
 
-  // const [userid, setuserid] = useState("");
-  // const [password, setPassword] = useState("");
+  const [userid, setuserid] = useState("");
+  const [password, setPassword] = useState("");
 
   // const [userid, setuserid] = useState("10000000");
   // const [password, setPassword] = useState("10000000");
@@ -622,7 +622,7 @@ const LoginScreen = () => {
               {showOTP ? "Enter OTP" : "Login to your account"}
             </Text> */}
 
-            <UpdateChecker />
+            {/* <UpdateChecker />*/}
             {!showOTP && !hasSavedCredentials && (
               <>
                 <TextInput
@@ -761,7 +761,7 @@ const styles = StyleSheet.create({
   passwordContainer: {
     flexDirection: "row",
     backgroundColor: "#D9E9CF",
-    padding: 16,
+    padding: 10,
     borderRadius: 12,
     marginBottom: 16,
     alignItems: "center",
@@ -811,12 +811,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#777",
   },
-  card:{
+  card: {
     // backgroundColor:'#fff',
-    borderRadius:10,
+    borderRadius: 10,
   },
 
-   textContainer: {
+  textContainer: {
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.9)', // Semi-transparent white for a card-like effect
     borderRadius: 20,
@@ -826,19 +826,19 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 8,
-    elevation: 5,  
+    elevation: 5,
   },
   bannerText: {
-    color: '#FF9800',  
+    color: '#FF9800',
     fontSize: 22,
     fontWeight: 'bold',
     textAlign: 'center',
-    fontFamily: 'serif', 
+    fontFamily: 'serif',
     letterSpacing: 1,
     textShadowColor: 'rgba(0, 0, 0, 0.3)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
-    padding:20
+    padding: 20
   },
 });
 

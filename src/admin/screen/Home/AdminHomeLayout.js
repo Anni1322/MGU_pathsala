@@ -351,7 +351,7 @@ const OfficeListModalContent = React.memo(({ closeModal }) => (
   return (
     <View style={styles.container}>
       <Header />
-      <UpdateChecker />
+      {/* <UpdateChecker /> */}
       <ScrollView
         style={styles.content}
         refreshControl={

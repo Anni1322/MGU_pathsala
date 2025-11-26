@@ -4,16 +4,16 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "mguvvmis",
+  "applicationId": "mguvvmis.mguvv",
   "variantName": "release",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 76,
-      "versionName": "5.0.5",
-      "outputFile": "paathvigyan-release.apk"
+      "versionCode": 1,
+      "versionName": "1.0.0",
+      "outputFile": "Morgurukul-release.apk"
     }
   ],
   "elementType": "File",
@@ -22,16 +22,16 @@
       "minApi": 28,
       "maxApi": 30,
       "baselineProfiles": [
-        "baselineProfiles/1/paathvigyan-release.dm"
+        "baselineProfiles/1/Morgurukul-release.dm"
       ]
     },
     {
       "minApi": 31,
       "maxApi": 2147483647,
       "baselineProfiles": [
-        "baselineProfiles/0/paathvigyan-release.dm"
+        "baselineProfiles/0/Morgurukul-release.dm"
       ]
     }
   ],
-  "minSdkVersionForDexing": 26
+  "minSdkVersionForDexing": 28
 }

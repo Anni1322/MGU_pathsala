@@ -17,14 +17,14 @@ const { width } = Dimensions.get("window");
 const CARD_WIDTH = (width - 45) / 2;  
 
 const gradientColors = [
-  ["#6a11cb", "#2575fc"],
-  ["#ff9966", "#ff5e62"],
-  ["#00c6ff", "#0072ff"],
-  ["#f953c6", "#b91d73"],
+  // ["#6a11cb", "#2575fc"],
+  // ["#ff9966", "#ff5e62"],
+  // ["#00c6ff", "#0072ff"],
+  // ["#f953c6", "#b91d73"],
   ["#36d1dc", "#5b86e5"],
   ["#fbc2eb", "#a6c1ee"],
-  ["#7f00ff", "#e100ff"],
-  ["#3a7bd5", "#00d2ff"],
+  // ["#7f00ff", "#e100ff"],
+  // ["#3a7bd5", "#00d2ff"],
   ["#f1c40f", "#e67e22"],
 ];
 
@@ -188,11 +188,13 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 16,
     marginBottom: 14,
-    elevation: 6,
+    elevation: 36,
     shadowColor: "#000",
     shadowOpacity: 0.15,
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 3 },
+    borderWidth:2,
+    borderColor:"#fff"
   },
   row: {
     flexDirection: "row",

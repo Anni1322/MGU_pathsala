@@ -204,7 +204,7 @@ const SyllabusScreen = () => {
                   >
                     <View style={styles.card}>
                       <View style={styles.iconBox}>
-                        <FontAwesome6 name="book" size={22} color="#00991fff" />
+                        <FontAwesome6 name="book" size={22} color="#FF6868" />
                       </View>
                       <View style={styles.textContainer}>
                         <Text style={styles.title}>{item.Course_Title_E}</Text>
@@ -227,7 +227,7 @@ const SyllabusScreen = () => {
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    backgroundColor: '#ffffffff',
+    backgroundColor: '#FAF1E6',
   },
   container: {
     flex: 1,
@@ -241,10 +241,10 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fef9ff',
+    backgroundColor: '#FFC785',
     borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#ff1654',
+    borderWidth: 2,
+    borderColor: '#ffffffff',
     padding: 10,
     margin: 15,
     marginBottom: 5,
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 10,
-    backgroundColor: '#c6cd79',
+    backgroundColor: '#FFFBF5',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 15,
@@ -264,13 +264,13 @@ const styles = StyleSheet.create({
     paddingLeft: 4,
   },
   title: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '600',
-    color: '#333',
+    color: '#9d2e08ff',
   },
   subtitle: {
     fontSize: 13,
-    color: '#666',
+    color: '#0a1f92ff',
   },
   dropdownRow: {
     flexWrap: 'wrap',
@@ -290,11 +290,11 @@ const styles = StyleSheet.create({
   dropdownLabel: {
     fontSize: 14,
     marginBottom: 5,
-    color: '#006d33ff',
+    color: '#6482AD',
   },
   dropdownBox: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#6482AD',
     borderRadius: 12,
     paddingHorizontal: 10,
     paddingVertical: 14,
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
   iconStyle: {
     width: 22,
     height: 22,
-    tintColor: '#006d33ff',
+    tintColor: '#748E63',
   },
   item: {
     flexDirection: 'row',
@@ -328,7 +328,7 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 15,
-    color: '#333',
+    color: '#748E63',
   },
 });
 

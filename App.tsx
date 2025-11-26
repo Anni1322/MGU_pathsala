@@ -1,37 +1,3 @@
-// import React , { useEffect } from "react";
-// import { ThemeProvider } from "./src/common/Theme/ThemeContext";
-// import AppNavigation from "./src/common/Navigation/AppNavigation";
-// import AlertProvider from "./src/common/Services/alert/AlertProvider";
-// // import alertService from "./src/Services/alert/AlertService";
-// import requestAndroidPermission from "./src/common/Services/requestStoragePermission";
-
-// export default function App() {
-//     useEffect(() => {
-//     requestAndroidPermission();  
-//   }, []);
-
-//   return (
-//     <ThemeProvider>
-//        <AlertProvider>
-//         <AppNavigation />
-//       </AlertProvider>
-//     </ThemeProvider>
-//   );
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import React, { useEffect } from "react";
 import { ThemeProvider } from "./src/common/Theme/ThemeContext";
 import AppNavigation from "./src/common/Navigation/AppNavigation";

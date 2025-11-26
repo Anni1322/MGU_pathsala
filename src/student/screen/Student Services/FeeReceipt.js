@@ -12,8 +12,24 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { downloadFile } from "../../../common/Services/pdfService";
 import alertService from '../../../common/Services/alert/AlertService';
 import { API_BASE_URL } from '../../../common/config/BaseUrl';
+import LinearGradient from 'react-native-linear-gradient';
 
-const FeeReceipt = () => {
+
+
+const gradientColors = [
+  // ["#6a11cb", "#2575fc"],
+  // ["#ff9966", "#ff5e62"],
+  // ["#00c6ff", "#0072ff"],
+  // ["#f953c6", "#b91d73"],
+  ["#36d1dc", "#5b86e5"],
+  ["#fbc2eb", "#a6c1ee"],
+  // ["#7f00ff", "#e100ff"],
+  // ["#3a7bd5", "#00d2ff"],
+  ["#f1c40f", "#e67e22"],
+];
+
+
+const FeeReceipt = (index) => {
   const [receipts, setReceipts] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [searchText, setSearchText] = useState('');
@@ -24,6 +40,7 @@ const FeeReceipt = () => {
   const [loading, setLoading] = useState(false);
   const [selectedReceipt, setSelectedReceipt] = useState(null);
   const [footerHide, setfooterHide] = useState(false);
+  const colors = gradientColors[index % gradientColors.length];
 
   const handleCardPress = item => {
     setSelectedReceipt(item);
@@ -35,7 +52,7 @@ const FeeReceipt = () => {
 
 
   const handleDownloadPDF = async receipt => {
-      setLoading(true);
+    setLoading(true);
     try {
       const sessionData = await SessionService.getSession();
       const payload = { STUDENT_ID: sessionData?.STUDENT_ID, Receipt_No: receipt?.Receipt_No, };
@@ -66,127 +83,127 @@ const FeeReceipt = () => {
       );
       throw error;
     }
-     setLoading(false);
+    setLoading(false);
   };
 
-const sortByDateDesc = (data = []) => {
-  return [...data].sort((a, b) => {
-    const parseDate = (dateStr) => {
-      if (!dateStr) return null;
-      const dateOnly = dateStr.split(" ")[0];
-      const [d, m, y] = dateOnly.split("-");
-      if (!d || !m || !y) return null;
-      const date = new Date(parseInt(y), parseInt(m) - 1, parseInt(d)); 
-      return isNaN(date.getTime()) ? null : date; 
-    };
-    const dateA = parseDate(a?.ReceiptDate);
-    const dateB = parseDate(b?.ReceiptDate);
-    if (dateA && dateB) {
-      return dateB - dateA;
-    }
-    if (!dateA && dateB) return 1; 
-    if (dateA && !dateB) return -1;  
-    return 0; 
-  });
-};
+  const sortByDateDesc = (data = []) => {
+    return [...data].sort((a, b) => {
+      const parseDate = (dateStr) => {
+        if (!dateStr) return null;
+        const dateOnly = dateStr.split(" ")[0];
+        const [d, m, y] = dateOnly.split("-");
+        if (!d || !m || !y) return null;
+        const date = new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
+        return isNaN(date.getTime()) ? null : date;
+      };
+      const dateA = parseDate(a?.ReceiptDate);
+      const dateB = parseDate(b?.ReceiptDate);
+      if (dateA && dateB) {
+        return dateB - dateA;
+      }
+      if (!dateA && dateB) return 1;
+      if (dateA && !dateB) return -1;
+      return 0;
+    });
+  };
 
-const getFeeReceipt = async payload => {
-  setLoading(true);
-  try {
-    const apiList = getApiList();
-    const FeesReceiptAPI = apiList.FeeReceiptList;
-    if (!FeesReceiptAPI) throw new Error('Fees Receipt endpoint not found.');
-
-    const response = await HttpService.post(FeesReceiptAPI, payload);
-
-    if (!response || response?.status !== 200) {
-      throw new Error('Failed to fetch fee receipt details.');
-    }
-    let list = Array.isArray(response?.data?.FeeReceiptList)
-      ? response.data.FeeReceiptList
-      : [];
-
-    list = sortByDateDesc(list);  
-
-    // Output the sorted dates in numbered list format
-    // console.log("Sorted Receipt Dates (Latest to Oldest):");
-    // list.forEach((item, index) => {
-    //   console.log(`${index + 1} ${item.ReceiptDate}`);
-    // });
-
-    return list;
-
-  } catch (error) {
-    Alert.alert('Fees Receipt Fetch Failed', error?.message || 'Something went wrong');
-    throw error;
-  } finally {
-    setLoading(false);
-  }
-};
-
-useEffect(() => {
-  const fetchReceipts = async () => {
+  const getFeeReceipt = async payload => {
     setLoading(true);
     try {
-      const sessionData = await SessionService.getSession();
-      const payload = {
-        LOGIN_TYPE: sessionData?.[0]?.LOGIN_TYPE,
-        STUDENT_ID: sessionData?.STUDENT_ID,
-      };
+      const apiList = getApiList();
+      const FeesReceiptAPI = apiList.FeeReceiptList;
+      if (!FeesReceiptAPI) throw new Error('Fees Receipt endpoint not found.');
 
-      const fees = await getFeeReceipt(payload);
-      setReceipts(fees);
-      setFiltered(fees);
-      setSessionOptions([
-        { label: 'All', value: 'All' },
-        ...[...new Set(fees?.map(i => i.Academic_Session_Name_E))]?.map(s => ({
-          label: s,
-          value: s,
-        }))
-      ]);
+      const response = await HttpService.post(FeesReceiptAPI, payload);
 
-      setPurposeOptions([
-        { label: 'All', value: 'All' },
-        ...[...new Set(fees?.map(i => i.Fee_Purpose_Name))]?.map(p => ({
-          label: p,
-          value: p,
-        }))
-      ]);
+      if (!response || response?.status !== 200) {
+        throw new Error('Failed to fetch fee receipt details.');
+      }
+      let list = Array.isArray(response?.data?.FeeReceiptList)
+        ? response.data.FeeReceiptList
+        : [];
+
+      list = sortByDateDesc(list);
+
+      // Output the sorted dates in numbered list format
+      // console.log("Sorted Receipt Dates (Latest to Oldest):");
+      // list.forEach((item, index) => {
+      //   console.log(`${index + 1} ${item.ReceiptDate}`);
+      // });
+
+      return list;
 
     } catch (error) {
-      console.error(error);
+      Alert.alert('Fees Receipt Fetch Failed', error?.message || 'Something went wrong');
+      throw error;
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
-  fetchReceipts();
-}, []);
+  useEffect(() => {
+    const fetchReceipts = async () => {
+      setLoading(true);
+      try {
+        const sessionData = await SessionService.getSession();
+        const payload = {
+          LOGIN_TYPE: sessionData?.[0]?.LOGIN_TYPE,
+          STUDENT_ID: sessionData?.STUDENT_ID,
+        };
 
-useEffect(() => {
-  let data = receipts;
-  if (searchText.trim() !== '') {
-    data = data.filter(
-      item =>
-        item.Receipt_No.includes(searchText) ||
-        item.IGKVRefNo.includes(searchText),
-    );
-  }
-  if (selectedSession && selectedSession !== 'All') {
-    data = data.filter(
-      item => item.Academic_Session_Name_E === selectedSession,
-    );
-  }
-  if (selectedPurpose && selectedPurpose !== 'All') {
-    data = data.filter(item => item.Fee_Purpose_Name === selectedPurpose);
-  }
-  data = sortByDateDesc(data);
-// console.log(data,"data")
-  setFiltered(data);
-}, [searchText, selectedSession, selectedPurpose, receipts]);
+        const fees = await getFeeReceipt(payload);
+        setReceipts(fees);
+        setFiltered(fees);
+        setSessionOptions([
+          { label: 'All', value: 'All' },
+          ...[...new Set(fees?.map(i => i.Academic_Session_Name_E))]?.map(s => ({
+            label: s,
+            value: s,
+          }))
+        ]);
+
+        setPurposeOptions([
+          { label: 'All', value: 'All' },
+          ...[...new Set(fees?.map(i => i.Fee_Purpose_Name))]?.map(p => ({
+            label: p,
+            value: p,
+          }))
+        ]);
+
+      } catch (error) {
+        console.error(error);
+      }
+      setLoading(false);
+    };
+
+    fetchReceipts();
+  }, []);
+
+  useEffect(() => {
+    let data = receipts;
+    if (searchText.trim() !== '') {
+      data = data.filter(
+        item =>
+          item.Receipt_No.includes(searchText) ||
+          item.MGUVVRefNo.includes(searchText),
+      );
+    }
+    if (selectedSession && selectedSession !== 'All') {
+      data = data.filter(
+        item => item.Academic_Session_Name_E === selectedSession,
+      );
+    }
+    if (selectedPurpose && selectedPurpose !== 'All') {
+      data = data.filter(item => item.Fee_Purpose_Name === selectedPurpose);
+    }
+    data = sortByDateDesc(data);
+    // console.log(data,"data")
+    setFiltered(data);
+  }, [searchText, selectedSession, selectedPurpose, receipts]);
 
 
   const renderReceipt = ({ item }) => (
-    <TouchableOpacity onPress={() => handleCardPress(item)} style={styles.card}>
+    <TouchableOpacity onPress={() => handleCardPress(item)} colors={colors} style={styles.card}>
       <View style={styles.cardGrid}>
         {/* Only show purpose, amount, and date as per requirements */}
         <Text style={styles.headtittle}>{item.Fee_Purpose_Name}</Text>
@@ -209,13 +226,15 @@ useEffect(() => {
         </TouchableOpacity>
       </View>
     </TouchableOpacity>
+
+
   );
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
-        <Header  />
-        <Text style={styles.headerText }>Fees Recipt</Text>
+        <Header />
+        <Text style={styles.headerText}>Fees Recipt</Text>
         {/* <TextInput
           style={styles.search}
           placeholder="Search by Receipt No or Ref No"
@@ -252,7 +271,8 @@ useEffect(() => {
 
         {loading ? (
           <View
-            style={{flex: 1, justifyContent: 'center',alignItems: 'center',
+            style={{
+              flex: 1, justifyContent: 'center', alignItems: 'center',
               marginTop: 50,
             }}
           >
@@ -392,16 +412,16 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 
-    headerText: {
-    margin:10,
-    padding:10,
-    borderRadius: 8,
+  headerText: {
+    margin: 10,
+    padding: 10,
+    borderRadius: 30,
     marginTop: 10,
     fontSize: 18,
     fontWeight: '600',
     textAlign: 'center',
-    color: '#333',
-    backgroundColor: '#ff922b',
+    color: '#01201bff',
+    backgroundColor: '#B7A3E3',
   },
 
   closeButton: {
@@ -418,7 +438,10 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 
-  container: { flex: 1, backgroundColor: '#ECEDEF' },
+  container: {
+    flex: 1,
+    backgroundColor: '#e2e3e5ff'
+  },
   search: {
     marginHorizontal: 15,
     marginTop: 5,
@@ -429,7 +452,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#a5d6a7',
   },
-  
+
   dropdown: {
     marginHorizontal: 15,
     marginBottom: 10,
@@ -451,16 +474,18 @@ const styles = StyleSheet.create({
   placeholderStyle: { fontSize: 14, color: '#999' },
   selectedTextStyle: { fontSize: 14, color: '#1b5e20' },
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#CBCBCB',
     marginHorizontal: 10,
     marginVertical: 4,
-    padding: 10,
+    padding: 5,
     borderRadius: 12,
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    borderBottomWidth: 5,
-    borderBottomColor: '#ff922b',
+    borderWidth: 2,
+    borderColor: '#fff'
+    // borderBottomWidth: 5,
+    // borderBottomColor: '#ff922b',
   },
   cardGrid: {
     flexDirection: 'row',
@@ -471,19 +496,23 @@ const styles = StyleSheet.create({
     width: '50%',
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#000397ff',
+    color: '#950202ff',
     marginBottom: 8,
+    borderBottomWidth: 2,
+    borderBottomColor: '#ffffffff',
   },
   gridItem: { width: '50%', fontSize: 14, color: '#333', marginBottom: 8 },
   downloadBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#e2ad00ff',
+    backgroundColor: '#1581BF',
     padding: 6,
     borderRadius: 6,
+    borderWidth: 2,
+    borderColor: '#fff'
+
   },
   downloadText: { color: '#fff', fontWeight: 'bold' },
 });
 
 export default FeeReceipt;
- 

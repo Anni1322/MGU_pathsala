@@ -67,7 +67,7 @@ export default function Header({ title, backgroundColor }) {
             canGoBack ? styles.childTitle : styles.parentTitle,
           ]}
         >
-          {title || 'PAATH VIGYAN'}
+          {title || 'MOR GURUKUL'}
         </Text>
         <View style={styles.headerRight}>
           <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   parentTitle: {
-    color: colors.primary,
+    color: colors.background,
     fontSize: 20,
   },
   childTitle: {
