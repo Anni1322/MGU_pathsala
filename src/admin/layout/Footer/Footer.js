@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // justifyContent: 'center',
     flex: 1,
-     bottom: -18,
+    bottom: -18,
   },
   bottomNavText: {
     fontSize: 11,

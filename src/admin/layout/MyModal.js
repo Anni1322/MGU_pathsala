@@ -100,9 +100,9 @@ const styles = StyleSheet.create({
   },
 
   line: {
-    width: 45,
-    height: 5,
-    backgroundColor: '#ccc',
+    width: 75,
+    height: 8,
+    backgroundColor: '#e00000ff',
     borderRadius: 5,
     alignSelf: 'center',
     marginBottom: 15,
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 15,
     marginBottom: 12,
-    backgroundColor: colors.lite2,
+    backgroundColor: colors.footercolor,
     borderRadius: 10,
   },
 

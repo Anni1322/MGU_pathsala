@@ -131,14 +131,14 @@ export const facultyMenu = [
   //   data: 'QRScannerr',
   // },
 
-  //   {
-  //   id: 12,
-  //   name: 'Splash',
-  //   iconLib: 'FontAwesome6',
-  //   icon: 'camera',
-  //   screen: 'Splash',
-  //   color: '#888600ff',
-  //   data: 'Splash',
-  // },
+    {
+    id: 12,
+    name: 'Splash',
+    iconLib: 'FontAwesome6',
+    icon: 'camera',
+    screen: 'Splash',
+    color: '#888600ff',
+    data: 'Splash',
+  },
 
 ];

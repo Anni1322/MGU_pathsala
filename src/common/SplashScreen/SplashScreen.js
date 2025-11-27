@@ -371,12 +371,12 @@ const styles = StyleSheet.create({
   slide: {
     width,
     alignItems: 'center',
-    paddingTop: 60,
+    paddingTop: 0,
 
   },
 
   taglineContainer: {
-    marginTop: 20,
+    marginTop: 0,
     backgroundColor: '#ffe3e3ff',
     padding: 10,
     borderRadius: 5
@@ -391,14 +391,14 @@ const styles = StyleSheet.create({
   mainImagehead: {
     width: '90%',
     height: 120,
-    marginTop: -50,
+    marginTop: 0,
     // backgroundColor:'#fff',
   },
 
   mainImage: {
     width: '80%',
     height: 260,
-    marginTop: 20,
+    marginTop: 0,
   },
 
   title: {
@@ -430,18 +430,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
     marginHorizontal: 5,
     // position: 'absolute',
-    bottom: 10,
+    bottom: 0,
     right: 120,
   },
 
   skipBtn: {
     position: 'absolute',
-    bottom: 180,
+    bottom: 155,
     right: 30,
     backgroundColor: '#E74C3C',
-    paddingVertical: 12,
+    // paddingVertical: 12,
     paddingHorizontal: 25,
-    borderRadius: 30,
+    borderRadius: 20,
   },
 
   skipText: {
