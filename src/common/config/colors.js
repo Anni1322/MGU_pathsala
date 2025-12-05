@@ -76,6 +76,7 @@ export default {
   cardcolor:'#DEF5E5',
   tableheader:'#86B0BD',
   tablerow:'#F2EAD3',
+  bgcolor:'#2d016bff',
 };
 
 // // ### 🎨 **Theme 5 – Soft Pastels**

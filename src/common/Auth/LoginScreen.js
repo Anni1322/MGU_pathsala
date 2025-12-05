@@ -13,6 +13,7 @@ import {
   Alert,
   ActivityIndicator,
   Image,
+  StatusBar,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -21,6 +22,7 @@ import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import AuthService from "../../common/Services/AuthService";
 import SessionService from "../../common/Services/SessionService";
 import UpdateChecker from '../../common/UpdateChecker';
+import colors from "../config/colors";
 
 
 const LoginScreen = () => {
@@ -173,6 +175,9 @@ const LoginScreen = () => {
   // };
 
 
+
+
+
   // with masterid
   const handleLogin = async () => {
     if (!userid || !password) {
@@ -200,7 +205,6 @@ const LoginScreen = () => {
       );
       return navigation.replace("Student", { userData });
     }
-
 
     if (userid === 'MIS0001' && password === 'MIS0001') {
       LoginDetail = {
@@ -233,8 +237,6 @@ const LoginScreen = () => {
       );
       return navigation.replace("Admin", { userData });
     }
-
-
 
     // ✅ Proceed to API-based login only if not hardcoded
     try {
@@ -433,7 +435,6 @@ const LoginScreen = () => {
       PASSWORD: password,
       OTP: fullOTP,
     };
-
     try {
       const response = await AuthService.verifyOtp(payload);
 
@@ -473,7 +474,6 @@ const LoginScreen = () => {
       } else {
         Alert.alert("Login Error", "Unable to determine user type.");
       }
-
     } catch (error) {
       const message = error?.message || "Try again";
       Alert.alert("OTP Verification Failed", message);
@@ -537,7 +537,6 @@ const LoginScreen = () => {
         const studentLoginType = savedData?.[0]?.LOGIN_TYPE;
         // console.log(studentLoginType)
 
-
         if (userType == 3 || userTypeMaster) {
           // console.log(userType,"userTypeuserType")
           return navigation.replace("Admin", { userId });
@@ -552,12 +551,9 @@ const LoginScreen = () => {
         } else {
           Alert.alert("Invalid User Type", "No valid user type found.");
         }
-
       } else {
         Alert.alert("No Saved Credentials", "Please login manually first.");
       }
-
-
     } catch (error) {
       Alert.alert("Biometric Auth Failed", "Try again or use manual login.");
       return navigation.replace("Login");
@@ -565,72 +561,47 @@ const LoginScreen = () => {
   };
 
 
-  const colors = [
-    // '#FF5733',   
-    // '#33FF57',   
-    // '#3357FF',   
-    // '#FF33A1',   
-    // '#e98101ff',   
-    // '#8A2BE2',   
-    // '#FFFF00',   
-    // '#FF1493',  
-    // '#00BFFF',  
-    // '#8B0000',   
-    // '#FFB823',   
-    '#612e07ff',
-    // '#FFF6DA',   
-  ];
-
-
-
   const word = "MOR-GURUKUL";
-
   return (
     <SafeAreaView style={styles.safeArea}>
+    <StatusBar backgroundColor={ colors.bgcolor} barStyle="light-content" />
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}
-      >
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}>
+        <View style={styles.bg}>
+            <Image
+              source={require('../../../assets/logo_mgu.png')}
+              style={styles.image}
+            />
+          <View style={styles.bannerContainer}>
+            <Text style={styles.bannerText}>
+              {word.split('').map((letter, index) => (
+                <Text key={index} style={{ color: 'white' }}>
+                  {letter}
+                </Text>
+              ))}
+            </Text>
+          </View>
+        </View>
+
+        {/* --- Login/OTP Form Area --- */}
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.inner}>
+            {/* Login to your account / Enter OTP subtitle */}
+            <Text style={styles.subtitle}>
+              {showOTP ? 'Enter OTP' : 'Login to your account'}
+            </Text>
 
-            {/* <Image
-          source={require('../../../assets/signin.png')}
-          width={300}
-          height={300}
-           >
+            {/* <UpdateChecker /> */}
 
-          </Image> */}
-
-
-            {/* <View style={styles.textContainer}> */}
-            <View style={styles.card}>
-              <Text style={styles.bannerText}>
-                {word.split('').map((letter, index) => (
-                  <Text key={index} style={{ color: colors[index % colors.length] }}>
-                    {letter}
-                  </Text>
-                ))}
-              </Text>
-            </View>
-            {/* </View> */}
-
-
-            {/* <Text style={styles.title}>MOR-GURUKUL</Text> */}
-
-            {/* <Text style={styles.subtitle}>
-              {showOTP ? "Enter OTP" : "Login to your account"}
-            </Text> */}
-
-            {/* <UpdateChecker />*/}
+            {/* --- Login Form (UserID/Password) --- */}
             {!showOTP && !hasSavedCredentials && (
               <>
                 <TextInput
                   style={styles.input}
-                  placeholder="Student / Faculty ID"
+                  placeholder="Enter Student Or Faculty ID"
                   value={userid}
                   onChangeText={setuserid}
-                  // keyboardType="numeric"
                   autoCapitalize="none"
                   placeholderTextColor="#aaa"
                 />
@@ -638,7 +609,7 @@ const LoginScreen = () => {
                 <View style={styles.passwordContainer}>
                   <TextInput
                     style={styles.passwordInput}
-                    placeholder="Password"
+                    placeholder="Enter Password"
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry={secure}
@@ -646,15 +617,14 @@ const LoginScreen = () => {
                     placeholderTextColor="#aaa"
                   />
                   <TouchableOpacity onPress={() => setSecure(!secure)}>
-                    <Text style={styles.toggle}>{secure ? "👁️" : "🙈"}</Text>
+                    <Text style={styles.toggle}>{secure ? '👁️' : '👨🏻‍💻'}</Text>
                   </TouchableOpacity>
                 </View>
 
                 <TouchableOpacity
-                  style={styles.button}
+                  style={[styles.button, { backgroundColor: colors.bgcolor }]}
                   onPress={handleLogin}
-                  disabled={loading}
-                >
+                  disabled={loading}>
                   {loading ? (
                     <ActivityIndicator color="#fff" />
                   ) : (
@@ -664,56 +634,53 @@ const LoginScreen = () => {
               </>
             )}
 
+            {/* --- OTP Verification Form --- */}
             {showOTP && (
               <>
                 <View style={styles.otpContainer}>
                   {otp.map((digit, index) => (
                     <TextInput
                       key={index}
-                      ref={(ref) => (inputs.current[index] = ref)}
+                      ref={ref => (inputs.current[index] = ref)}
                       style={styles.otpInput}
                       value={digit}
                       keyboardType="number-pad"
                       maxLength={1}
-                      onChangeText={(text) => handleOTPChange(text, index)}
-                      onKeyPress={(e) => handleKeyPress(e, index)}
+                      onChangeText={text => handleOTPChange(text, index)}
+                      onKeyPress={e => handleKeyPress(e, index)}
                       textAlign="center"
                     />
                   ))}
                 </View>
-
-                <TouchableOpacity style={styles.button} onPress={handleVerifyOTP}>
+                <TouchableOpacity
+                  style={[styles.button, { backgroundColor: colors.bgcolor }]}
+                  onPress={handleVerifyOTP}>
                   <Text style={styles.buttonText}>Verify OTP</Text>
                 </TouchableOpacity>
-
                 <View style={styles.resendContainer}>
                   {timer > 0 ? (
-                    <Text style={styles.timerText}>Resend OTP in {timer}s</Text>
+                    <Text style={styles.timerText}>
+                      Resend OTP in {timer}s
+                    </Text>
                   ) : (
                     <TouchableOpacity onPress={handleResendOTP}>
                       <Text style={styles.resendText}>Resend OTP</Text>
                     </TouchableOpacity>
                   )}
                 </View>
-
               </>
             )}
 
-            {/* {hasSavedCredentials && biometryType && !showOTP && ( */}
+            {/* --- Biometric/Saved Credentials Login --- */}
             {hasSavedCredentials && !showOTP && (
               <>
                 <TouchableOpacity
                   style={styles.fingerprintCircle}
-                  onPress={handleBiometricLogin}
-                >
-                  <FontAwesome6 name="house" size={40} color="#b22707ff" />
-
+                  onPress={handleBiometricLogin}>
+                  {/* <FontAwesome6 name="house" size={40} color="#b22707ff" /> */}
+                  <Text style={{ fontSize: 40, color: '#b22707ff' }}>🏠</Text>
                 </TouchableOpacity>
-                <Text style={styles.fingerprintText}>
-                  Click here{" "}
-                  {/* Tap to login with{" "} */}
-                  {/* {biometryType === "FaceID" ? "Face ID" : "Fingerprint"} */}
-                </Text>
+                <Text style={styles.fingerprintText}>Click here</Text>
               </>
             )}
           </View>
@@ -723,123 +690,119 @@ const LoginScreen = () => {
   );
 };
 
+
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: "#F8F5E9" },
+  safeArea: { flex: 1, backgroundColor: '#F8F5E9' },
   container: { flex: 1 },
+  bg: {
+    height: 330,
+    backgroundColor: colors.bgcolor,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   inner: {
     flex: 1,
     padding: 20,
-    justifyContent: "center",
-    alignItems: "stretch",
+    marginTop: -50,
+    backgroundColor: '#F8F5E9',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    fontFamily: "Arial, sans-serif",
-    fontStyle: "italic",
-    color: "#333",
-    marginBottom: 8,
-    textAlign: "center",
-    marginBottom: 50
-  },
-
   subtitle: {
     fontSize: 18,
-    color: "#666",
+    color: '#666',
     marginBottom: 24,
-    textAlign: "center",
+    textAlign: 'center',
   },
   input: {
-    backgroundColor: "#D9E9CF",
+    backgroundColor: '#D9E9CF',
     padding: 16,
     borderRadius: 12,
     marginBottom: 16,
     fontSize: 16,
     borderWidth: 1,
-    borderColor: '#ffffffff'
+    borderColor: '#ccc',
   },
   passwordContainer: {
-    flexDirection: "row",
-    backgroundColor: "#D9E9CF",
+    flexDirection: 'row',
+    backgroundColor: '#D9E9CF',
     padding: 10,
     borderRadius: 12,
     marginBottom: 16,
-    alignItems: "center",
+    alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#ffffffff'
+    borderColor: '#ccc',
   },
-  passwordInput: { flex: 1, fontSize: 16 },
-  toggle: { marginLeft: 10, fontSize: 18 },
+  passwordInput: { flex: 1, fontSize: 16, paddingHorizontal: 6 },
+  toggle: { marginLeft: 10, fontSize: 18, padding: 5 },
   button: {
-    backgroundColor: "#007E6E",
+
     padding: 16,
-    borderRadius: 12,
-    alignItems: "center",
+    borderRadius: 55,
+    alignItems: 'center',
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#ffffffff'
+    borderColor: '#fff',
   },
-  buttonText: { color: "#fff", fontSize: 16, fontWeight: "bold" },
+  buttonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
   otpContainer: {
-    flexDirection: "row",
-    justifyContent: "space-evenly",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginBottom: 16,
+    paddingHorizontal: 10,
   },
   otpInput: {
     borderWidth: 1,
-    borderColor: "#ffbdbdff",
+    borderColor: '#ffbdbdff',
     borderRadius: 8,
-    padding: 10,
+    padding: 0,
     fontSize: 18,
-    width: 50,
-    height: 50,
-    backgroundColor: "#fff",
+    width: 45,
+    height: 45,
+    backgroundColor: '#fff',
   },
-  resendContainer: { alignItems: "center", marginBottom: 16 },
-  timerText: { color: "#777", fontSize: 14 },
-  resendText: { color: "#4CAF50", fontWeight: "bold", fontSize: 14 },
+  resendContainer: { alignItems: 'center', marginBottom: 16 },
+  timerText: { color: '#777', fontSize: 14 },
+  resendText: { color: '#4CAF50', fontWeight: 'bold', fontSize: 14 },
   fingerprintCircle: {
-    alignSelf: "center",
+    alignSelf: 'center',
     marginTop: 16,
     borderRadius: 100,
     padding: 20,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
   },
   fingerprintText: {
-    textAlign: "center",
+    textAlign: 'center',
     marginTop: 8,
     fontSize: 14,
-    color: "#777",
+    color: '#777',
   },
-  card: {
-    // backgroundColor:'#fff',
-    borderRadius: 10,
-  },
+  image: {
+    marginTop: -50,
+    width: 140,
+    height: 140,
+    backgroundColor: '#ffffffff',
+    borderRadius: 70,
 
-  textContainer: {
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)', // Semi-transparent white for a card-like effect
-    borderRadius: 20,
-    paddingVertical: 15,
-    paddingHorizontal: 25,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 5,
+  },
+ 
+
+  bannerContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 55,
+    margin: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
   },
   bannerText: {
-    color: '#FF9800',
-    fontSize: 22,
+    fontSize: 28,
     fontWeight: 'bold',
     textAlign: 'center',
     fontFamily: 'serif',
-    letterSpacing: 1,
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
-    padding: 20
+    letterSpacing: 2,
+    textShadowColor: 'rgba(0, 0, 0, 0.4)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 3,
   },
 });
-
 export default LoginScreen;

@@ -16,15 +16,10 @@ export default function Header({ title, backgroundColor }) {
   const navigation = useNavigation();
   const canGoBack = navigation.canGoBack();
   const [isMounted, setIsMounted] = useState(false);
-
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const slideAnim = useRef(new Animated.Value(-SIDEBAR_WIDTH)).current;
-
   const [profileData, setProfileData] = useState(null);
-
-
   const [isModalVisible, setModalVisible] = useState(false);
-
   const toggleSidebar = () => {
     Animated.timing(slideAnim, {
       toValue: isSidebarOpen ? -SIDEBAR_WIDTH : 0,
@@ -36,7 +31,6 @@ export default function Header({ title, backgroundColor }) {
 
   useEffect(() => {
     setIsMounted(true);
-
     const fetchSession = async () => {
       const sessionData = await SessionService.getSession();
       const data = sessionData?.LoginDetail[0];
