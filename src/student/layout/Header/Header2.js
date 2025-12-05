@@ -30,7 +30,7 @@ export default function Header({ title, backgroundColor }) {
   };
 
   // const dynamicBgColor = backgroundColor || colors.primary;
-  const dynamicBgColor = backgroundColor || '#05a0abff';
+  const dynamicBgColor = backgroundColor || colors.whiteD;
 
   return (
     <>
@@ -54,11 +54,11 @@ export default function Header({ title, backgroundColor }) {
               justifyContent: 'center',
             }}
           >
-            <FontAwesome6 name="chevron-left" size={26} color={colors.background} />
+            <FontAwesome6 name="chevron-left" size={26} color={colors.footercolor} />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity onPress={toggleSidebar}>
-            <EvilIcons name="navicon" size={30} color={colors.background} />
+            <EvilIcons name="navicon" size={30} color={colors.footercolor} />
           </TouchableOpacity>
         )}
         <Text
@@ -71,10 +71,10 @@ export default function Header({ title, backgroundColor }) {
         </Text>
         <View style={styles.headerRight}>
           <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
-            <FontAwesome6 name="bell" size={24} color={colors.background} />
+            <FontAwesome6 name="bell" size={24} color={colors.footercolor} />
           </TouchableOpacity>
           <View
-            style={[styles.notificationDot, { backgroundColor: colors.background }]}
+            style={[styles.notificationDot, { backgroundColor: colors.footercolor }]}
           />
         </View>
       </View>
@@ -97,11 +97,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   parentTitle: {
-    color: colors.background,
+    color: colors.footercolor,
     fontSize: 20,
   },
   childTitle: {
-    color: colors.background,
+    color: colors.footercolor,
     fontSize: 18,
   },
   headerRight: {

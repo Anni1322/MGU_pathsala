@@ -69,7 +69,7 @@ export default function Header({ title, backgroundColor }) {
     setModalVisible(!isModalVisible);
   };
 
-  const dynamicBgColor = backgroundColor || colors.lite2;
+  const dynamicBgColor = backgroundColor || colors.footercolor;
   return (
     <>
       <StatusBar backgroundColor={dynamicBgColor} barStyle="light-content" />
@@ -90,22 +90,30 @@ export default function Header({ title, backgroundColor }) {
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-            <FontAwesome6 name="chevron-left" size={26} color={colors.white} />
+            <FontAwesome6 name="chevron-left" size={26} color={colors.background} />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity onPress={toggleSidebar}>
-            <EvilIcons name="navicon" size={30} color={colors.white} />
+            <EvilIcons name="navicon" size={30} color={colors.background} />
           </TouchableOpacity>
         )}
 
+
         <Text style={[styles.headerTitle, canGoBack ? styles.childTitle : styles.parentTitle,]}>
           {title || 'MOR 🧑🏻‍🎓 GURUKUL'}
+
+          {/* <Image
+            source={require('../../../../assets/morgurukul.png')}
+            style={styles.image}
+            resizeMode='cover'
+          /> */}
+
         </Text>
 
         <View style={styles.headerRight}>
           {/* Changed: Now toggles modal instead of navigating */}
           <TouchableOpacity onPress={toggleModal}>
-            <FontAwesome6 name="user" size={24} color={colors.white} />
+            <FontAwesome6 name="user" size={24} color={colors.background} />
           </TouchableOpacity>
 
           {/* <View
@@ -117,14 +125,14 @@ export default function Header({ title, backgroundColor }) {
       {/* New: Modal for Admin Profile */}
       <Modal
         visible={isModalVisible}
-        animationType="slide"  // Slides up from bottom
+        animationType="slide"
         transparent={true}
-        onRequestClose={toggleModal}  // For Android back button
+        onRequestClose={toggleModal}
       >
         <TouchableOpacity
           style={styles.modalOverlay}
           activeOpacity={1}
-          onPress={toggleModal}  // Close modal when tapping outside
+          onPress={toggleModal}
         >
           <View style={styles.modalContent}>
             {/* Close button */}
@@ -138,7 +146,7 @@ export default function Header({ title, backgroundColor }) {
                 source={{ uri: 'https://via.placeholder.com/100' }}
                 style={styles.profileImage}
               /> */}
-              <Text style={styles.profileName}>{profileData?.Emp_Name || 'faculty Name'}</Text>
+              <Text style={styles.profileName}>{profileData?.Emp_Name || 'Faculty Name'}</Text>
               <Text style={styles.profileEmail}>{profileData?.emp_address || 'No mail address found'}</Text>
             </View>
 
@@ -160,12 +168,21 @@ export default function Header({ title, backgroundColor }) {
 
 const styles = StyleSheet.create({
   // Existing styles...
-  header: {
+  image: {
+    width: 110,
     height: 60,
+    // borderRadius: 40,
+    // marginBottom: 10,
+  },
+  header: {
+    height: 80,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 15,
+    paddingHorizontal: 1,
     alignItems: 'center',
+    paddingTop: 20,
+    paddingLeft: 10
+
   },
   headerTitle: {
     flex: 1,
@@ -174,21 +191,23 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   parentTitle: {
-    color: colors.white,
+    color: colors.background,
     fontSize: 20,
-    backgroundColor: '#f0a3a31e',
+    // backgroundColor: '#f0a3a307',
     borderRadius: 7,
-    padding: 10
+    padding: 10,
   },
   childTitle: {
-    color: colors.white,
+    color: colors.background,
     fontSize: 18,
   },
   headerRight: {
-    marginLeft: 10,
-    flexDirection: 'row',
-    position: 'relative',
-    gap: 10,
+    padding:10,
+    marginRight: 10
+    // marginLeft: 0,
+    // flexDirection: 'row',
+    // position: 'relative',
+    // gap: 10,
   },
   notificationDot: {
     position: 'absolute',

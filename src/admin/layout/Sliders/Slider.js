@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { View, Text, FlatList, Dimensions, StyleSheet, TouchableOpacity, ImageBackground, } from 'react-native';
+import colors from '../../../common/config/colors';
 
 const { width } = Dimensions.get('window');
 
@@ -216,7 +217,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     marginTop: 10,
-    backgroundColor: '#5D866C',
+    backgroundColor:colors.dangerD,
     padding: 8,
     marginLeft: 40,
     marginRight: 40,

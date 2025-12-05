@@ -90,7 +90,7 @@
 
 
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { useNavigation } from '@react-navigation/native';
 import colors from '../../../common/config/colors';
@@ -116,7 +116,7 @@ const menuItems = [
     iconName: 'house',
     label: '',
     routeName: 'HomeLayout',
-    isHome: true, 
+    isHome: true,
   },
   {
     key: 'My Profile',
@@ -138,12 +138,12 @@ const menuItems = [
 export default function FooterNav() {
   const navigation = useNavigation();
 
- 
+
   const renderMenuItem = (item) => {
     // Determine the style and navigation action based on the 'isHome' flag
     const buttonStyle = item.isHome ? styles.homeBtn : styles.bottomNavItem;
-    const navAction = item.isHome ? 
-      () => navigation.replace(item.routeName) : 
+    const navAction = item.isHome ?
+      () => navigation.replace(item.routeName) :
       () => navigation.navigate(item.routeName);
 
     if (item.isHome) {
@@ -153,8 +153,8 @@ export default function FooterNav() {
           style={buttonStyle}
           onPress={navAction}
         >
-          <View style={[styles.homeBtnCircle, { backgroundColor: colors.background }]}>
-            <FontAwesome6 name={item.iconName} size={30} color={colors.secondary} />
+          <View style={[styles.homeBtnCircle, { backgroundColor: colors.dangerD, borderWidth:1, borderColor:'white' }]}>
+            <FontAwesome6 name={item.iconName} size={30} color={colors.white} />
           </View>
           <Text style={[styles.bottomNavText, { color: colors.background, marginTop: 6 }]}>
             {item.label}
@@ -177,40 +177,73 @@ export default function FooterNav() {
   };
 
   return (
-    <View style={[styles.bottomNav, { backgroundColor: colors.lite }]}>
+
+    <ImageBackground
+      source={require('../../../../assets/footer1.png')}
+      style={styles.bottomNav}
+      resizeMode="stretch" 
+    >
       {menuItems.map(renderMenuItem)}
-    </View>
+    </ImageBackground>
+
+    // <View style={[styles.bottomNav, { backgroundColor: colors.lite }]}>
+    //   {menuItems.map(renderMenuItem)}
+    // </View>
   );
 }
 
 const styles = StyleSheet.create({
+  // bottomNav: {
+  //   // position: 'absolute',
+  //   bottom: 0,
+  //   left: 0,
+  //   right: 0,
+  //   height: 65,
+  //   flexDirection: 'row',
+  //   justifyContent: 'space-around',
+  //   alignItems: 'center',
+  //   borderTopLeftRadius: 20,
+  //   borderTopRightRadius: 20,
+  //   borderBottomLeftRadius: 20,
+  //   borderBottomRightRadius: 20,
+  //   shadowColor: colors.secondary,
+  //   shadowOffset: { width: 0, height: -1 },
+  //   shadowOpacity: 0.1,
+  //   shadowRadius: 8,
+  //   elevation: 8,
+  //   paddingHorizontal: 10,
+  //   borderWidth: 5,
+  //   borderColor: '#ffffffff',
+  // },
+
   bottomNav: {
-    // position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    height: 65,
+    height: 105,
+    // width:'100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    shadowColor: colors.secondary,
-    shadowOffset: { width: 0, height: -1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 8,
+    backgroundColor: '#ffffffff',
+
+    // borderTopLeftRadius: 85,    
+    // borderTopRightRadius: 85,   
+    // backgroundColor: '#f3faf9d7',
+    // shadowColor: colors.secondary,
+    // shadowOffset: { width: 0, height: -1 },
+    // shadowOpacity: 0.1,
+    // shadowRadius: 8,
+    // elevation: 38,
     paddingHorizontal: 10,
-    borderWidth: 5,
-    borderColor: '#ffffffff',
   },
-  
+
+
   bottomNavItem: {
     alignItems: 'center',
-    justifyContent: 'center',
+    // justifyContent: 'center',
     flex: 1,
+    bottom: -18,
   },
   bottomNavText: {
     fontSize: 11,
@@ -220,11 +253,12 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: -20,
+    bottom: 18,
+    // marginBottom: -20,
   },
   homeBtnCircle: {
-    width: 58,
-    height: 58,
+    width: 78,
+    height: 78,
     borderRadius: 39,
     justifyContent: 'center',
     alignItems: 'center',

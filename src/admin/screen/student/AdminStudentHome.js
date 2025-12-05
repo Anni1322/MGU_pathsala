@@ -9,6 +9,7 @@ import { studentMenu } from "../../../student/config/Menu/MenuLiist";
 import { useRoute } from '@react-navigation/native';
 import { HttpService } from "../../../common/Services/HttpService";
 import SessionService from '../../../common/Services/SessionService';
+import colors from "../../../common/config/colors";
 
 
 const AdminStudentHome = ({ navigation }) => {
@@ -101,7 +102,6 @@ const AdminStudentHome = ({ navigation }) => {
                     </View>
                 </View>
             </ScrollView>
-
             <Footer />
         </SafeAreaView>
     );
@@ -142,8 +142,8 @@ const styles = StyleSheet.create({
     studentReportCard: {
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: "#2a2c94",
-        borderRadius: 15,
+        backgroundColor: colors.dangerD,
+        borderRadius: 10 ,
         justifyContent: "center",
         paddingVertical: 14,
         marginTop: 20,
