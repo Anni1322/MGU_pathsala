@@ -58,7 +58,7 @@ export default function Header({ title, backgroundColor }) {
           </TouchableOpacity>
         ) : (
           <TouchableOpacity onPress={toggleSidebar}>
-            <EvilIcons name="navicon" size={30} color={colors.footercolor} />
+            <EvilIcons name="navicon" size={40} color={colors.footercolor} />
           </TouchableOpacity>
         )}
         <Text
@@ -71,7 +71,7 @@ export default function Header({ title, backgroundColor }) {
         </Text>
         <View style={styles.headerRight}>
           <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
-            <FontAwesome6 name="bell" size={24} color={colors.footercolor} />
+            <FontAwesome6 name="bell" size={30} color={colors.footercolor} />
           </TouchableOpacity>
           <View
             style={[styles.notificationDot, { backgroundColor: colors.footercolor }]}

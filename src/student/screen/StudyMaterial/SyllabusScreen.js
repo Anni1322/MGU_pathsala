@@ -15,6 +15,7 @@ import Footer from "../../layout/Footer/Footer";
 import { HttpService } from "../../../common/Services/HttpService";
 import SessionService from '../../../common/Services/SessionService';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import colors from '../../../common/config/colors';
 
 const SyllabusScreen = () => {
   const [years, setYears] = useState([]);
@@ -146,9 +147,8 @@ const SyllabusScreen = () => {
                 value={selectedYear}
                 onChange={item => {
                   setSelectedYear(item.value);
-                  setSelectedSemester('1'); // Reset semester to default when year changes
+                  setSelectedSemester('1');  
                   setCourses([]);
-                  // Fetch courses for the new year and default semester
                   fetchSession(item.value, '1');
                 }}
                 maxHeight={200}
@@ -186,7 +186,6 @@ const SyllabusScreen = () => {
               />
             </View>
           </View>
-
           {loading || courses.length === 0 ? (
             <ActivityIndicator size="large" color="#1e90ff" />
           ) : (
@@ -273,12 +272,14 @@ const styles = StyleSheet.create({
     color: '#0a1f92ff',
   },
   dropdownRow: {
-    flexWrap: 'wrap',
+    // flexWrap: 'wrap',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginVertical: 20,
-    height: 80,
-    padding: 10
+    marginVertical: 5,
+    height: 120,
+    padding: 10,
+    backgroundColor:colors.footercolor,
+    borderRadius:10
   },
   dropdown: {
     flex: 1,
@@ -290,15 +291,16 @@ const styles = StyleSheet.create({
   dropdownLabel: {
     fontSize: 14,
     marginBottom: 5,
-    color: '#6482AD',
+    color: colors.background,
+   marginLeft:30
   },
   dropdownBox: {
     borderWidth: 1,
-    borderColor: '#6482AD',
+    borderColor: colors.footercolor,
     borderRadius: 12,
     paddingHorizontal: 10,
     paddingVertical: 14,
-    backgroundColor: '#fff',
+    // backgroundColor: '#fc0000ff',
     elevation: 3,
     shadowColor: '#000',
     shadowOpacity: 0.1,
@@ -311,7 +313,7 @@ const styles = StyleSheet.create({
   selectedTextStyle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#006d33ff',
+    color: colors.dangerD,
   },
   iconStyle: {
     width: 22,

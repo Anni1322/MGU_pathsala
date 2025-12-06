@@ -131,7 +131,8 @@ const HomeLayout = () => {
         <View style={styles.infocard}>
           <View style={styles.userInfo}>
             <Image source={{
-                uri: profilePhoto || "https://t4.ftcdn.net/jpg/02/29/75/83/360_F_229758328_7x8jwCwjtBMmC6rgFzLFhZoEpLobB6L8.jpg", }} style={styles.avatar}/>
+              uri: profilePhoto || "https://t4.ftcdn.net/jpg/02/29/75/83/360_F_229758328_7x8jwCwjtBMmC6rgFzLFhZoEpLobB6L8.jpg",
+            }} style={styles.avatar} />
             <View style={{ flex: 1 }}>
               <Text style={styles.userName}>{profileData?.student_name} 👋</Text>
               <Text style={styles.userHandle} >
@@ -146,26 +147,49 @@ const HomeLayout = () => {
 
 
 
-        {/* Pathshala Menu */}
-        <Text style={styles.sectionTitle}>MOR GURUKUL</Text>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.horizontalMenuContainer}>
-          {pathshalaMenu.map((item) => (
-            <TouchableOpacity key={item.id} onPress={() => navigation.navigate(item.screen)}>
-              <View style={{ alignItems: "center", marginHorizontal: 8, margin:5 }}>
-                <View style={[styles.iconRectangle, { backgroundColor: item.color }]}>
-                  <FontAwesome6 name={item.icon} size={20} color="white" />
-                </View>
-                <Text style={styles.iconLabel}>{item.name}</Text>
-              </View>
+    // {/* Pathshala Menu */}
+        <View style={[styles.cardmain, { marginBottom: -25 }]}>
+          {/* Student E-Corner */}
+          <View style={[styles.texthead, { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }]}>
+            <Text style={styles.sectionTitle}>Student Corner</Text>
+            <TouchableOpacity
+              style={styles.all}
+              onPress={() => navigation.navigate('ViewAllScreen', { title: 'Student Corner', menuData: pathshalaMenu })}>
+              <Text style={styles.all}>View All</Text>
             </TouchableOpacity>
-          ))}
-        </ScrollView>
+          </View>
+
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.eCornerContainer}>
+            <View style={styles.gridContainer}>
+              {pathshalaMenu.slice(0, 4).map((item) => (
+                <TouchableOpacity key={item.id}
+                  style={styles.gridItem}
+                  onPress={() => navigation.navigate(item.screen)}>
+                  <View style={{ alignItems: "center" }}>
+                    <View style={styles.iconRectangle}>
+                      <FontAwesome6 name={item.icon} size={28} color={item.color} />
+                    </View>
+                    <Text style={styles.iconLabel}>{item.name}</Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </ScrollView>
+        </View>
+
         <View style={styles.cardmain}>
           {/* Student E-Corner */}
-          <Text style={styles.sectionTitlestudent}>Student Corner</Text>
+          <View style={[styles.texthead, { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }]}>
+            <Text style={styles.sectionTitle}>Services</Text>
+            <TouchableOpacity
+              style={styles.all}
+              onPress={() => navigation.navigate('ViewAllScreen', { title: 'Services', menuData: studentMenu })}>
+              <Text style={styles.all}>View All</Text>
+            </TouchableOpacity>
+          </View>
+
           <ScrollView
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.eCornerContainer}>
@@ -175,8 +199,8 @@ const HomeLayout = () => {
                   style={styles.gridItem}
                   onPress={() => navigation.navigate(item.screen)}>
                   <View style={{ alignItems: "center" }}>
-                    <View style={[styles.iconRectangle, { backgroundColor: item.color }]}>
-                      <FontAwesome6 name={item.icon} size={22} color="white" />
+                    <View style={styles.iconRectangle}>
+                      <FontAwesome6 name={item.icon} size={28} color={item.color} />
                     </View>
                     <Text style={styles.iconLabel}>{item.name}</Text>
                   </View>
@@ -198,13 +222,13 @@ const styles = StyleSheet.create({
   content: { flex: 1, padding: 15 },
   infocard: {
     marginLeft: -20,
-    // marginRight: 165,
+    marginRight: -15,
     marginTop: -5,
     marginBottom: 10,
-    backgroundColor:colors.footercolor,
+    backgroundColor: colors.footercolor,
     // borderTopLeftRadius:60,
-    borderTopRightRadius: 80,
-    borderBottomRightRadius: 80,
+    // borderTopRightRadius: 80,
+    // borderBottomRightRadius: 80,
   },
   cardmain: {
     // marginRight: -15,
@@ -222,39 +246,52 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 15,
-
   },
-  avatar: { 
+  avatar: {
     width: 50, height: 50, borderRadius: 25, marginRight: 10
-   },
-  userName: { 
-    fontWeight: 'bold', 
-    fontSize: 14, 
-    color:colors.background
   },
-  userHandle: { color:colors.background, fontSize: 12 },
+  userName: {
+    fontWeight: 'bold',
+    fontSize: 14,
+    color: colors.background
+  },
+  userHandle: { color: colors.background, fontSize: 12 },
   greeting: { color: 'darkred', fontWeight: '600' },
 
-  sectionTitle: {
-    color: '#510303ff',
+
+  texthead: {
+    color: colors.footercolor,
     fontWeight: 'bold',
-    fontSize: 16,
-    marginBottom: 8,
+    flexDirection: 'row',
+    // alignContent: 'space-around'
+
+  },
+  all: {
+    color: colors.dangerD,
+    textAlign: 'right',
+    fontWeight: 'bold',
+    fontSize: 17,
+    marginBottom: 4,
     marginTop: 8,
-    justifyContent: 'center',
-    backgroundColor:'#ffffff5c',
-    alignItems: 'center',
-    padding:5,
-    borderRadius:10
+    marginRight: 10,
+  },
+  sectionTitle: {
+    color: colors.footercolor,
+    fontWeight: 'bold',
+    fontSize: 20,
+    marginBottom: 4,
+    marginTop: 8,
+    marginRight: 10,
   },
   sectionTitlestudent: {
-    color: 'green',
+    color: colors.footercolor,
     fontWeight: 'bold',
-    fontSize: 16,
-    marginBottom: 8,
+    fontSize: 20,
+    marginBottom: 4,
     marginTop: 8,
-    marginRight:10,
-    textAlign: 'right', 
+    marginRight: 10,
+    // textAlign: 'right',
+    fontFamily: 'Arial'
   },
 
   iconCircle: {
@@ -274,28 +311,34 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 5,
+    borderWidth: 0.7,
+    borderRadius: 10,
+    // backgroundColor:'red'
 
     // shadowOffset: { width: 0, height: 6 },
     // shadowOpacity: 0.3,
     // shadowRadius: 8,
     // elevation: 10,
     // backgroundColor: '#fff',
-    
   },
 
   iconLabel: {
     fontSize: 13,
     color: '#003109ff',
     textAlign: 'center',
+    fontFamily: 'Arial'
   },
 
+  card1: {
+    padding: 10,
+  },
   gridContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     borderRadius: 20,
     justifyContent: 'space-around',
     justifyContent: 'flex-start',
-    marginBottom:15
+    marginBottom: 15
   },
   gridItem: {
     width: '25%',

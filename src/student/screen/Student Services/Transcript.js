@@ -11,6 +11,7 @@ import Loading from '../../../common/Services/Loading'; // Assuming this is a sp
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { API_BASE_URL } from '../../../common/config/BaseUrl';
 import { downloadFile } from "../../../common/Services/pdfService";
+import colors from '../../../common/config/colors';
 
 const Transcript = () => {
   const [transcriptUrl, setTranscriptUrl] = useState(null);
@@ -109,16 +110,16 @@ const Transcript = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF1DC',
+    backgroundColor: colors.background,
     justifyContent: 'center',
     alignItems: 'center',
     // paddingHorizontal: 20,
   },
   header: {
-    backgroundColor: '#3A98B9',
+    backgroundColor: colors.footercolor,
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: colors.background,
     borderRadius: 20,
     margin: 10,
     padding: 15,
@@ -130,16 +131,16 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   card: {
-    backgroundColor: '#FEFAE0',
+    backgroundColor: colors.footercolor,
     borderRadius: 15,
     padding: 20,
-    width: '90%', // More responsive
-    flex: 1, // Dynamic height
-    elevation: 5,
-    shadowColor: '#000',
+    width: '90%',  
+    // flex: 1, 
+    // elevation: 5,
+    // shadowColor: '#000',
     // shadowOffset: { width: 0, height: 5 },
     // shadowOpacity: 0.1,
-    shadowRadius: 6,
+    // shadowRadius: 6,
     // alignItems: 'center',
   },
   title: {
@@ -147,7 +148,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
-    color: '#8500baff',
+    color: colors.background,
   },
   infoRow: {
     alignItems: 'center',

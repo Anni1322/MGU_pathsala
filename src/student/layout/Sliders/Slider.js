@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { View, Text, FlatList, Dimensions, StyleSheet, TouchableOpacity, ImageBackground, } from 'react-native';
 import Video from 'react-native-video';
+import colors from '../../../common/config/colors';
 
 const { width } = Dimensions.get('window');
 
@@ -10,49 +11,49 @@ const sliderData = [
     title: 'MGUVV Durg',
     subtitle: 'Mahatma Gandhi Udyanikee Evam Vanikee Vishwavidyalaya, Durg',
     video: 'https://mguvv.ac.in/angular/assets/video/home_video.mp4',
-    color: '#6a9f66db',  
+    // color: '#001168db',
   },
   {
     id: '1',
     title: 'MGUVV Durg: Pioneering Excellence',
     subtitle: 'Mahatma Gandhi University of Horticulture and Forestry',
-    color: '#001168db', 
+    // color: '#001168db',
   },
   {
     id: '2',
     title: 'Focus on Horticulture & Forestry',
     subtitle: 'Specialized Academic Programs for Green Careers',
-    color: '#228B22', 
+    // color: '#001168db',
   },
   {
     id: '3',
     title: 'Committed to Academic Excellence',
     subtitle: 'Dedicated Faculty & State-of-the-Art Research Facilities',
-    color: '#837211ff',  
+    // color: '#837211ff',
   },
   {
     id: '4',
     title: 'Promoting Sustainable Practices',
     subtitle: 'Research and Education for Environmental Stewardship',
-    color: '#128312ff',  
+    // color: '#128312ff',
   },
   {
     id: '5',
     title: 'Central Chhattisgarh Location',
     subtitle: 'Excellent Connectivity & Vibrant University Life in Durg',
-    color: '#8c2b1aff', // Tomato red for vibrancy
+    // color: '#8c2b1aff', // Tomato red for vibrancy
   },
   {
     id: '6',
     title: 'Hands-on Learning',
     subtitle: 'Practical Field Exposure and Experiential Education',
-    color: '#8A2BE2', // Blue violet for hands-on
+    // color: '#8A2BE2', // Blue violet for hands-on
   },
   {
     id: '7',
     title: 'Empowering Rural Economy',
     subtitle: 'Research Focused on Farmers and Local Producers',
-    color: '#DAA520', // Goldenrod for rural/economy
+    // color: '#DAA520', // Goldenrod for rural/economy
   },
 ];
 
@@ -82,7 +83,7 @@ const Slider = () => {
   }, [currentIndex]);
 
   const renderItem = ({ item }) => {
-    const cardColor = item.color || '#6a9f66db';  
+    const cardColor = item.color || '#6a9f66db';
 
     if (item.video) {
       return (
@@ -127,11 +128,13 @@ const Slider = () => {
         onViewableItemsChanged={onViewRef.current}
         viewabilityConfig={viewConfigRef.current} />
 
-      <View style={styles.dotContainer}>
-        {sliderData.map((_, index) => (
-          <View key={index}
-            style={[ styles.dot, currentIndex === index ? styles.activeDot : null,]} />
-        ))}
+      <View style={[styles.cardDot,]}>
+        <View style={styles.dotContainer}>
+          {sliderData.map((_, index) => (
+            <View key={index}
+              style={[styles.dot, currentIndex === index ? styles.activeDot : null,]} />
+          ))}
+        </View>
       </View>
     </View>
   );
@@ -139,7 +142,7 @@ const Slider = () => {
 
 const styles = StyleSheet.create({
   video: {
-    width: width -24,
+    width: width - 24,
     height: width * 0.55,
     borderRadius: 20,
     position: 'absolute',
@@ -150,22 +153,21 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   card: {
-    width: width -24,
+    width: width * 0.9,
     borderRadius: 20,
-     height: width * 0.15,
+    height: width * 0.45,
     marginHorizontal: 8,
     marginTop: 1,
     padding: width * 0.04,
     flexDirection: 'row',
     alignItems: 'center',
-    minHeight: width * 0.45,
     position: 'relative',
     overflow: 'hidden',
   },
   userCard: {
     padding: 20,
     borderRadius: 15,
-    marginBottom: 20,
+    marginBottom: 10,
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
@@ -180,7 +182,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 90,
     paddingRight: 5,
-    zIndex: 2, 
+    zIndex: 2,
   },
   title: {
     color: '#fff',
@@ -205,13 +207,22 @@ const styles = StyleSheet.create({
   },
   arrow: {
     fontSize: 20,
-    color: '#002B34',
+    color: '#342a00ff',
     fontWeight: 'bold',
+  },
+  cardDot: {
+    backgroundColor: colors.dangerD,
+    padding: 5,
+    borderRadius: 15,
+    // marginBottom: 10,
+    // flexDirection: 'row',
+    alignItems: 'center',
+    // // borderWidth: 5,
+    // borderColor: 'green'
   },
   dotContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 10,
   },
   dot: {
     width: 8,

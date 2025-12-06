@@ -136,13 +136,13 @@ export const pathshalaMenu = [
 const getColorForMenuItem = (name) => {
   const colors = {
     'Profile': '#432323',   
-    'Registraion Card': '#7ec8f1',   
+    'Registraion Card': '#0685caff',   
     'Admit Card': '#a89eff',   
     'FeeReceipt': '#E67E22',  
     'Syllabus': '#FE4F2D',  
-    'Transcript': '#ffb96e',  
-    'Notification': '#3A98B9',   
-    'Complaint': '#FFACAC',   
+    'Transcript': '#d76f00ff',  
+    'Notification': '#00aae8ff',   
+    'Complaint': '#930000ff',   
   };
   
   return colors[name] || '#ffffff';   

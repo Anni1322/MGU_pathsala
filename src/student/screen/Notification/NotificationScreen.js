@@ -1,6 +1,6 @@
 // igkv
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, ActivityIndicator, Linking, } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, ActivityIndicator, Linking, StatusBar, } from 'react-native';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import Icon from 'react-native-vector-icons/FontAwesome6';
@@ -13,6 +13,7 @@ import Header from "../../layout/Header/Header2";
 import Footer from "../../layout/Footer/Footer";
 import { HttpService } from "../../../common/Services/HttpService";
 import SessionService from '../../../common/Services/SessionService';
+import colors from '../../../common/config/colors';
 
 
 export default function JobListingScreen() {
@@ -20,8 +21,6 @@ export default function JobListingScreen() {
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
 
-
- 
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -52,17 +51,19 @@ export default function JobListingScreen() {
       );
     }
   };
-
+  const dynamicBgColor = colors.primary;
   return (
     <SafeAreaView style={styles.container}>
+   <StatusBar backgroundColor={dynamicBgColor} barStyle="light-content" />
       {/* Header */}
-      {/* <View style={styles.header}>
-        <EvilIcons name="navicon" size={30} color="#1b001eff" />
+      <View style={styles.header}>
+        <Text style={styles.headerRight}> Notification</Text>
+        {/* <EvilIcons name="navicon" size={30} color="#1b001eff" />
         <View style={styles.headerRight}>
           <FontAwesome6 name="bell" size={24} color="#1b001eff" />
           <View style={styles.notificationDot} />
-        </View>
-      </View> */}
+        </View> */}
+      </View>
 
       {/* Loader / News List */}
       {loading ? (
@@ -71,22 +72,21 @@ export default function JobListingScreen() {
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           {newsData.map((item) => (
             <View key={item.News_Notification_Main_Id} style={styles.card}>
+        
               <View style={styles.cardHeader}>
                 {/* Static icon for logo */}
                 <Image
                   source={{
                     uri: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
-                  }}
-                  style={styles.logo}
-                />
-                
+                  }} style={styles.logo}/>
+
                 {/* Open PDF button */}
                 <TouchableOpacity
                   style={styles.handIconContainer}
-                  onPress={() => openPDF(item.File_Path)}
-                >
+                  onPress={() => openPDF(item.File_Path)}>
                   <FontAwesome6 name="file-pdf" size={22} color="#d9534f" />
                 </TouchableOpacity>
+                <Text style={styles.date}>{item.news_date}</Text>
               </View>
 
               {/* Tags */}
@@ -96,6 +96,7 @@ export default function JobListingScreen() {
                   <View style={styles.jobInfo}>
                     <Text style={styles.position}>{item.Main_Title}</Text>
                     {/* <Text style={styles.company}>{item.Sub_Title}</Text> */}
+                  
                   </View>
                 </View>
                 <View style={styles.tagRed}>
@@ -114,7 +115,7 @@ export default function JobListingScreen() {
 
               {/* Bottom Row */}
               <View style={styles.bottomRow}>
-                <Text style={styles.date}>{item.news_date}</Text>
+
                 {item.File_Path ? (
                   <TouchableOpacity
                     style={styles.seeMoreBtn}
@@ -169,13 +170,25 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#e8f0fe' },
   header: {
     height: 60,
-    backgroundColor: '#f5f7fa',
-    flexDirection: 'row',
+    // flexDirection: 'row',
     justifyContent: 'space-between',
+     backgroundColor:colors.footercolor,
     paddingHorizontal: 15,
     alignItems: 'center',
+    borderBottomEndRadius:40,
+    borderBottomLeftRadius:40
   },
-  headerRight: { position: 'relative' },
+  headerRight: {
+    fontSize:20,
+    padding:10,
+    borderRadius:5,
+    // justifyContent:'center',
+    alignItems:'center',
+    // alignItems:'center',
+    //  position: 'relative',
+    //  backgroundColor:colors.footercolor,
+     color:colors.background
+    },
   notificationDot: {
     position: 'absolute',
     right: -2,
@@ -185,7 +198,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 5,
   },
-  scrollContainer: { paddingHorizontal: 12, paddingBottom: 90 },
+  scrollContainer: { 
+    paddingHorizontal: 12, 
+    paddingBottom: 90 ,
+    marginTop:10
+  },
   card: {
     backgroundColor: '#fff',
     borderRadius: 14,
@@ -211,14 +228,18 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginBottom: 10,
   },
-  tagBlueText: { color: '#3a83f1', fontWeight: '500', fontSize: 12 },
+  tagBlueText: {
+    color: colors.dangerD,
+    fontWeight: '500',
+    fontSize: 12
+  },
   tagRed: {
     backgroundColor: '#f7ccce',
     paddingHorizontal: 14,
     paddingVertical: 5,
     borderRadius: 20,
   },
-  tagRedText: { color: '#f14d55', fontWeight: '500', fontSize: 12 },
+  tagRedText: { color: '#664df1ff', fontWeight: '500', fontSize: 12 },
   description: { fontSize: 12, color: '#666', lineHeight: 18 },
   bottomRow: {
     flexDirection: 'row',
@@ -228,12 +249,15 @@ const styles = StyleSheet.create({
   },
   date: { fontSize: 11, color: '#999' },
   seeMoreBtn: {
-    backgroundColor: '#167ffa',
+    backgroundColor: colors.dangerD,
     borderRadius: 6,
     paddingHorizontal: 14,
     paddingVertical: 6,
   },
-  seeMoreText: { color: '#fff', fontSize: 13 },
+  seeMoreText: {
+    color: '#fff',
+    fontSize: 13
+  },
   bottomNav: {
     position: 'absolute',
     bottom: 0,

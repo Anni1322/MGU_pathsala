@@ -15,6 +15,7 @@ import Header from "../../layout/Header/Header2";
 import Footer from "../../layout/Footer/Footer";
 import { HttpService } from "../../../common/Services/HttpService";
 import SessionService from '../../../common/Services/SessionService';
+import colors from '../../../common/config/colors';
 
 
 const Chapter = () => {
@@ -102,7 +103,7 @@ const Chapter = () => {
         <FontAwesome6
           name={isExpanded ? 'chevron-up' : 'chevron-down'}
           size={20}
-          color="#006c04ff"
+          color="#ffffffff"
           style={styles.icon}
         />
       </TouchableOpacity>
@@ -128,11 +129,11 @@ const styles = StyleSheet.create({
   header: { backgroundColor: '#6c63ff', paddingVertical: 18, paddingHorizontal: 16, elevation: 4 },
   headerText: { fontSize: 20, fontWeight: 'bold', color: '#fff' },
   card: {
-    backgroundColor: '#FBF9F1',
-    borderWidth: 1,
-    borderColor: '#3A98B9',
-    borderRadius: 15,
-    padding: 16,
+    backgroundColor:colors.footercolor,
+    // borderWidth: 1,
+    // borderColor: '#3A98B9',
+    borderRadius: 5,
+    padding: 10,
     marginBottom: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -146,11 +147,11 @@ const styles = StyleSheet.create({
 
   textContainer: { flex: 1, paddingRight: 10 },
   chapterTitle: {
-    fontSize: 18, fontWeight: 'bold', color: '#d53007ff'
+    fontSize: 18, fontWeight: 'bold', color: '#ff3b0aff'
   },
   bulletPoint: {
     fontSize: 16,
-    color: '#555',
+    color:colors.background,
     marginLeft: 10,
     marginBottom: 4,
     lineHeight: 20,

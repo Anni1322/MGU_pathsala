@@ -63,7 +63,7 @@
 export default {
   primary: '#004D40',
   secondary: '#FFB300',
-  background: '#F9FBE7',
+  background: '#ffffffff',
   textPrimary: '#212121',
   textSecondary: '#4CAF50',
   white: '#ffffff',

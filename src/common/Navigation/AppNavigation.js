@@ -13,6 +13,7 @@ import AuthLoadingScreen from "../Services/AuthLoadingScreen";
 // import StudentDashboard from "../screen/student/StudentDashboard";
 import HomeLayout from "../../student/screen/Home/HomeLayout";
 import ComplaintScreen from '../../student/screen/Support/ComplaintScreen';
+import ViewAllScreen from '../../student/screen/Home/All';
 import MenuScreen from "../../student/layout/Sidebar/MenuScreen";
 import FilePickerScreen from '../../student/screen/Support/FilePickerScreen';
 
@@ -101,6 +102,7 @@ const StudentNavigator = () => (
     <StudentStack.Screen name="Profile" component={ProfileScreen} />
     <StudentStack.Screen name="Settings" component={SettingsScreen} />
     <StudentStack.Screen name="ComplaintScreen" component={ComplaintScreen} />
+    <StudentStack.Screen name="ViewAllScreen" component={ViewAllScreen} />
 
   </StudentStack.Navigator>
 );
