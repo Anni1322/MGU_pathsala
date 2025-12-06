@@ -69,10 +69,10 @@ export default function Header({ title, backgroundColor }) {
     setModalVisible(!isModalVisible);
   };
 
-  const dynamicBgColor = backgroundColor || colors.footercolor;
+  const dynamicBgColor = backgroundColor || colors.tablerow;
   return (
     <>
-      <StatusBar backgroundColor={dynamicBgColor} barStyle="light-content" />
+      <StatusBar backgroundColor={dynamicBgColor} barStyle="dark-content" />
       <AdminSidemenu sidebarX={slideAnim} />
       {isSidebarOpen && (
         <TouchableOpacity
@@ -90,11 +90,11 @@ export default function Header({ title, backgroundColor }) {
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-            <FontAwesome6 name="chevron-left" size={26} color={colors.background} />
+            <FontAwesome6 name="chevron-left" size={26} color={colors.footercolor} />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity onPress={toggleSidebar}>
-            <EvilIcons name="navicon" size={30} color={colors.background} />
+            <EvilIcons name="navicon" size={30} color={colors.footercolor} />
           </TouchableOpacity>
         )}
 
@@ -113,7 +113,7 @@ export default function Header({ title, backgroundColor }) {
         <View style={styles.headerRight}>
           {/* Changed: Now toggles modal instead of navigating */}
           <TouchableOpacity onPress={toggleModal}>
-            <FontAwesome6 name="user" size={24} color={colors.background} />
+            <FontAwesome6 name="user" size={24} color={colors.footercolor} />
           </TouchableOpacity>
 
           {/* <View
@@ -181,8 +181,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 1,
     alignItems: 'center',
     paddingTop: 20,
-    paddingLeft: 10
-
+    paddingLeft: 10,
+    elevation:55,
   },
   headerTitle: {
     flex: 1,
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   parentTitle: {
-    color: colors.background,
+    color: colors.footercolor,
     fontSize: 20,
     // backgroundColor: '#f0a3a307',
     borderRadius: 7,

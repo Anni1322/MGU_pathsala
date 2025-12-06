@@ -5,7 +5,7 @@ export const Menu = [
     iconLib: 'FontAwesome6',
     icon: 'user',
     screen: 'AdminProfile',
-    color: '#007362ff',
+    color: '#00736222',
 
   },
   {
@@ -14,7 +14,7 @@ export const Menu = [
     iconLib: 'FontAwesome6',
     icon: 'pen-to-square',
     screen: 'AdminExamination',
-    color: '#ff3b65ff',
+    color: '#ff3b6508',
   },
 ];
 
@@ -28,7 +28,7 @@ export const facultyMenu = [
     iconLib: 'FontAwesome6',
     icon: 'book',
     screen: 'MyCourses',
-    color: '#F0CA6D',
+    color: '#f0cb6d',
     iconColor: '#319DA0',
     count: '',
     data: 'MyCourses',
@@ -142,3 +142,5 @@ export const facultyMenu = [
   },
 
 ];
+
+ 

@@ -4,7 +4,7 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { useNavigation } from '@react-navigation/native';
 import colors from '../../../common/config/colors';
 
-// --- Menu Data Definition ---
+//^ --- Menu Data Definition ---
 const menuItems = [
   {
     key: 'profile',
@@ -46,13 +46,7 @@ const menuItems = [
 
 export default function FooterNav() {
   const navigation = useNavigation();
-
-  /**
-   * Renders a single menu item based on its properties.
-   * @param {object} item - The menu item object.
-   */
   const renderMenuItem = (item) => {
-    // Determine the style and navigation action based on the 'isHome' flag
     const buttonStyle = item.isHome ? styles.homeBtn : styles.bottomNavItem;
     const navAction = item.isHome ?
       () => navigation.replace(item.routeName) :
@@ -123,7 +117,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: '#ffffffff',
+    // backgroundColor: '#ffffffff',
 
     // borderTopLeftRadius: 85,    
     // borderTopRightRadius: 85,   
@@ -133,7 +127,6 @@ const styles = StyleSheet.create({
     // shadowOpacity: 0.1,
     // shadowRadius: 8,
     // elevation: 38,
-    
     paddingHorizontal: 10,
   },
 

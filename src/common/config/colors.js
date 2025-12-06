@@ -77,8 +77,9 @@ export default {
   lite2: '#1d6d6eff',
   cardcolor:'#DEF5E5',
   tableheader:'#86B0BD',
-  tablerow:'#F2EAD3',
+  tablerow:'#ffffffff',
   footercolor:'#030337',
+  bgcolor:'#1a0167ff',
 };
 
 // // ### 🎨 **Theme 5 – Soft Pastels**

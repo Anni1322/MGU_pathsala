@@ -52,7 +52,6 @@ const sliderData = [
 const Slider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef(null);
-
   const onViewRef = useRef(({ viewableItems }) => {
     if (viewableItems.length > 0) {
       setCurrentIndex(viewableItems[0].index);
@@ -60,7 +59,6 @@ const Slider = () => {
   });
 
   const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 50 });
-
   useEffect(() => {
     const interval = setInterval(() => {
       let nextIndex = currentIndex + 1;
@@ -129,7 +127,7 @@ const Slider = () => {
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         horizontal
-        pagingEnabled
+        // pagingEnabled
         showsHorizontalScrollIndicator={false}
         onViewableItemsChanged={onViewRef.current}
         viewabilityConfig={viewConfigRef.current}
@@ -152,12 +150,12 @@ const Slider = () => {
 
 const styles = StyleSheet.create({
   card: {
-    // backgroundColor: '#096800db',
-    width: width - 50,
+    backgroundColor: '#096800db',
+    width: width * 0.40,
     borderRadius: 20,
     marginHorizontal: 8,
     marginTop: 1,
-    padding: width * 0.04,
+    padding: width * 1,
     flexDirection: 'row',
     alignItems: 'center',
     height: width * 0.40,
@@ -166,13 +164,13 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   userCard: {
-    // backgroundColor: 'rgba(184, 231, 114, 0.81)',
-    padding: 20,
+    backgroundColor: colors.footercolor,
+    padding: 10,
     borderRadius: 15,
-    marginBottom: 20,
+    marginBottom: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 1,
+    // borderWidth: 5,
     borderColor: 'green'
   },
   overlay: {
@@ -183,17 +181,16 @@ const styles = StyleSheet.create({
   textContainer: {
     flex: 1,
     // marginTop:70,
-
     paddingRight: 5,
     zIndex: 2, // above overlay
   },
   title: {
-    color: '#fff',
+    color: colors.background,
     fontSize: width * 0.045,
     fontWeight: 'bold',
   },
   subtitle: {
-    color: '#006a00ff',
+    color: colors.background,
     marginTop: 5,
     fontSize: width * 0.035,
   },
@@ -216,12 +213,12 @@ const styles = StyleSheet.create({
   dotContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 10,
+    // marginTop: 10,
     backgroundColor:colors.dangerD,
     padding: 8,
     marginLeft: 40,
     marginRight: 40,
-    borderRadius: 30
+    borderRadius: 5
   },
   dot: {
     width: 10,

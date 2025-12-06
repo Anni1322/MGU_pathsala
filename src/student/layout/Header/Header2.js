@@ -89,6 +89,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 15,
     alignItems: 'center',
+    elevation:55,
+    shadowColor:'#000000ff'
   },
   headerTitle: {
     flex: 1,

@@ -12,6 +12,7 @@ import SessionService from '../../../common/Services/SessionService';
 import Loading from '../../../common/Services/Loading';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { API_BASE_URL } from '../../../common/config/BaseUrl';
+import colors from "../../../common/config/colors";
 
 export default function RegistraionCardList() {
   const [srcData, setSrcData] = useState([]);
@@ -90,9 +91,7 @@ export default function RegistraionCardList() {
     <SafeAreaView style={styles.content}>
       <ScrollView style={styles.content}>
         <Header title="Registration Card List" />
-
         <Text style={styles.header}> Registration Card List</Text>
-
         {/* Conditionally render Loading component */}
         {loading ? (
           <Loading size="large" color="#3498db" />
@@ -132,10 +131,10 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   header: {
-    backgroundColor: '#B87C4C',
+    backgroundColor: colors.footercolor,
     fontSize: 18,
     fontWeight: "bold",
-    color: "#ffffffff",
+    color: colors.background,
     borderRadius: 30,
     margin: 10,
     padding: 10,
@@ -151,9 +150,9 @@ const styles = StyleSheet.create({
   },
   card: {
     borderTopWidth: 10,
-    borderTopColor: '#A72703',
+    borderTopColor: colors.footercolor,
     borderBottomWidth: 10,
-    borderBottomColor: '#FDE7B3',
+    borderBottomColor: colors.dangerD,
     backgroundColor: '#fff',
     borderRadius: 10,
     marginBottom: 10,
@@ -174,7 +173,7 @@ const styles = StyleSheet.create({
   },
   cardPdfButton: {
     flexDirection: "row",
-    backgroundColor: "#427A76",
+    backgroundColor:colors.dangerD,
     padding: 8,
     borderRadius: 10,
     alignItems: "center",

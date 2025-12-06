@@ -82,7 +82,7 @@ const Slider = () => {
   }, [currentIndex]);
 
   const renderItem = ({ item }) => {
-    const cardColor = item.color || '#6a9f66db'; // Fallback to default green if no color is provided
+    const cardColor = item.color || '#6a9f66db';  
 
     if (item.video) {
       return (
@@ -122,21 +122,15 @@ const Slider = () => {
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         horizontal
-        pagingEnabled
+        // pagingEnabled
         showsHorizontalScrollIndicator={false}
         onViewableItemsChanged={onViewRef.current}
-        viewabilityConfig={viewConfigRef.current}
-      />
+        viewabilityConfig={viewConfigRef.current} />
 
       <View style={styles.dotContainer}>
         {sliderData.map((_, index) => (
-          <View
-            key={index}
-            style={[
-              styles.dot,
-              currentIndex === index ? styles.activeDot : null,
-            ]}
-          />
+          <View key={index}
+            style={[ styles.dot, currentIndex === index ? styles.activeDot : null,]} />
         ))}
       </View>
     </View>
@@ -145,8 +139,8 @@ const Slider = () => {
 
 const styles = StyleSheet.create({
   video: {
-    width: width - 50,
-    height: width * 0.45,
+    width: width -24,
+    height: width * 0.55,
     borderRadius: 20,
     position: 'absolute',
     top: 0,
@@ -156,9 +150,9 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   card: {
-    // backgroundColor removed - now dynamic
-    width: width - 50,
+    width: width -24,
     borderRadius: 20,
+     height: width * 0.15,
     marginHorizontal: 8,
     marginTop: 1,
     padding: width * 0.04,
@@ -169,7 +163,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   userCard: {
-    // backgroundColor removed - now dynamic
     padding: 20,
     borderRadius: 15,
     marginBottom: 20,
@@ -187,7 +180,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 90,
     paddingRight: 5,
-    zIndex: 2, // above overlay
+    zIndex: 2, 
   },
   title: {
     color: '#fff',

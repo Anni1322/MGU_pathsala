@@ -16,6 +16,7 @@ import Slider from '../../layout/Sliders/Slider';
 import { HttpService } from "../../../common/Services/HttpService";
 import SessionService from "../../../common/Services/SessionService";
 import { API_BASE_URL } from '../../../common/config/BaseUrl'
+import colors from '../../../common/config/colors';
 
 // Memoized IconText component
 const IconText = React.memo(({
@@ -129,21 +130,12 @@ const HomeLayout = () => {
         {/* User Info */}
         <View style={styles.infocard}>
           <View style={styles.userInfo}>
-            <Image
-              source={{
-                uri:
-                  profilePhoto ||
-                  "https://t4.ftcdn.net/jpg/02/29/75/83/360_F_229758328_7x8jwCwjtBMmC6rgFzLFhZoEpLobB6L8.jpg",
-              }}
-              style={styles.avatar}
-            />
+            <Image source={{
+                uri: profilePhoto || "https://t4.ftcdn.net/jpg/02/29/75/83/360_F_229758328_7x8jwCwjtBMmC6rgFzLFhZoEpLobB6L8.jpg", }} style={styles.avatar}/>
             <View style={{ flex: 1 }}>
               <Text style={styles.userName}>{profileData?.student_name} 👋</Text>
-              <Text style={styles.userHandle}>
-                {profileData?.Semester_Name || "Semester Info"}
-              </Text>
-              <Text style={styles.userHandle}>
-                {profileData?.Degree_Programme_Name || "Not Available"}
+              <Text style={styles.userHandle} >
+                {profileData?.Semester_Name || "Semester Info"} , {profileData?.Degree_Programme_Name || "Not Available"}
               </Text>
             </View>
           </View>
@@ -159,8 +151,7 @@ const HomeLayout = () => {
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.horizontalMenuContainer}
-        >
+          contentContainerStyle={styles.horizontalMenuContainer}>
           {pathshalaMenu.map((item) => (
             <TouchableOpacity key={item.id} onPress={() => navigation.navigate(item.screen)}>
               <View style={{ alignItems: "center", marginHorizontal: 8, margin:5 }}>
@@ -177,15 +168,12 @@ const HomeLayout = () => {
           <Text style={styles.sectionTitlestudent}>Student Corner</Text>
           <ScrollView
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.eCornerContainer}
-          >
+            contentContainerStyle={styles.eCornerContainer}>
             <View style={styles.gridContainer}>
               {studentMenu.map((item) => (
-                <TouchableOpacity
-                  key={item.id}
+                <TouchableOpacity key={item.id}
                   style={styles.gridItem}
-                  onPress={() => navigation.navigate(item.screen)}
-                >
+                  onPress={() => navigation.navigate(item.screen)}>
                   <View style={{ alignItems: "center" }}>
                     <View style={[styles.iconRectangle, { backgroundColor: item.color }]}>
                       <FontAwesome6 name={item.icon} size={22} color="white" />
@@ -196,11 +184,8 @@ const HomeLayout = () => {
               ))}
             </View>
           </ScrollView>
-
         </View>
-
       </ScrollView>
-
       <Footer />
     </View>
   );
@@ -209,26 +194,27 @@ const HomeLayout = () => {
 
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#e0dfdfff' },
+  container: { flex: 1, backgroundColor: '#fffdfdff' },
   content: { flex: 1, padding: 15 },
   infocard: {
     marginLeft: -20,
     // marginRight: 165,
     marginTop: -5,
     marginBottom: 10,
-    backgroundColor: '#F7F9F2',
+    backgroundColor:colors.footercolor,
     // borderTopLeftRadius:60,
     borderTopRightRadius: 80,
     borderBottomRightRadius: 80,
   },
   cardmain: {
-    marginRight: -15,
+    // marginRight: -15,
     // marginRight: 155,
-    marginTop: 25,
+    // marginTop: 25,
     // marginBottom: 10,
     backgroundColor: '#ffffffff',
-    borderTopLeftRadius: 80,
-    borderBottomLeftRadius: 80,
+    // borderTopLeftRadius: 80,
+    // borderBottomLeftRadius: 80,
+
   },
   userInfo: {
     margin: 15,
@@ -238,9 +224,15 @@ const styles = StyleSheet.create({
     marginBottom: 15,
 
   },
-  avatar: { width: 50, height: 50, borderRadius: 25, marginRight: 10 },
-  userName: { fontWeight: 'bold', fontSize: 14, color: 'black' },
-  userHandle: { color: 'gray', fontSize: 12 },
+  avatar: { 
+    width: 50, height: 50, borderRadius: 25, marginRight: 10
+   },
+  userName: { 
+    fontWeight: 'bold', 
+    fontSize: 14, 
+    color:colors.background
+  },
+  userHandle: { color:colors.background, fontSize: 12 },
   greeting: { color: 'darkred', fontWeight: '600' },
 
   sectionTitle: {
@@ -269,26 +261,26 @@ const styles = StyleSheet.create({
     backgroundColor: '#006d33ff',
     width: 50,
     height: 50,
-    borderRadius: 30,
+    // borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 5,
   },
 
   iconRectangle: {
-    width: 55,
-    height: 40,
-    borderRadius: 27,
+    width: 70,
+    height: 70,
+    borderRadius: 15,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 5,
 
-
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 10,
-    backgroundColor: '#fff',
+    // shadowOffset: { width: 0, height: 6 },
+    // shadowOpacity: 0.3,
+    // shadowRadius: 8,
+    // elevation: 10,
+    // backgroundColor: '#fff',
+    
   },
 
   iconLabel: {

@@ -13,6 +13,7 @@ import { downloadFile } from "../../../common/Services/pdfService";
 import alertService from '../../../common/Services/alert/AlertService';
 import { API_BASE_URL } from '../../../common/config/BaseUrl';
 import LinearGradient from 'react-native-linear-gradient';
+import colors from '../../../common/config/colors';
 
 
 
@@ -274,8 +275,7 @@ const FeeReceipt = (index) => {
             style={{
               flex: 1, justifyContent: 'center', alignItems: 'center',
               marginTop: 50,
-            }}
-          >
+            }}>
             <ActivityIndicator size="large" color="#2e7d32" />
             <Text style={{ marginTop: 10 }}>Loading receipts...</Text>
           </View>
@@ -283,9 +283,7 @@ const FeeReceipt = (index) => {
           <FlatList
             data={[...filtered]}
             renderItem={renderReceipt}
-            keyExtractor={(item, index) => index.toString()}
-          />
-
+            keyExtractor={(item, index) => index.toString()}/>
         )}
 
         {/* Modal for showing details */}
@@ -420,8 +418,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     textAlign: 'center',
-    color: '#01201bff',
-    backgroundColor: '#B7A3E3',
+    color: colors.background,
+    backgroundColor:colors.footercolor,
   },
 
   closeButton: {
@@ -505,7 +503,7 @@ const styles = StyleSheet.create({
   downloadBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1581BF',
+    backgroundColor: colors.dangerD,
     padding: 6,
     borderRadius: 6,
     borderWidth: 2,

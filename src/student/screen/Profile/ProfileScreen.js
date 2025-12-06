@@ -47,19 +47,16 @@ const ProfileScreen = () => {
           LOGIN_TYPE: sessionData?.[0]?.LOGIN_TYPE,
           STUDENT_ID: sessionData?.STUDENT_ID,
         };
-
         const apiList = getApiList();
         const response = await HttpService.post(apiList.profile, payload);
         if (response?.status !== 200) {
           throw new Error('Failed to fetch profile data');
         }
-
         const profile = capitalizeObjectStrings(response?.data?.StudentProfile);
         const photoPath = response.data?.Profile_Photo?.[0]?.ProfilePhotoPath;
         const finalPhoto = photoPath
           ? API_BASE_URL + photoPath.replace('../', '/')
           : null;
-
         setProfileData(profile);
         setProfilePhoto(finalPhoto);
       } catch (error) {
@@ -92,8 +89,7 @@ const ProfileScreen = () => {
   const data = profileData[0] || {};
 
   return (
-    <LinearGradient colors={[colors.lite2, colors.background]}
-    
+    <LinearGradient colors={[colors.background, colors.tablerow]}
      style={styles.container}>
       <Header />
       <SafeAreaView style={styles.safeArea}>
@@ -106,13 +102,11 @@ const ProfileScreen = () => {
                 profilePhoto ||
                 'https://t4.ftcdn.net/jpg/02/29/75/83/360_F_229758328_7x8jwCwjtBMmC6rgFzLFhZoEpLobB6L8.jpg',
             }}
-            style={styles.avatar}
-          />
+            style={styles.avatar}/>
           <View style={styles.userInfo}>
             <Text style={styles.userName}>{data['Student Name'] || '—'}</Text>
-            <Text style={styles.userRole}>{data.Degree_Programme_Name || '—'}</Text>
+            <Text style={styles.userRole}>{data.Degree_Programme_Name || '—'} , {data.Course_Year_Name} • {data.Semester_Name}</Text>
             <Text style={styles.userTag}>
-              {data.Course_Year_Name} • {data.Semester_Name}
             </Text>
           </View>
         </View>
@@ -179,10 +173,9 @@ const ProfileItem = ({ label, value, icon }) => (
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  
   },
   topcard:{
-    backgroundColor:colors.lite2
+    backgroundColor:colors.tablerow
   },
   safeArea: {
     flex: 1,
@@ -202,7 +195,7 @@ const styles = StyleSheet.create({
   userCard: {
     // flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor:colors.footercolor,
     // borderRadius: 55,
     padding: 10,
     marginVertical: 20,
@@ -220,31 +213,34 @@ const styles = StyleSheet.create({
     // borderRightColor:'#ff9100ff'
   },
   avatar: {
-     marginTop:-45,
-    width: 80,
-    height: 80,
+    marginTop:-45,
+    width: 120,
+    height: 120,
     borderRadius: 40,
-    borderWidth: 3,
-    borderColor: '#884DFF',
+    borderWidth: 5,
+    borderColor: colors.danger,
   },
   userInfo: {
     flex: 1,
-    marginLeft: 15,
+    marginLeft: 15,  
   },
   userName: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color:colors.background,
     marginBottom: 5,
+    textAlign:'center'
   },
   userRole: {
     fontSize: 14,
-    color: '#666',
+     fontWeight: 'bold',
+    color:colors.background,
     marginBottom: 3,
   },
   userTag: {
     fontSize: 14,
-    color: '#888',
+    fontWeight: 'bold',
+    color:colors.background,
   },
   scrollView: {
     flex: 1,
@@ -266,13 +262,13 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#ffffffff',
     marginBottom: 10,
     // borderBottomWidth: 3,
     // borderBottomColor: '#ff6720ff',
     paddingBottom: 5,
     borderRadius:15,
-    backgroundColor:'#ffd5c1ff',
+    backgroundColor:colors.footercolor,
     padding:10
   },
   sectionContent: {

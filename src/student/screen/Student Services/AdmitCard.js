@@ -11,6 +11,7 @@ import SessionService from "../../../common/Services/SessionService";
 import { downloadFile } from "../../../common/Services/pdfService";
 import alertService from '../../../common/Services/alert/AlertService';
 import { API_BASE_URL } from '../../../common/config/BaseUrl'
+import colors from "../../../common/config/colors";
 
 
 const { width } = Dimensions.get("window");
@@ -178,10 +179,10 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     textAlign: "center",
     marginVertical: 12,
-    backgroundColor: "#ffdc84ff",
+    backgroundColor: colors.footercolor,
     paddingVertical: 8,
     borderRadius: 8,
-    color: "#0b4b33",
+    color: colors.background,
   },
   card: {
     width: CARD_WIDTH,
