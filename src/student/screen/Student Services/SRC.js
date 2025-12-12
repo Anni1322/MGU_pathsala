@@ -105,7 +105,7 @@ export default function SRCPage() {
       { text: "Student Registration Card (SRC)", x: 50, y: 350, size: 18, color: [0, 0.4, 0] },
       { text: `${item.Session} | ${item.Year} | ${item.Semester} | Reg: ${item.Registration_Id}`, x: 50, y: 320, size: 14 },
     ];
-    await generateAndOpenPDF(`SRC_${item.Registration_Id}`, content, "MyApp_SRC_PDFs");
+    // await generateAndOpenPDF(`SRC_${item.Registration_Id}`, content, "MyApp_SRC_PDFs");
   };
 
   return (

@@ -133,13 +133,14 @@ export const facultyMenu = [
 
     {
     id: 12,
-    name: 'Splash',
+    name: 'StudyDash',
     iconLib: 'FontAwesome6',
     icon: 'camera',
-    screen: 'Splash',
+    screen: 'StudyDash',
     color: '#888600ff',
     data: 'Splash',
   },
+
 
 ];
 

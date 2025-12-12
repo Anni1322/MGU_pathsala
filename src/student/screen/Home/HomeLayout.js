@@ -163,7 +163,7 @@ const HomeLayout = () => {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.eCornerContainer}>
             <View style={styles.gridContainer}>
-              {pathshalaMenu.slice(0, 4).map((item) => (
+              {pathshalaMenu.slice(0, 4)?.map((item) => (
                 <TouchableOpacity key={item.id}
                   style={styles.gridItem}
                   onPress={() => navigation.navigate(item.screen)}>
@@ -194,7 +194,7 @@ const HomeLayout = () => {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.eCornerContainer}>
             <View style={styles.gridContainer}>
-              {studentMenu.map((item) => (
+              {studentMenu.slice(0,8)?.map((item) => (
                 <TouchableOpacity key={item.id}
                   style={styles.gridItem}
                   onPress={() => navigation.navigate(item.screen)}>

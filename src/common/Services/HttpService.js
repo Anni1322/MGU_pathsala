@@ -137,7 +137,7 @@ const api = axios.create({
 
 export const HttpService = {
   get: async (path, params = {}) => {
-    // console.log(params);
+    console.log(params);
     try {
       const response = await api.get(path, { params });
       // console.log(response,"responseresponseresponseresponse")

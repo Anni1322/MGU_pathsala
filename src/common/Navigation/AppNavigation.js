@@ -47,7 +47,7 @@ import MyCourses from '../../admin/screen/MyCourses';
 import MyStudents from '../../admin/screen/MyStudents';
 import AdminExamination from '../../admin/screen/AdminExamination';
 import StudyMaterials from '../../admin/screen/StudyMaterials';
-import StudyDashScreen from '../../admin/screen/StudyDashScreen';
+import StudyDash from '../../admin/screen/StudyDash';
 import MyAssignment from '../../admin/screen/MyAssignment';
 import MyVideoLecture from '../../admin/screen/MyVideoLecture';
 import FinanceDashboard from '../../admin/screen/FinanceDashboard';
@@ -117,7 +117,7 @@ const AdminNavigator = () => (
     <AdminStack.Screen name="MyStudents" component={MyStudents} />
     <AdminStack.Screen name="AdminExamination" component={AdminExamination} />
     <AdminStack.Screen name="StudyMaterials" component={StudyMaterials} />
-    <AdminStack.Screen name="StudyDashScreen" component={StudyDashScreen} />
+    <AdminStack.Screen name="StudyDash" component={StudyDash} />
     <AdminStack.Screen name="MyAssignment" component={MyAssignment} />
     <AdminStack.Screen name="MyVideoLecture" component={MyVideoLecture} />
     <AdminStack.Screen name="FinanceDashboard" component={FinanceDashboard} />

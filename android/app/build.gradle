@@ -72,14 +72,12 @@ def enableProguardInReleaseBuilds = false
  */
 def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
-
 project.ext.react = [
     enableHermes: true  
 ]
 android {
     namespace "mguvvmis.mguvv"
     compileSdkVersion 36
-
     defaultConfig {
         applicationId "mguvvmis.mguvv"
         minSdkVersion 28
@@ -114,9 +112,9 @@ android {
         abi {
             enable true
             reset()
-//            include "armeabi-v7a"
-            // "arm64-v8a"
-            // universalApk true  // Generate a universal APK that works on all ABIs
+            //  include "armeabi-v7a"
+            //  "arm64-v8a"
+            //  universalApk true  // Generate a universal APK that works on all ABIs
         }
     }
 

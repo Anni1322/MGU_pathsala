@@ -433,7 +433,8 @@ const AdminHomeLayout = () => {
             colors={["#007AFF"]}
             tintColor="#007AFF"
             title="Refreshing..."
-          />}>
+          />}
+          >
 
         <View style={styles.userInfo}>
           <View style={{ flex: 1 }}>
@@ -707,7 +708,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 8,
     marginTop: 8,
-    margin: 5
+    margin: 5, 
   },
 
   cont: {

@@ -151,7 +151,7 @@ const Slider = () => {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#096800db',
-    width: width * 0.40,
+    width: width * 0.95,
     borderRadius: 20,
     marginHorizontal: 8,
     marginTop: 1,

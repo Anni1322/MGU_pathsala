@@ -61,14 +61,11 @@ const LoginScreen = () => {
   const inputs = useRef([]);
   const navigation = useNavigation();
 
-
-
   useEffect(() => {
     const checkCredentialsAndBiometry = async () => {
       try {
         const credentials = await Keychain.getGenericPassword();
         if (credentials) setHasSavedCredentials(true);
-
         const type = await Keychain.getSupportedBiometryType();
         setBiometryType(type);
       } catch (error) {
@@ -564,15 +561,15 @@ const LoginScreen = () => {
   const word = "MOR-GURUKUL";
   return (
     <SafeAreaView style={styles.safeArea}>
-    <StatusBar backgroundColor={ colors.bgcolor} barStyle="light-content" />
+      <StatusBar backgroundColor={colors.bgcolor} barStyle="light-content" />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.container}>
         <View style={styles.bg}>
-            <Image
-              source={require('../../../assets/logo_mgu.png')}
-              style={styles.image}
-            />
+          <Image
+            source={require('../../../assets/logo_mgu.png')}
+            style={styles.image}
+          />
           <View style={styles.bannerContainer}>
             <Text style={styles.bannerText}>
               {word.split('').map((letter, index) => (
@@ -614,8 +611,7 @@ const LoginScreen = () => {
                     onChangeText={setPassword}
                     secureTextEntry={secure}
                     autoCapitalize="none"
-                    placeholderTextColor="#aaa"
-                  />
+                    placeholderTextColor="#aaa" />
                   <TouchableOpacity onPress={() => setSecure(!secure)}>
                     <Text style={styles.toggle}>{secure ? '👁️' : '👨🏻‍💻'}</Text>
                   </TouchableOpacity>
@@ -785,7 +781,7 @@ const styles = StyleSheet.create({
     borderRadius: 70,
 
   },
- 
+
 
   bannerContainer: {
     backgroundColor: 'rgba(255, 255, 255, 0.2)',

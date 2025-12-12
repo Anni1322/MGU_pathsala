@@ -240,9 +240,8 @@ export default function ComplaintScreen() {
       const apiList = getApiList();
       const SaveComplainApi = apiList.SaveComplain;
       const response = await HttpService.post(SaveComplainApi, formData);
-
       const complainId = response?.data?.Response[0]?.Complain_ID;
-
+      
       if (complainId === '0') {
         Alert.alert("Duplicate Complaint", "You have already submitted this complaint.");
       } else if (complainId && complainId.length > 0) {
@@ -281,8 +280,7 @@ export default function ComplaintScreen() {
           style={[
             optimizedStyles.statusTag,
             item.resolve_yn === "Y" ? optimizedStyles.resolvedTag : optimizedStyles.pendingTag,
-          ]}
-        >
+          ]}>
           <Text>  {item.resolve_yn === "Y" ? "Resolved" : "Pending"}</Text>
         </Text>
       </View>
@@ -300,8 +298,7 @@ export default function ComplaintScreen() {
     <TouchableOpacity
       style={[optimizedStyles.tab, activeTab === tabKey && optimizedStyles.activeTab]}
       onPress={() => setActiveTab(tabKey)}
-      activeOpacity={0.7}
-    >
+      activeOpacity={0.7}>
       <Text
         style={[
           optimizedStyles.tabText,

@@ -4,7 +4,13 @@ let adminApiList = {
  "getTodayBirhtList": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/getTodayBirhtList",
  "getCourseWiseDashCount": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/getCourseWiseDashCount",
  "Get_File_Type_Masters": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/Get_File_Type_Masters",
-//  "getStudentsDashCount": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/getStudentsDashCount",
+
+ "getStudyMaterialList": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/getStudyMaterialList",
+ "saveStudyMaterailFile": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/saveStudyMaterailFile",
+ "getCourseCodeFacultyWise": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/getCourseCodeFacultyWise",
+ "getAssignmentMaterailApprovalDashCountList": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/getAssignmentMaterailApprovalDashCountList",
+ 
+ 
  
  "getCourseCodeList": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/getCourseCodeList",
  "GetCourseListForStudyMaterial": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/GetCourseListForStudyMaterial",
@@ -13,10 +19,6 @@ let adminApiList = {
  "getDegreeTypeWiseDashCount": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/getDegreeTypeWiseDashCount",
  "getDepartmentWiseStudentDashCount": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/getDepartmentWiseStudentDashCount",
  "saveVideoLectureFromYouTube": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/saveVideoLectureFromYouTube",
-
-
-
- 
 
 };
 
