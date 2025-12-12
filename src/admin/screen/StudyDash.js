@@ -11,6 +11,7 @@ import { API_BASE_URL } from '../../common/config/BaseUrl';
 import colors from '../../common/config/colors';
 import RNFS from 'react-native-fs';
 import { CheckBox } from 'react-native-elements';
+import { useNavigation } from '@react-navigation/native';
 
 
 
@@ -56,6 +57,7 @@ const Colors = {
 
 
 export default function UploadStudyMaterialScreen() {
+  const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const [studyMaterialTotalList, getstudyMaterialTotalList] = useState([]);
   const [studyMaterialGetApprovalList, getstudyMaterialGetApprovalList] = useState([]);
@@ -117,7 +119,6 @@ export default function UploadStudyMaterialScreen() {
     }
   };
 
-
   const handleFileSelection = async () => {
     try {
       const result = await pick({
@@ -151,6 +152,7 @@ export default function UploadStudyMaterialScreen() {
       setIsModalVisible(true);
     }
     if (label == 'Materials in Queued') {
+      setIsModalVisible(false);
       // GetApprovalList();
       setisModalVisibleApprovalList(true);
     }
@@ -188,22 +190,20 @@ export default function UploadStudyMaterialScreen() {
       });
 
       console.log("FormData object created:", formData);
-
       const apiList = getAdminApiList();
       const uploadApi = apiList.saveStudyMaterailFile;
-
-      // const response = await HttpService.post(uploadApi, formData);
-      // console.log("Full response:", response);
-
-      // const result = response?.data?.UploadMaterialResult;
-      // if (result?.Success === "1") {
-      //   Alert.alert("Success", result.Message || "Uploaded successfully!");
-      //   setSelectedValues({});
-      //   setTitle("");
-      //   setSelectedFile(null);
-      // } else {
-      //   Alert.alert("Submission Failed", result?.Message || "The server returned an unexpected response.");
-      // }
+      const response = await HttpService.post(uploadApi, formData);
+      console.log("Full response:", response);
+      const result = response?.data?.UploadMaterialResult;
+      if (result?.Success === "1") {
+        Alert.alert("Success", result.Message || "Uploaded successfully!");
+        setSelectedValues({});
+        setTitle("");
+        setSelectedFile(null);
+        navigation.navigate('StudyMaterials')
+      } else {
+        Alert.alert("Submission Failed", result?.Message || "The server returned an unexpected response.");
+      }
 
 
     } catch (error) {
@@ -211,6 +211,7 @@ export default function UploadStudyMaterialScreen() {
       Alert.alert("An error occurred", error.message || "Failed to submit.");
     } finally {
       setIsSubmitting(false);
+      GetApprovalList();
     }
   };
 
@@ -299,63 +300,257 @@ export default function UploadStudyMaterialScreen() {
   }, []);
 
 
-
   // for action in model section start
   // Toggle select all
   const toggleSelectAll = () => {
     const data = selectedLabel === 'Total Materials' ? studyMaterialTotalList : studyMaterialGetApprovalList;
     setSelectedItems(prev =>
-      prev.length === data.length ? [] : data.map(item => item.id)
+      prev.length === data.length ? [] : data.map(item => item.Study_Material_ID)
     );
   };
 
-
   // Toggle individual selection  
-  const toggleSelectItem = (id) => {
+  const toggleSelectItem = (item) => {
+    // console.log(item, "idd")
+    // console.log(item?.Study_Material_ID, "idd")
+    const id = item?.Study_Material_ID;
     setSelectedItems(prev =>
       prev.includes(id) ? prev.filter(itemId => itemId !== id) : [...prev, id]
     );
   };
 
-  const handleDelete = () => {
-    const selectedData = (selectedLabel === 'Total Materials' ? studyMaterialTotalList : studyMaterialGetApprovalList).filter(item => selectedItems.includes(item.id));
-    if (selectedData.length > 0) {
-      Alert.alert("Delete", `Delete ${selectedData.length} items?`, [
-        { text: "Cancel" },
-        {
-          text: "OK", onPress: () => {
-            // Implement delete logic here
-            console.log("Deleting:", selectedData);
-            setSelectedItems([]);
+  const handleDelete = useCallback(async () => {
+    const sourceList = selectedLabel === 'Total Materials' ? studyMaterialTotalList : studyMaterialGetApprovalList;
+    const itemsToDelete = sourceList.filter(item =>
+      selectedItems.includes(item.Study_Material_ID));
+    if (itemsToDelete.length === 0) {
+      Alert.alert("Selection Error", "No items are selected for deletion.");
+      return;
+    }
+    // 1. Get the array of IDs
+    const studyMaterialIDs = itemsToDelete.map(item => item.Study_Material_ID);
+    // 2. **CRITICAL FIX: Join the IDs into a string using the server's expected delimiter '¶'**
+    const studyMaterialString = studyMaterialIDs.join('¶');
+    Alert.alert("Delete", `Delete ${itemsToDelete.length} item(s)?`, [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "OK",
+        onPress: async () => {
+          setLoading(true);
+          try {
+            const deleteApi = getAdminApiList().deleteUploadMaterialAssignmentFile;
+            if (!deleteApi) {
+              throw new Error("Delete API endpoint not found.");
+            }
+            const sessionData = await SessionService.getSession();
+            const profile = sessionData?.LoginDetail?.[0];
+            if (!profile?.Emp_Id) {
+              throw new Error("User session data is missing.");
+            }
+            const payload = {
+              to_update_id: studyMaterialString,
+              remark: studyMaterialString,
+              Emp_ID: profile.Emp_Id,
+              is_assignment: 'N',
+            };
+            const response = await HttpService.post(deleteApi, payload);
+            if (response.status === 200) {
+              Alert.alert("Success", `${itemsToDelete.length} item(s) deleted successfully.`);
+              setSelectedItems([]);
+            } else {
+              throw new Error(response.message || "Failed to delete items.");
+            }
+          } catch (error) {
+            console.error("Deletion Error:", error.message || error);
+            Alert.alert("Error", `An error occurred during deletion: ${error.message || 'Please try again.'}`);
+          } finally {
+            setLoading(false);
+            setIsModalVisible(false);
+            navigation.navigate('StudyMaterials')
           }
         }
-      ]);
-    }
-  };
+      },
+    ]);
+  }, [selectedLabel, selectedItems, studyMaterialTotalList, studyMaterialGetApprovalList, setLoading, setSelectedItems]);
+
+  // const handleSendToStudent = useCallback(async (approvalStatus) => {
+  //   const sourceList = selectedLabel === 'Total Materials' ? studyMaterialTotalList : studyMaterialGetApprovalList;
+  //   const itemsToUpdate = sourceList.filter(item =>
+  //     selectedItems.includes(item.Study_Material_ID));
+  //   if (itemsToUpdate.length === 0) {
+  //     Alert.alert("Selection Error", "No items are selected for deletion.");
+  //     return;
+  //   }
+  //   const studyMaterialIDs = itemsToUpdate.map(item => item.Study_Material_ID);
+  //   const studyMaterialString = studyMaterialIDs.join('¶');
+  //   const actionText = approvalStatus === 'A' ? 'Approve' : 'Sent to student';
+  //   Alert.alert(actionText, `${actionText} ${itemsToUpdate.length} item(s)?`, [
+  //     { text: "Cancel", style: "cancel" },
+  //     {
+  //       text: "OK",
+  //       onPress: async () => {
+  //         setLoading(true);
+  //         try {
+  //           const approvalApi = getAdminApiList().SaveUploadMaterialFileApproval;
+  //           if (!approvalApi) {
+  //             throw new Error("Approval API endpoint not found.");
+  //           }
+  //           const sessionData = await SessionService.getSession();
+  //           const profile = sessionData?.LoginDetail?.[0];
+  //           if (!profile?.Emp_Id) {
+  //             throw new Error("User session data is missing.");
+  //           }
+  //           const payload = {
+  //             to_update_id: studyMaterialString,
+  //             remark: remark,
+  //             Emp_ID: profile.Emp_Id,
+  //             is_approved: 'Y',
+  //           };
+  //           console.log(payload, "Approval Payload");
+  //           const response = await HttpService.post(approvalApi, payload);
+  //           console.log(response, "Approval Response");
+  //           if (response.status === 200) {
+  //             Alert.alert("Success", `${itemsToUpdate.length} item(s) ${actionText.toLowerCase()}d successfully.`);
+  //             setSelectedItems([]);
+  //             setRemark('');  
+  //           } else {
+  //             throw new Error(response.message || `Failed to ${actionText.toLowerCase()} items.`);
+  //           }
+  //         } catch (error) {
+  //           console.error(`${actionText} Error:`, error.message || error);
+  //           Alert.alert("Error", `An error occurred during ${actionText.toLowerCase()}: ${error.message || 'Please try again.'}`);
+  //         } finally {
+  //           setLoading(false);
+  //         }
+  //       }
+  //     },
+  //   ]);
+  // }, [selectedLabel, selectedItems, studyMaterialTotalList, studyMaterialGetApprovalList, setLoading, setSelectedItems, setRemark, remark]);
+
+  // const handleRemoveToStudent = useCallback(async (approvalStatus) => {
+  //   const sourceList = selectedLabel === 'Total Materials' ? studyMaterialTotalList : studyMaterialGetApprovalList;
+  //   const itemsToUpdate = sourceList.filter(item =>
+  //     selectedItems.includes(item.Study_Material_ID));
+  //   if (itemsToUpdate.length === 0) {
+  //     Alert.alert("Selection Error", "No items are selected for deletion.");
+  //     return;
+  //   }
+  //   const studyMaterialIDs = itemsToUpdate.map(item => item.Study_Material_ID);
+  //   const studyMaterialString = studyMaterialIDs.join('¶');
+  //   const actionText = approvalStatus === 'A' ? 'Approve' : 'Sent to student';
+  //   Alert.alert(actionText, `${actionText} ${itemsToUpdate.length} item(s)?`, [
+  //     { text: "Cancel", style: "cancel" },
+  //     {
+  //       text: "OK",
+  //       onPress: async () => {
+  //         setLoading(true);
+  //         try {
+  //           const approvalApi = getAdminApiList().SaveUploadMaterialFileApproval;
+  //           if (!approvalApi) {
+  //             throw new Error("Approval API endpoint not found.");
+  //           }
+  //           const sessionData = await SessionService.getSession();
+  //           const profile = sessionData?.LoginDetail?.[0];
+  //           if (!profile?.Emp_Id) {
+  //             throw new Error("User session data is missing.");
+  //           }
+  //           const payload = {
+  //             to_update_id: studyMaterialString,
+  //             remark: remark,
+  //             Emp_ID: profile.Emp_Id,
+  //             is_approved: 'N',
+  //           };
+  //           console.log(payload, "Approval Payload");
+  //           const response = await HttpService.post(approvalApi, payload);
+  //           console.log(response, "Approval Response");
+  //           if (response.status === 200) {
+  //             Alert.alert("Success", `${itemsToUpdate.length} item(s) ${actionText.toLowerCase()}d successfully.`);
+  //             setSelectedItems([]);
+  //             setRemark('');  
+  //           } else {
+  //             throw new Error(response.message || `Failed to ${actionText.toLowerCase()} items.`);
+  //           }
+  //         } catch (error) {
+  //           console.error(`${actionText} Error:`, error.message || error);
+  //           Alert.alert("Error", `An error occurred during ${actionText.toLowerCase()}: ${error.message || 'Please try again.'}`);
+  //         } finally {
+  //           setLoading(false);
+  //         }
+  //       }
+  //     },
+  //   ]);
+  // }, [selectedLabel, selectedItems, studyMaterialTotalList, studyMaterialGetApprovalList, setLoading, setSelectedItems, setRemark, remark]);
 
 
-  const handleSendToStudent = () => {
-    const selectedData = (selectedLabel === 'Total Materials' ? studyMaterialTotalList : studyMaterialGetApprovalList).filter(item => selectedItems.includes(item.id));
-    if (selectedData.length > 0) {
-      // Implement send logic with remark
-      console.log("Sending to student:", selectedData, remark);
-      setSelectedItems([]);
-      setRemark('');
-    }
-  };
-
-  const handleRemoveToStudent = () => {
-    const selectedData = (selectedLabel === 'Total Materials' ? studyMaterialTotalList : studyMaterialGetApprovalList).filter(item => selectedItems.includes(item.id));
-    if (selectedData.length > 0) {
-      // Implement remove logic with remark
-      console.log("Removing from student:", selectedData, remark);
-      setSelectedItems([]);
-      setRemark('');
-    }
-  };
 
 
   // for action in model section end
+
+
+
+  const handleUpdateStudyMaterialStatus = useCallback(async (isApprovedStatus) => {
+    // 1. Determine the source list
+    const sourceList = selectedLabel === 'Total Materials' ? studyMaterialTotalList : studyMaterialGetApprovalList;
+    const itemsToUpdate = sourceList.filter(item =>
+      selectedItems.includes(item.Study_Material_ID)
+    );
+    if (itemsToUpdate.length === 0) {
+      Alert.alert("Selection Error", "No items are selected for the operation.");
+      return;
+    }
+    const studyMaterialIDs = itemsToUpdate.map(item => item.Study_Material_ID);
+    const studyMaterialString = studyMaterialIDs.join('¶');
+    const isApproved = isApprovedStatus === 'Y';
+    const actionVerb = isApproved ? 'Send/Approve' : 'Remove';
+    const actionText = isApproved ? 'Sent to student' : 'Removed from student';
+
+    Alert.alert(actionVerb, `Do you want to ${actionVerb.toLowerCase()} ${itemsToUpdate.length} item(s)?`, [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "OK",
+        onPress: async () => {
+          setLoading(true);
+          try {
+            const approvalApi = getAdminApiList().SaveUploadMaterialFileApproval;
+            if (!approvalApi) {
+              throw new Error("Approval API endpoint not found.");
+            }
+            const sessionData = await SessionService.getSession();
+            const profile = sessionData?.LoginDetail?.[0];
+            if (!profile?.Emp_Id) {
+              throw new Error("User session data is missing.");
+            }
+ 
+            const payload = {
+              to_update_id: studyMaterialString,
+              remark: remark,
+              Emp_ID: profile.Emp_Id,
+              is_approved: isApprovedStatus, // 'Y' or 'N'
+            };
+            // console.log(payload, `${actionVerb} Payload`);
+            const response = await HttpService.post(approvalApi, payload);
+            // console.log(response, `${actionVerb} Response`);
+            if (response.status === 200) {
+              Alert.alert("Success", `${itemsToUpdate.length} item(s) ${actionText} successfully.`);
+              setSelectedItems([]);
+              setRemark('');
+            } else {
+              throw new Error(response.message || `Failed to ${actionVerb.toLowerCase()} items.`);
+            }
+          } catch (error) {
+            const errorMessage = error.message || 'Please try again.';
+            console.error(`${actionVerb} Error:`, error.message || error);
+            Alert.alert("Error", `An error occurred during ${actionVerb.toLowerCase()}: ${errorMessage}`);
+          } finally {
+            setLoading(false);
+            setIsModalVisible(false);
+            navigation.navigate('StudyMaterials')
+          }
+        }
+      },
+    ]);
+  }, [selectedLabel, selectedItems, studyMaterialTotalList, studyMaterialGetApprovalList, setLoading, setSelectedItems, setRemark, remark]);
+   
   const MaterialListModal = ({ isVisible, onClose, data, label }) => {
     return (
       <Modal animationType="slide" transparent={true} visible={isVisible} onRequestClose={onClose}>
@@ -399,8 +594,8 @@ export default function UploadStudyMaterialScreen() {
                     <FontAwesome6 name="file-pdf" size={24} color={Colors.redPDF} />
                   </TouchableOpacity>
                   <CheckBox
-                    checked={selectedItems.includes(item.id)}
-                    onPress={() => toggleSelectItem(item.id)}
+                    checked={selectedItems.includes(item.Study_Material_ID)}
+                    onPress={() => toggleSelectItem(item)}
                     containerStyle={{ marginLeft: 0 }}
                     checkedIcon={<FontAwesome6 name="check-square" size={20} color="#000" />}
                     uncheckedIcon={<FontAwesome6 name="square" size={20} color="#000" />}
@@ -413,12 +608,22 @@ export default function UploadStudyMaterialScreen() {
               <TouchableOpacity style={modalStyles.actionButton} onPress={handleDelete}>
                 <Text style={modalStyles.deleteButton}>Delete</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={modalStyles.actionButton} onPress={handleSendToStudent}>
+
+
+              {/* <TouchableOpacity style={modalStyles.actionButton} onPress={handleSendToStudent}>
                 <Text style={modalStyles.actionButtonText}>Send to Student</Text>
               </TouchableOpacity>
               <TouchableOpacity style={modalStyles.actionButton} onPress={handleRemoveToStudent}>
                 <Text style={modalStyles.actionButtonText}>Remove from Student</Text>
+              </TouchableOpacity> */}
+
+              <TouchableOpacity style={modalStyles.actionButton} onPress={() => handleUpdateStudyMaterialStatus('Y')}>
+                <Text style={modalStyles.actionButtonText}>Send to Student</Text>
               </TouchableOpacity>
+              <TouchableOpacity style={modalStyles.actionButton} onPress={() => handleUpdateStudyMaterialStatus('N')}>
+                <Text style={modalStyles.actionButtonText}>Remove from Student</Text>
+              </TouchableOpacity>
+
             </View>
           </View>
         </View>
@@ -598,7 +803,7 @@ export default function UploadStudyMaterialScreen() {
         isVisible={isModalVisibleApprovalList}
         onClose={() => setisModalVisibleApprovalList(false)}
         data={studyMaterialGetApprovalList} />
-        
+
       <DropdownModal
         isVisible={dropdownModalVisible}
         onClose={() => setDropdownModalVisible(false)}
@@ -763,7 +968,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  
+
 });
 
 // --- Modal Stylesheet (Completed) ---
