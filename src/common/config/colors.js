@@ -70,6 +70,7 @@ export default {
   whiteD: '#fcf1f1ff',
   danger: '#D32F2F',
   dangerD: '#ff2828ff',
+  dangerL: '#fdc8c8ff',
   success: '#388E3C',
   warning: '#FBC02D',
   lite: '#3c939090',

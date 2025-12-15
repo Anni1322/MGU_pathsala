@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   childTitle: {
-    color: colors.background,
+    color: colors.footercolor,
     fontSize: 18,
   },
   headerRight: {

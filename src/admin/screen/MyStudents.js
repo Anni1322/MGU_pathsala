@@ -18,10 +18,8 @@ import colors from '../../common/config/colors';
 const MyStudents = () => {
   const route = useRoute();
   const navigation = useNavigation();
-
   const Mystudent = route.params?.data || [];
   const [modalVisible, setModalVisible] = useState(false);
-
   const [DegreeTypeWiseStudentCount, setDegreeTypeWiseStudentCount] = useState([]);
   const [courses, setCourses] = useState([]);
   const [students, setStudents] = useState([]);
@@ -253,7 +251,7 @@ export default MyStudents;
 const styles = StyleSheet.create({
   containerCard: {
     flex: 1,
-    backgroundColor: colors.lite2,
+    // backgroundColor: colors.background,
     borderBottomEndRadius: 55,
     borderBottomStartRadius: 55,
     // borderTopStartRadius:35,

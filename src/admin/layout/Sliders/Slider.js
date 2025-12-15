@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     // marginTop: 10,
-    backgroundColor:colors.dangerD,
+    // backgroundColor:colors.dangerD,
     padding: 8,
     marginLeft: 40,
     marginRight: 40,
@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 6,
-    backgroundColor: '#fffbfaff',
+    backgroundColor: '#e76949ff',
     marginHorizontal: 5,
   },
   activeDot: {

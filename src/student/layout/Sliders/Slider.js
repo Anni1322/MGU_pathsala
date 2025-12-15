@@ -19,42 +19,42 @@ const sliderData = [
     subtitle: 'Mahatma Gandhi University of Horticulture and Forestry',
     // color: '#001168db',
   },
-  {
-    id: '2',
-    title: 'Focus on Horticulture & Forestry',
-    subtitle: 'Specialized Academic Programs for Green Careers',
-    // color: '#001168db',
-  },
-  {
-    id: '3',
-    title: 'Committed to Academic Excellence',
-    subtitle: 'Dedicated Faculty & State-of-the-Art Research Facilities',
-    // color: '#837211ff',
-  },
-  {
-    id: '4',
-    title: 'Promoting Sustainable Practices',
-    subtitle: 'Research and Education for Environmental Stewardship',
-    // color: '#128312ff',
-  },
-  {
-    id: '5',
-    title: 'Central Chhattisgarh Location',
-    subtitle: 'Excellent Connectivity & Vibrant University Life in Durg',
-    // color: '#8c2b1aff', // Tomato red for vibrancy
-  },
-  {
-    id: '6',
-    title: 'Hands-on Learning',
-    subtitle: 'Practical Field Exposure and Experiential Education',
-    // color: '#8A2BE2', // Blue violet for hands-on
-  },
-  {
-    id: '7',
-    title: 'Empowering Rural Economy',
-    subtitle: 'Research Focused on Farmers and Local Producers',
-    // color: '#DAA520', // Goldenrod for rural/economy
-  },
+  // {
+  //   id: '2',
+  //   title: 'Focus on Horticulture & Forestry',
+  //   subtitle: 'Specialized Academic Programs for Green Careers',
+  //   // color: '#001168db',
+  // },
+  // {
+  //   id: '3',
+  //   title: 'Committed to Academic Excellence',
+  //   subtitle: 'Dedicated Faculty & State-of-the-Art Research Facilities',
+  //   // color: '#837211ff',
+  // },
+  // {
+  //   id: '4',
+  //   title: 'Promoting Sustainable Practices',
+  //   subtitle: 'Research and Education for Environmental Stewardship',
+  //   // color: '#128312ff',
+  // },
+  // {
+  //   id: '5',
+  //   title: 'Central Chhattisgarh Location',
+  //   subtitle: 'Excellent Connectivity & Vibrant University Life in Durg',
+  //   // color: '#8c2b1aff', // Tomato red for vibrancy
+  // },
+  // {
+  //   id: '6',
+  //   title: 'Hands-on Learning',
+  //   subtitle: 'Practical Field Exposure and Experiential Education',
+  //   // color: '#8A2BE2', // Blue violet for hands-on
+  // },
+  // {
+  //   id: '7',
+  //   title: 'Empowering Rural Economy',
+  //   subtitle: 'Research Focused on Farmers and Local Producers',
+  //   // color: '#DAA520', // Goldenrod for rural/economy
+  // },
 ];
 
 const Slider = () => {
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   cardDot: {
-    backgroundColor: colors.dangerD,
+    // backgroundColor: colors.dangerD,
     padding: 5,
     borderRadius: 15,
     // marginBottom: 10,

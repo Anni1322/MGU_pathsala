@@ -550,7 +550,6 @@ export default function UploadStudyMaterialScreen() {
       },
     ]);
   }, [selectedLabel, selectedItems, studyMaterialTotalList, studyMaterialGetApprovalList, setLoading, setSelectedItems, setRemark, remark]);
-   
   const MaterialListModal = ({ isVisible, onClose, data, label }) => {
     return (
       <Modal animationType="slide" transparent={true} visible={isVisible} onRequestClose={onClose}>
@@ -559,7 +558,7 @@ export default function UploadStudyMaterialScreen() {
             <View style={modalStyles.modalHeader}>
               <Text style={modalStyles.modalHeaderText}>For Approval And Remove List</Text>
               <TouchableOpacity onPress={onClose} style={modalStyles.closeButton}>
-                <FontAwesome6 name="close" size={24} color={Colors.lightText} />
+                <FontAwesome6 name="xmark" size={24} color={Colors.lightText} />
               </TouchableOpacity>
             </View>
             <TextInput

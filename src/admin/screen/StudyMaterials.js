@@ -75,8 +75,6 @@ const StudyMaterials = () => {
     }
   };
 
- 
-
   const GettudyMaterial = useCallback(async () => {
     try {
       setLoading(true);
@@ -101,7 +99,7 @@ const StudyMaterials = () => {
   }, []);
 
   useEffect(() => {
-    GettudyMaterial(); // Changed to fetch study materials
+    GettudyMaterial();  
   }, [GettudyMaterial]);
 
   const filteredList = courseslist.filter(item => {
@@ -208,8 +206,8 @@ const StudyMaterials = () => {
         )}
 
         <TouchableOpacity style={styles.fab} onPress={() => navigation.navigate('StudyDash')}>
-          <FontAwesome6 name="plus" solid size={16} color="#fff" />
-          <Text style={styles.fabText}>Upload</Text>
+          <FontAwesome6 name="plus" solid size={26} color="#ffffffff" />
+          {/* <Text style={styles.fabText}>Upload</Text> */}
         </TouchableOpacity>
       </View>
       <FooterNav />
@@ -304,18 +302,22 @@ const styles = StyleSheet.create({
     color: '#444',
     marginLeft: 2,
   },
-  fab: {
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-    backgroundColor: '#017016c3',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderRadius: 30,
-    elevation: 5,
-  },
+fab: {
+  position: 'absolute',
+  bottom: 20,
+  right: 20,
+  backgroundColor: '#705101c3',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',  
+  width: 80,  
+  height: 80, 
+  borderRadius: 50,  
+  elevation: 55,
+  paddingHorizontal: 15,
+  paddingVertical: 15,  
+},
+
   fabText: {
     color: '#fff',
     marginLeft: 8,

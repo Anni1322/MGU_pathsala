@@ -329,8 +329,7 @@ const AdminHomeLayout = () => {
                 key={office.Office_Id || index}
                 style={modalStyles.officeListItem}
                 onPress={() => onOfficeSelect(office)
-                }
-              >
+                }>
                 <Text style={modalStyles.officeItemText}>
                   {office.Office_Name || `Office ${index + 1}`}
                 </Text>
@@ -442,7 +441,7 @@ const AdminHomeLayout = () => {
             <Text style={styles.userHandle}>{profileData?.Organization_Unit_Name || ''}</Text>
           </View>
 
-          <View style={styles.changeOfficeContainer}>
+          {/* <View style={styles.changeOfficeContainer}>
             <TouchableOpacity
               style={styles.changeOfficeButton}
               onPress={openModal}
@@ -450,7 +449,8 @@ const AdminHomeLayout = () => {
               <Text style={styles.changeOfficeButtonText}>Office's</Text>
               <Text style={styles.changeOfficeButtonText}>Change Office</Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
+          
         </View>
         <View style={styles.topcard}>
           <Slider />
@@ -490,7 +490,7 @@ const AdminHomeLayout = () => {
                   <View style={{ alignItems: 'center' }}>
                     <View style={[styles.iconRectangle, { backgroundColor: item.color }]}>
                       <Text style={styles.cont}>{item.count}</Text>
-                      <FontAwesome6 name={item.icon} size={22} color={item.iconColor || 'white'} />
+                      <FontAwesome6 name={item.icon} size={28} color={item.iconColor || 'white'} />
                     </View>
                     <Text style={styles.iconLabel}>{item.name}</Text>
                   </View>
@@ -715,8 +715,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   iconRectangle: {
-    width: 65,
-    height: 65,
+    width: 70,
+    height: 70,
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
@@ -729,9 +729,10 @@ const styles = StyleSheet.create({
   },
 
   iconLabel: {
-    fontSize: 13,
+    fontSize: 14,
     color: '#003109ff',
     textAlign: 'center',
+    marginBottom:15
   },
 
   eCornerContainer: {
@@ -740,7 +741,8 @@ const styles = StyleSheet.create({
 
   gridContainer: {
     margin: 5,
-    padding: 20,
+    padding: 0,
+    margin:10,
     backgroundColor: '#FAF7F0',
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -767,7 +769,7 @@ const styles = StyleSheet.create({
   },
 
   ModelButton: {
-    backgroundColor: colors.footercolor,
+    backgroundColor: colors.dangerL,
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 8,
@@ -780,7 +782,7 @@ const styles = StyleSheet.create({
   },
   ModelText: {
     fontSize: 16,
-    color: colors.background
+    color: colors.textPrimary
   },
 
   changeOfficeButton: {
@@ -803,9 +805,9 @@ const styles = StyleSheet.create({
 
   selectorContainercard: {
     marginTop: -15,
-    padding: 8,
+    padding: 5,
     flexDirection: 'row',
-    backgroundColor: '#5522222c',
+    // backgroundColor: '#5522222c',
     marginRight: -20,
     borderTopLeftRadius: 15,
     borderBottomLeftRadius: 15

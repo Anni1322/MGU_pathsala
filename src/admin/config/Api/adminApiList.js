@@ -14,6 +14,14 @@ let adminApiList = {
  
  
  
+ "getStudyAssignmentDashCount": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/getStudyAssignmentDashCount",
+ "getSubmittedAssignmentStudentCount": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/getSubmittedAssignmentStudentCount",
+ "saveStudyAssignemtnFile": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/saveStudyAssignemtnFile",
+ "SaveUploadAssignmentApproval": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/SaveUploadAssignmentApproval",
+ 
+ 
+
+ 
  "getCourseCodeList": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/getCourseCodeList",
  "GetCourseListForStudyMaterial": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/GetCourseListForStudyMaterial",
  "Get_Course_Wise_Total_Student_Count": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/Get_Course_Wise_Total_Student_Count",
