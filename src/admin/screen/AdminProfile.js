@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   ScrollView,
+  Image
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -55,7 +56,8 @@ const AdminProfile = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header title="Admin Profile" />
+      <Header  />
+      {/* <Header title="Admin Profile" /> */}
 
       <LinearGradient
         colors={['#fffbe1ff', '#fee8deff']}
@@ -64,7 +66,11 @@ const AdminProfile = () => {
 
         <View style={styles.cardhead}>
           <View style={styles.header}>
-            <View style={styles.profileCircle} />
+            {/* <View style={styles.profileCircle} /> */}
+            <Image source={{
+              uri:"https://t4.ftcdn.net/jpg/02/29/75/83/360_F_229758328_7x8jwCwjtBMmC6rgFzLFhZoEpLobB6L8.jpg",
+            }} style={styles.profileCircle} />
+
             <Text style={styles.profileText}>Profile</Text>
             <Text style={styles.name}>MR. {profileData.Emp_Name?.toUpperCase()}</Text>
           </View>
@@ -151,7 +157,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     fontSize: 16,
-    color: "#ffffffff",
+    color: "#050d69ff",
     marginBottom: 10,
   },
 

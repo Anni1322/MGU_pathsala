@@ -1,5 +1,6 @@
 //with otp and fingurprint
 import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 import {
   View,
   Text,
@@ -36,8 +37,8 @@ const LoginScreen = () => {
   // const [userid, setuserid] = useState("MIS10108");
   // const [password, setPassword] = useState("Saurabh@12345");
 
-  const [userid, setuserid] = useState("");
-  const [password, setPassword] = useState("");
+  // const [userid, setuserid] = useState("");
+  // const [password, setPassword] = useState("");
 
   // const [userid, setuserid] = useState("10000000");
   // const [password, setPassword] = useState("10000000");
@@ -47,6 +48,15 @@ const LoginScreen = () => {
 
   // const [userid, setuserid] = useState("20202595");
   // const [password, setPassword] = useState("Nikki@21");
+
+  // const [userid, setuserid] = useState("220120244429");
+  // const [password, setPassword] = useState("BDZH24N6");
+
+  const [userid, setuserid] = useState("MIS1017");
+  const [password, setPassword] = useState("MISAMIT2025");
+
+  // const [userid, setuserid] = useState("IGKVGUEST");
+  // const [password, setPassword] = useState("igkv@2020");
 
   const [secure, setSecure] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -172,8 +182,21 @@ const LoginScreen = () => {
   // };
 
 
+ 
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const res = await axios.get(
+        "https://mguvv.ac.in/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/GetAdmimLogin?user_id=1017&password=MISAMIT2025&ip_address=192.162.1.38"
+      );
+      console.log(res);
+    } catch (error) {
+      console.log("ERROR 👉", error);
+    }
+  };
 
-
+  fetchData();
+}, []);
 
   // with masterid
   const handleLogin = async () => {
@@ -181,277 +204,127 @@ const LoginScreen = () => {
       Alert.alert("Validation Error", "Please enter ID and password.");
       return;
     }
-    // Hardcoded login for admin/student test users
-    if (userid === '10000000' && password === '10000000') {
-      console.log("ok")
-      let userData = [
-        {
-          MSG: 'Login',
-          MSG_DET: 'Login Success',
-          LOGIN_TYPE: 'R',
-        },
-        {
-          STUDENT_ID: '10000000',
-        }
-      ];
-      // Store the session data securely in Keychain
-      await Keychain.setGenericPassword(
-        "session",
-        JSON.stringify(userData),
-        { accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY }
-      );
-      return navigation.replace("Student", { userData });
-    }
-
-    if (userid === 'MIS0001' && password === 'MIS0001') {
-      LoginDetail = {
-        "Emp_Id": "MIS0001",
-        "Emp_FName_E": "faculty",
-        "Emp_Organisation_Unit_Code": "00",
-        "Emp_Head_office_Code": "000",
-        "Emp_Office_Code": "10001",
-        "Organization_Unit_Name": "MIS TEAM",
-        "Head_Office_Name": "MIS  TEAM",
-        "Office_Name": "MIS TEAM",
-        "User_Type": "4",
-        "Emp_ShortName": "mis",
-        "Contact_No_1": "0000000000",
-        "Contact_No_2": "",
-        "emp_address": "",
-        "Email_Id": "",
-        "Emp_Name": "Mis"
-      }
-      let userData = {
-        LoginDetail: LoginDetail
-      };
 
 
-      // Store the session data securely in Keychain
-      await Keychain.setGenericPassword(
-        "session",
-        JSON.stringify(userData),
-        { accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY }
-      );
-      return navigation.replace("Admin", { userData });
-    }
 
-    // ✅ Proceed to API-based login only if not hardcoded
+
     try {
-      setLoading(true);
-
-      const isFaculty = userid.toUpperCase().startsWith("MIS");
-      const payload = {
-        [isFaculty ? "FACULTY_ID" : "STUDENT_ID"]: userid,
-        user_id: userid,
-        ip_address: "0.0.0.0",
-        PASSWORD: password,
-      };
-
-      const response = isFaculty
-        ? await AuthService.loginFaculty(payload)
-        : await AuthService.loginStudent(payload);
-
-      setLoginResponse(response?.data?.LoginDetail);
-
-      const success =
-        response?.data?.Result?.[0]?.Success === "1" ||
-        response?.data?.LoginResponse?.[0]?.MSG_DET === "Login Success" ||
-        response?.data?.LoginDetail;
-
-      if (success) {
-        const credentials = await Keychain.getGenericPassword({
-          authenticationPrompt: {
-            title: "Login with Biometrics",
-            subtitle: "Use your fingerprint or FaceID",
-          },
-        });
-
-        if (!credentials) {
-          Alert.alert("No Saved Credentials", "Please login manually first.");
-          return;
-        }
-
-        let savedData;
-        try {
-          savedData = JSON.parse(credentials.password);
-        } catch (parseError) {
-          Alert.alert("Error", "Failed to parse saved credentials.");
-          return;
-        }
-
-        const loginDetail = savedData?.LoginDetail?.[0];
-        const userId = savedData;
-        const userType = loginDetail?.User_Type;
-
-        if (userType || payload.STUDENT_ID) {
-          navigation.replace("Splash", { userId });
-        } else {
-          Alert.alert("Login Error", "Unable to determine user type.");
-        }
-
-      } else {
-        Alert.alert("Login Failed", "Invalid credentials or user not found.");
-      }
-
+     
+      console.log(result,"resultresult")
+      // setData(result);
     } catch (error) {
-      Alert.alert("Login Failed", error.message || "Something went wrong");
+      console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
     }
-  };
+ 
 
-
-
-  const handleOTPChange = (text, index) => {
-    if (/^[0-9]?$/.test(text)) {
-      const newOtp = [...otp];
-      newOtp[index] = text;
-      setOtp(newOtp);
-
-      if (text && index < 3) {
-        inputs.current[index + 1].focus();
+  // Hardcoded login for admin/student test users
+  if (userid === '10000000' && password === '10000000') {
+    console.log("ok")
+    let userData = [
+      {
+        MSG: 'Login',
+        MSG_DET: 'Login Success',
+        LOGIN_TYPE: 'R',
+      },
+      {
+        STUDENT_ID: '10000000',
+        Semester_Id:'1',
+        Academic_session:'25'
       }
+    ];
+    // Store the session data securely in Keychain
+    await Keychain.setGenericPassword(
+      "session",
+      JSON.stringify(userData),
+      { accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY }
+    );
+    return navigation.replace("Student", { userData });
+  }
+
+  if (userid === 'MIS0001' && password === 'MIS0001') {
+    LoginDetail = {
+      "Emp_Id": "1017",
+      // "Emp_Id": "MIS0001",
+      "Emp_FName_E": "faculty",
+      "Emp_Organisation_Unit_Code": "00",
+      "Emp_Head_office_Code": "000",
+      "Emp_Office_Code": "10001",
+      "Organization_Unit_Name": "MIS TEAM",
+      "Head_Office_Name": "MIS  TEAM",
+      "Office_Name": "MIS TEAM",
+      "User_Type": "4",
+      "Emp_ShortName": "mis",
+      "Contact_No_1": "0000000000",
+      "Contact_No_2": "",
+      "emp_address": "",
+      "Email_Id": "",
+      "Emp_Name": "Mis"
     }
-  };
-
-  const handleKeyPress = (e, index) => {
-    if (e.nativeEvent.key === "Backspace" && !otp[index] && index > 0) {
-      inputs.current[index - 1].focus();
-    }
-  };
-
-  // const handleVerifyOTP = async () => {
-  //   const fullOTP = otp.join("");
-  //   if (fullOTP.length < 4) {
-  //     Alert.alert("Error", "Please enter 4-digit OTP");
-  //     return;
-  //   }
-
-  //   try {
-  //     const payload = {
-  //       STUDENT_ID: userid,
-  //       PASSWORD: password,
-  //       OTP: fullOTP,
-  //     };
-  //     console.log(payload,"otpVerify")
-
-  //     const response = await AuthService.verifyOtp(payload);
-  //     if (response?.OTPValid) {
-
-
-  //       await Keychain.setGenericPassword(
-  //         userid.toString(),
-  //         JSON.stringify({
-  //           password,
-  //           studentDetails: response || null,
-  //         }),
-  //         {
-  //           accessControl: biometryType
-  //             ? Keychain.ACCESS_CONTROL.BIOMETRY_ANY
-  //             : undefined,
-  //           accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED,
-  //         }
-  //       );
-
-
-
-  //       // if (response?.OTP === "8888") {
-  //       //   navigation.replace("HomeLayout");
-  //       // }
-  //       // if (response?.OTP === "9999") {
-  //       //   navigation.replace("Faculty");
-  //       // }
-
-  //     } else {
-  //       Alert.alert("OTP Failed", "Invalid or expired OTP.");
-  //     }
-  //   } catch (error) {
-  //     Alert.alert("OTP Verification Failed", error.message || "Try again");
-  //   }
-  // };
-
-
-
-
-
-  // const handleVerifyOTP = async () => {
-  //   const fullOTP = otp.join("");
-  //   if (fullOTP.length < 4) {
-  //     Alert.alert("Error", "Please enter 4-digit OTP");
-  //     return;
-  //   }
-  //   try {
-  //     const payload = {
-  //       STUDENT_ID: loginResponse?.STUDENT_ID || userid,
-  //       PASSWORD: password,
-  //       OTP: fullOTP,
-  //     };
-
-  //     // console.log(payload, "otpVerify");
-  //     const response = await AuthService.verifyOtp(payload);
-  //     if (response?.OTPValid) {
-  //       const credentials = await Keychain.getGenericPassword({
-  //         authenticationPrompt: {
-  //           title: "Login with Biometrics",
-  //           subtitle: "Use your fingerprint or FaceID",
-  //         },
-  //       });
-  //       if (credentials) {
-  //         const savedData = JSON.parse(credentials.password);
-  //         const userId = savedData;
-  //         const userType = userId.LoginDetail?.[0]?.User_Type;
-  //         const loginType = savedData?.[0]?.LOGIN_TYPE;
-  //         if (userType) {
-  //           return navigation.replace("Faculty", { userId });
-  //         } else if (loginType) {
-  //           return navigation.replace("HomeLayout", { userId });
-  //         }
-  //       } else {
-  //         Alert.alert("No Saved Credentials", "Please login manually first.");
-  //       }
-
-  //     } else {
-  //       Alert.alert("OTP Failed", "Invalid or expired OTP.");
-  //     }
-  //   } catch (error) {
-  //     Alert.alert("OTP Verification Failed", error.message || "Try again");
-  //   }
-  // };
-
-
-
-  const handleVerifyOTP = async () => {
-    const fullOTP = otp.join("");
-    if (fullOTP.length < 4) {
-      Alert.alert("Error", "Please enter 4-digit OTP");
-      return;
-    }
-    const studentId = loginResponse?.STUDENT_ID || userid;
-    const payload = {
-      STUDENT_ID: studentId,
-      PASSWORD: password,
-      OTP: fullOTP,
+    let userData = {
+      LoginDetail: LoginDetail
     };
-    try {
-      const response = await AuthService.verifyOtp(payload);
 
-      // if (!response?.OTPValid) {
-      //   Alert.alert("OTP Failed", "Invalid or expired OTP.");
-      //   return;
-      // }
 
+    // Store the session data securely in Keychain
+    await Keychain.setGenericPassword(
+      "session",
+      JSON.stringify(userData),
+      { accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY }
+    );
+    return navigation.replace("Admin", { userData });
+  }
+
+  // ✅ Proceed to API-based login only if not hardcoded
+  try {
+    setLoading(true);
+
+    // const isFaculty = userid.toUpperCase().startsWith("MIS");
+    // const payload = {
+    //   [isFaculty ? "FACULTY_ID" : "STUDENT_ID"]: userid,
+    //   user_id: userid,
+    //   ip_address: "0.0.0.0",
+    //   PASSWORD: password,
+    // };
+
+    const isFaculty = userid.toUpperCase().startsWith("MIS");
+    const cleanedUserid = userid.toUpperCase().startsWith("MIS") ? userid.slice(3) : userid;
+    const payload = {
+      // [isFaculty ? "FACULTY_ID" : "STUDENT_ID"]: isFaculty ? cleanedUserid : userid,
+      [isFaculty ? "FACULTY_ID" : "STUDENT_ID"]:  cleanedUserid,
+      user_id: cleanedUserid,
+      ip_address: "0.0.0.0",
+      password: password,
+    };
+
+
+
+
+    console.log(payload, "payload")
+    const response = isFaculty
+      ? await AuthService.loginFaculty(payload)
+      : await AuthService.loginStudent(payload);
+
+    setLoginResponse(response?.data?.LoginDetail);
+    const success =
+      response?.data?.Result?.[0]?.Success === "1" ||
+      response?.data?.LoginResponse?.[0]?.MSG_DET === "Login Success" ||
+      response?.data?.LoginDetail;
+
+    if (success) {
       const credentials = await Keychain.getGenericPassword({
         authenticationPrompt: {
           title: "Login with Biometrics",
           subtitle: "Use your fingerprint or FaceID",
         },
       });
+
       if (!credentials) {
         Alert.alert("No Saved Credentials", "Please login manually first.");
         return;
       }
 
-      // with otp 
       let savedData;
       try {
         savedData = JSON.parse(credentials.password);
@@ -459,231 +332,414 @@ const LoginScreen = () => {
         Alert.alert("Error", "Failed to parse saved credentials.");
         return;
       }
+
       const loginDetail = savedData?.LoginDetail?.[0];
       const userId = savedData;
       const userType = loginDetail?.User_Type;
-      const loginType = savedData?.[0]?.LOGIN_TYPE;
-      // console.log(loginDetail,"student or not")
-      if (userType) {
-        navigation.replace("Splash", { userId });
-      } else if (payload.STUDENT_ID) {
+
+      if (userType || payload.STUDENT_ID) {
         navigation.replace("Splash", { userId });
       } else {
         Alert.alert("Login Error", "Unable to determine user type.");
       }
-    } catch (error) {
-      const message = error?.message || "Try again";
-      Alert.alert("OTP Verification Failed", message);
+
+    } else {
+      clg
+      Alert.alert("Login Failed", "Invalid credentials or user not found.");
     }
+
+  } catch (error) {
+    console.log(error)
+    Alert.alert("Login Failed", error || "Something went wrong");
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+
+const handleOTPChange = (text, index) => {
+  if (/^[0-9]?$/.test(text)) {
+    const newOtp = [...otp];
+    newOtp[index] = text;
+    setOtp(newOtp);
+
+    if (text && index < 3) {
+      inputs.current[index + 1].focus();
+    }
+  }
+};
+
+const handleKeyPress = (e, index) => {
+  if (e.nativeEvent.key === "Backspace" && !otp[index] && index > 0) {
+    inputs.current[index - 1].focus();
+  }
+};
+
+// const handleVerifyOTP = async () => {
+//   const fullOTP = otp.join("");
+//   if (fullOTP.length < 4) {
+//     Alert.alert("Error", "Please enter 4-digit OTP");
+//     return;
+//   }
+
+//   try {
+//     const payload = {
+//       STUDENT_ID: userid,
+//       PASSWORD: password,
+//       OTP: fullOTP,
+//     };
+//     console.log(payload,"otpVerify")
+
+//     const response = await AuthService.verifyOtp(payload);
+//     if (response?.OTPValid) {
+
+
+//       await Keychain.setGenericPassword(
+//         userid.toString(),
+//         JSON.stringify({
+//           password,
+//           studentDetails: response || null,
+//         }),
+//         {
+//           accessControl: biometryType
+//             ? Keychain.ACCESS_CONTROL.BIOMETRY_ANY
+//             : undefined,
+//           accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED,
+//         }
+//       );
+
+
+
+//       // if (response?.OTP === "8888") {
+//       //   navigation.replace("HomeLayout");
+//       // }
+//       // if (response?.OTP === "9999") {
+//       //   navigation.replace("Faculty");
+//       // }
+
+//     } else {
+//       Alert.alert("OTP Failed", "Invalid or expired OTP.");
+//     }
+//   } catch (error) {
+//     Alert.alert("OTP Verification Failed", error.message || "Try again");
+//   }
+// };
+
+
+
+
+
+// const handleVerifyOTP = async () => {
+//   const fullOTP = otp.join("");
+//   if (fullOTP.length < 4) {
+//     Alert.alert("Error", "Please enter 4-digit OTP");
+//     return;
+//   }
+//   try {
+//     const payload = {
+//       STUDENT_ID: loginResponse?.STUDENT_ID || userid,
+//       PASSWORD: password,
+//       OTP: fullOTP,
+//     };
+
+//     // console.log(payload, "otpVerify");
+//     const response = await AuthService.verifyOtp(payload);
+//     if (response?.OTPValid) {
+//       const credentials = await Keychain.getGenericPassword({
+//         authenticationPrompt: {
+//           title: "Login with Biometrics",
+//           subtitle: "Use your fingerprint or FaceID",
+//         },
+//       });
+//       if (credentials) {
+//         const savedData = JSON.parse(credentials.password);
+//         const userId = savedData;
+//         const userType = userId.LoginDetail?.[0]?.User_Type;
+//         const loginType = savedData?.[0]?.LOGIN_TYPE;
+//         if (userType) {
+//           return navigation.replace("Faculty", { userId });
+//         } else if (loginType) {
+//           return navigation.replace("HomeLayout", { userId });
+//         }
+//       } else {
+//         Alert.alert("No Saved Credentials", "Please login manually first.");
+//       }
+
+//     } else {
+//       Alert.alert("OTP Failed", "Invalid or expired OTP.");
+//     }
+//   } catch (error) {
+//     Alert.alert("OTP Verification Failed", error.message || "Try again");
+//   }
+// };
+
+
+
+const handleVerifyOTP = async () => {
+  const fullOTP = otp.join("");
+  if (fullOTP.length < 4) {
+    Alert.alert("Error", "Please enter 4-digit OTP");
+    return;
+  }
+  const studentId = loginResponse?.STUDENT_ID || userid;
+  const payload = {
+    STUDENT_ID: studentId,
+    PASSWORD: password,
+    OTP: fullOTP,
   };
+  try {
+    const response = await AuthService.verifyOtp(payload);
 
+    // if (!response?.OTPValid) {
+    //   Alert.alert("OTP Failed", "Invalid or expired OTP.");
+    //   return;
+    // }
 
+    const credentials = await Keychain.getGenericPassword({
+      authenticationPrompt: {
+        title: "Login with Biometrics",
+        subtitle: "Use your fingerprint or FaceID",
+      },
+    });
+    if (!credentials) {
+      Alert.alert("No Saved Credentials", "Please login manually first.");
+      return;
+    }
 
-  const handleResendOTP = () => {
-    setOtp(["", "", "", ""]);
-    setTimer(30);
-    Alert.alert("OTP Sent", "New OTP sent to your number.");
-  };
-
-  // const handleBiometricLogin = async () => {
-  //   try {
-  //     const credentials = await Keychain.getGenericPassword({
-  //       authenticationPrompt: {
-  //         title: "Login with Biometrics",
-  //         subtitle: "Use your fingerprint or FaceID",
-  //       },
-  //     });
-
-  //     if (credentials) {
-  //       const savedData = JSON.parse(credentials.password);
-  //       const userId = savedData;
-  //       const userType = userId.LoginDetail?.[0]?.User_Type;
-  //       const loginType = savedData?.[0]?.LOGIN_TYPE;
-  //       if (userType) {
-  //         return navigation.replace("AdminHomeLayout", { userId });
-  //       } else if (loginType) {
-  //         return navigation.replace("HomeLayout", { userId });
-  //       }
-  //     } else {
-  //       Alert.alert("No Saved Credentials", "Please login manually first.");
-  //     }
-  //   } catch (error) {
-  //     Alert.alert("Biometric Auth Failed", "Try again or use manual login.");
-  //     return navigation.replace("Login");
-  //   }
-  // };
-
-
-
-  const handleBiometricLogin = async () => {
+    // with otp 
+    let savedData;
     try {
-      const credentials = await Keychain.getGenericPassword({
-        authenticationPrompt: {
-          title: "Login with Biometrics",
-          subtitle: "Use your fingerprint or FaceID",
-        },
-      });
-      if (credentials) {
-        const savedData = JSON.parse(credentials.password);
-        const userId = savedData?.LoginDetail;
-        // console.log(savedData, "userTypeuserType")
-        const userType = savedData?.LoginDetail?.[0]?.User_Type;
-        const userTypeMaster = savedData?.LoginDetail?.User_Type;
-        // console.log(userType, "usertype")
-        const loginType = savedData?.LoginDetail?.[0]?.LOGIN_TYPE;
-        const studentLoginType = savedData?.[0]?.LOGIN_TYPE;
-        // console.log(studentLoginType)
-
-        if (userType == 3 || userTypeMaster) {
-          // console.log(userType,"userTypeuserType")
-          return navigation.replace("Admin", { userId });
-        } else if (userType == 2) {
-          return navigation.replace("Admin", { userId });
-        }
-        else if (userType == 4) {
-          return navigation.replace("Admin", { userId });
-        }
-        else if (studentLoginType) {
-          return navigation.replace("Student", { userId });
-        } else {
-          Alert.alert("Invalid User Type", "No valid user type found.");
-        }
-      } else {
-        Alert.alert("No Saved Credentials", "Please login manually first.");
-      }
-    } catch (error) {
-      Alert.alert("Biometric Auth Failed", "Try again or use manual login.");
-      return navigation.replace("Login");
+      savedData = JSON.parse(credentials.password);
+    } catch (parseError) {
+      Alert.alert("Error", "Failed to parse saved credentials.");
+      return;
     }
-  };
+    const loginDetail = savedData?.LoginDetail?.[0];
+    const userId = savedData;
+    const userType = loginDetail?.User_Type;
+    const loginType = savedData?.[0]?.LOGIN_TYPE;
+    // console.log(loginDetail,"student or not")
+    if (userType) {
+      navigation.replace("Splash", { userId });
+    } else if (payload.STUDENT_ID) {
+      navigation.replace("Splash", { userId });
+    } else {
+      Alert.alert("Login Error", "Unable to determine user type.");
+    }
+  } catch (error) {
+    const message = error?.message || "Try again";
+    Alert.alert("OTP Verification Failed", message);
+  }
+};
 
 
-  const word = "MOR-GURUKUL";
-  return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar backgroundColor={colors.bgcolor} barStyle="light-content" />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}>
-        <View style={styles.bg}>
-          <Image
-            source={require('../../../assets/logo_mgu.png')}
-            style={styles.image}
-          />
-          <View style={styles.bannerContainer}>
-            <Text style={styles.bannerText}>
-              {word.split('').map((letter, index) => (
-                <Text key={index} style={{ color: 'white' }}>
-                  {letter}
-                </Text>
-              ))}
-            </Text>
-          </View>
+
+const handleResendOTP = () => {
+  setOtp(["", "", "", ""]);
+  setTimer(30);
+  Alert.alert("OTP Sent", "New OTP sent to your number.");
+};
+
+// const handleBiometricLogin = async () => {
+//   try {
+//     const credentials = await Keychain.getGenericPassword({
+//       authenticationPrompt: {
+//         title: "Login with Biometrics",
+//         subtitle: "Use your fingerprint or FaceID",
+//       },
+//     });
+
+//     if (credentials) {
+//       const savedData = JSON.parse(credentials.password);
+//       const userId = savedData;
+//       const userType = userId.LoginDetail?.[0]?.User_Type;
+//       const loginType = savedData?.[0]?.LOGIN_TYPE;
+//       if (userType) {
+//         return navigation.replace("AdminHomeLayout", { userId });
+//       } else if (loginType) {
+//         return navigation.replace("HomeLayout", { userId });
+//       }
+//     } else {
+//       Alert.alert("No Saved Credentials", "Please login manually first.");
+//     }
+//   } catch (error) {
+//     Alert.alert("Biometric Auth Failed", "Try again or use manual login.");
+//     return navigation.replace("Login");
+//   }
+// };
+
+
+
+const handleBiometricLogin = async () => {
+  try {
+    const credentials = await Keychain.getGenericPassword({
+      authenticationPrompt: {
+        title: "Login with Biometrics",
+        subtitle: "Use your fingerprint or FaceID",
+      },
+    });
+    if (credentials) {
+      const savedData = JSON.parse(credentials.password);
+      const userId = savedData?.LoginDetail;
+      // console.log(savedData, "userTypeuserType")
+      const userType = savedData?.LoginDetail?.[0]?.User_Type;
+      const userTypeMaster = savedData?.LoginDetail?.User_Type;
+      // console.log(userType, "usertype")
+      const loginType = savedData?.LoginDetail?.[0]?.LOGIN_TYPE;
+      const studentLoginType = savedData?.[0]?.LOGIN_TYPE;
+      // console.log(studentLoginType)
+
+      if (userType == 3 || userTypeMaster) {
+        // console.log(userType,"userTypeuserType")
+        return navigation.replace("Admin", { userId });
+      } else if (userType == 2) {
+        return navigation.replace("Admin", { userId });
+      }
+      else if (userType == 4) {
+        return navigation.replace("Admin", { userId });
+      }
+      else if (studentLoginType) {
+        return navigation.replace("Student", { userId });
+      } else {
+        Alert.alert("Invalid User Type", "No valid user type found.");
+      }
+    } else {
+      Alert.alert("No Saved Credentials", "Please login manually first.");
+    }
+  } catch (error) {
+    Alert.alert("Biometric Auth Failed", "Try again or use manual login.");
+    return navigation.replace("Login");
+  }
+};
+
+
+const word = "MOR-GURUKUL";
+return (
+  <SafeAreaView style={styles.safeArea}>
+    <StatusBar backgroundColor={colors.bgcolor} barStyle="light-content" />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}>
+      <View style={styles.bg}>
+        <Image
+          source={require('../../../assets/logo_mgu.png')}
+          style={styles.image}
+        />
+        <View style={styles.bannerContainer}>
+          <Text style={styles.bannerText}>
+            {word.split('').map((letter, index) => (
+              <Text key={index} style={{ color: 'white' }}>
+                {letter}
+              </Text>
+            ))}
+          </Text>
         </View>
+      </View>
 
-        {/* --- Login/OTP Form Area --- */}
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.inner}>
-            {/* Login to your account / Enter OTP subtitle */}
-            <Text style={styles.subtitle}>
-              {showOTP ? 'Enter OTP' : 'Login to your account'}
-            </Text>
+      {/* --- Login/OTP Form Area --- */}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.inner}>
+          {/* Login to your account / Enter OTP subtitle */}
+          <Text style={styles.subtitle}>
+            {showOTP ? 'Enter OTP' : 'Login to your account'}
+          </Text>
 
-            {/* <UpdateChecker /> */}
+          {/* <UpdateChecker /> */}
 
-            {/* --- Login Form (UserID/Password) --- */}
-            {!showOTP && !hasSavedCredentials && (
-              <>
+          {/* --- Login Form (UserID/Password) --- */}
+          {!showOTP && !hasSavedCredentials && (
+            <>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter Student Or Faculty ID"
+                value={userid}
+                onChangeText={setuserid}
+                autoCapitalize="none"
+                placeholderTextColor="#aaa"
+              />
+
+              <View style={styles.passwordContainer}>
                 <TextInput
-                  style={styles.input}
-                  placeholder="Enter Student Or Faculty ID"
-                  value={userid}
-                  onChangeText={setuserid}
+                  style={styles.passwordInput}
+                  placeholder="Enter Password"
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry={secure}
                   autoCapitalize="none"
-                  placeholderTextColor="#aaa"
-                />
+                  placeholderTextColor="#aaa" />
+                <TouchableOpacity onPress={() => setSecure(!secure)}>
+                  <Text style={styles.toggle}>{secure ? '👁️' : '👨🏻‍💻'}</Text>
+                </TouchableOpacity>
+              </View>
 
-                <View style={styles.passwordContainer}>
+              <TouchableOpacity
+                style={[styles.button, { backgroundColor: colors.bgcolor }]}
+                onPress={handleLogin}
+                disabled={loading}>
+                {loading ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <Text style={styles.buttonText}>Login</Text>
+                )}
+              </TouchableOpacity>
+            </>
+          )}
+
+          {/* --- OTP Verification Form --- */}
+          {showOTP && (
+            <>
+              <View style={styles.otpContainer}>
+                {otp.map((digit, index) => (
                   <TextInput
-                    style={styles.passwordInput}
-                    placeholder="Enter Password"
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry={secure}
-                    autoCapitalize="none"
-                    placeholderTextColor="#aaa" />
-                  <TouchableOpacity onPress={() => setSecure(!secure)}>
-                    <Text style={styles.toggle}>{secure ? '👁️' : '👨🏻‍💻'}</Text>
+                    key={index}
+                    ref={ref => (inputs.current[index] = ref)}
+                    style={styles.otpInput}
+                    value={digit}
+                    keyboardType="number-pad"
+                    maxLength={1}
+                    onChangeText={text => handleOTPChange(text, index)}
+                    onKeyPress={e => handleKeyPress(e, index)}
+                    textAlign="center"
+                  />
+                ))}
+              </View>
+              <TouchableOpacity
+                style={[styles.button, { backgroundColor: colors.bgcolor }]}
+                onPress={handleVerifyOTP}>
+                <Text style={styles.buttonText}>Verify OTP</Text>
+              </TouchableOpacity>
+              <View style={styles.resendContainer}>
+                {timer > 0 ? (
+                  <Text style={styles.timerText}>
+                    Resend OTP in {timer}s
+                  </Text>
+                ) : (
+                  <TouchableOpacity onPress={handleResendOTP}>
+                    <Text style={styles.resendText}>Resend OTP</Text>
                   </TouchableOpacity>
-                </View>
+                )}
+              </View>
+            </>
+          )}
 
-                <TouchableOpacity
-                  style={[styles.button, { backgroundColor: colors.bgcolor }]}
-                  onPress={handleLogin}
-                  disabled={loading}>
-                  {loading ? (
-                    <ActivityIndicator color="#fff" />
-                  ) : (
-                    <Text style={styles.buttonText}>Login</Text>
-                  )}
-                </TouchableOpacity>
-              </>
-            )}
-
-            {/* --- OTP Verification Form --- */}
-            {showOTP && (
-              <>
-                <View style={styles.otpContainer}>
-                  {otp.map((digit, index) => (
-                    <TextInput
-                      key={index}
-                      ref={ref => (inputs.current[index] = ref)}
-                      style={styles.otpInput}
-                      value={digit}
-                      keyboardType="number-pad"
-                      maxLength={1}
-                      onChangeText={text => handleOTPChange(text, index)}
-                      onKeyPress={e => handleKeyPress(e, index)}
-                      textAlign="center"
-                    />
-                  ))}
-                </View>
-                <TouchableOpacity
-                  style={[styles.button, { backgroundColor: colors.bgcolor }]}
-                  onPress={handleVerifyOTP}>
-                  <Text style={styles.buttonText}>Verify OTP</Text>
-                </TouchableOpacity>
-                <View style={styles.resendContainer}>
-                  {timer > 0 ? (
-                    <Text style={styles.timerText}>
-                      Resend OTP in {timer}s
-                    </Text>
-                  ) : (
-                    <TouchableOpacity onPress={handleResendOTP}>
-                      <Text style={styles.resendText}>Resend OTP</Text>
-                    </TouchableOpacity>
-                  )}
-                </View>
-              </>
-            )}
-
-            {/* --- Biometric/Saved Credentials Login --- */}
-            {hasSavedCredentials && !showOTP && (
-              <>
-                <TouchableOpacity
-                  style={styles.fingerprintCircle}
-                  onPress={handleBiometricLogin}>
-                  {/* <FontAwesome6 name="house" size={40} color="#b22707ff" /> */}
-                  <Text style={{ fontSize: 40, color: '#b22707ff' }}>🏠</Text>
-                </TouchableOpacity>
-                <Text style={styles.fingerprintText}>Click here</Text>
-              </>
-            )}
-          </View>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
-  );
+          {/* --- Biometric/Saved Credentials Login --- */}
+          {hasSavedCredentials && !showOTP && (
+            <>
+              <TouchableOpacity
+                style={styles.fingerprintCircle}
+                onPress={handleBiometricLogin}>
+                {/* <FontAwesome6 name="house" size={40} color="#b22707ff" /> */}
+                <Text style={{ fontSize: 40, color: '#b22707ff' }}>🏠</Text>
+              </TouchableOpacity>
+              <Text style={styles.fingerprintText}>Click here</Text>
+            </>
+          )}
+        </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
+  </SafeAreaView>
+);
 };
 
 

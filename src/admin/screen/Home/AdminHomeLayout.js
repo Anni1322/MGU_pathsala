@@ -30,7 +30,6 @@ const IconMap = {
 
 const IconText = React.memo(({ label, iconLib = 'MaterialIcons', iconName, iconSize = 25, color = 'green' }) => {
   const IconComponent = IconMap[iconLib] || MaterialIcons;
-
   return (
     <View style={{ alignItems: 'center', marginHorizontal: 10 }}>
       <IconComponent name={iconName} size={iconSize} color={color} />
@@ -49,6 +48,7 @@ const STATIC_SEMESTERS = [
 ];
 
 const STATIC_SESSION_DATA = [
+  // { key: 26, label: '2026-27' },
   { key: 25, label: '2025-26' },
   { key: 24, label: '2024-25' },
   { key: 23, label: '2023-24' },
@@ -82,6 +82,7 @@ const AdminHomeLayout = () => {
   // const [MyStudyMaterials, setMyStudyMaterials] = useState([]);  
 
   const [selectedSession, setSelectedSession] = useState(STATIC_SESSION_DATA[0].key);
+  // const [selectedSession, setSelectedSession] = useState();
   const [selectedSemester, setSelectedSemester] = useState(STATIC_SEMESTERS[0].key);
   const [EmpId, setEmpId] = useState(null);
   const [officeList, setOfficeList] = useState([]);
@@ -118,6 +119,22 @@ const AdminHomeLayout = () => {
   );
 
   // ^--- API Callbacks ---
+  const getCurrentAcademicSession = useCallback(async () => {
+    try {
+      const getCurrentAcademicSessionApi = getApiList().getCurrentAcademicSession;
+      const payload = {};
+      const response = await HttpService.get(getCurrentAcademicSessionApi, payload);
+      console.log(response.data.AccadmicSession, "current session")
+      if (response?.status === 200) {
+        // setSelectedSession(response?.data?.AccadmicSession);
+      }
+    } catch (error) {
+      console.error("fetchMystudents failed:", error);
+      // alert()
+    }
+  }, []);
+
+
   const fetchMystudents = useCallback(async (empId, session, semester) => {
     try {
       if (!empId) return;
@@ -128,6 +145,7 @@ const AdminHomeLayout = () => {
         emp_id: empId
       };
       const response = await HttpService.get(DegreeTypeWiseStudentListApi, payload);
+      // console.log(response,"response")
       if (response?.status === 200) {
         setStudent(response.data.DegreeTypeWiseStudentCount);
       }
@@ -190,18 +208,18 @@ const AdminHomeLayout = () => {
       console.log(sessionData?.LoginDetail, "office list")
       setOfficeList(sessionData?.LoginDetail)
 
+      // const sessionFromStorage = sessionData?.SelectedSession ;
       const sessionFromStorage = sessionData?.SelectedSession || STATIC_SESSION_DATA[0].key;
       const semesterFromStorage = sessionData?.SelectedSemester || STATIC_SEMESTERS[0].key;
       setSelectedSession(sessionFromStorage);
       setSelectedSemester(semesterFromStorage);
-
-      setSessionValue(STATIC_SESSION_DATA[0].label)
+      setSessionValue(sessionData?.SelectedSession)
+      // setSessionValue(STATIC_SESSION_DATA[0].label)
       setSemesterValue(STATIC_SEMESTERS[0].label)
 
       if (initialEmpId) {
         await loadData(sessionFromStorage, semesterFromStorage, initialEmpId);
       }
-
     } catch (error) {
       console.error("Error loading initial data:", error);
       Alert.alert("Error", "Failed to load initial data.");
@@ -241,13 +259,12 @@ const AdminHomeLayout = () => {
           };
           await SessionService.saveSession(updatedSession);
           await loadData(selectedSession, selectedSemester, EmpId);
-
         } catch (error) {
           console.error("Failed to update session:", error);
         }
       };
-
       updateSessionAndRefresh();
+      getCurrentAcademicSession();
     }
   }, [selectedSemester, selectedSession, EmpId, loadData]);
 
@@ -354,11 +371,9 @@ const AdminHomeLayout = () => {
   const SessionListModalContent = React.memo(({ closeModalSession }) => (
     <View style={modalStyles.centeredView}>
       <View style={modalStyles.modalView}>
-
         <View style={modalStyles.modalHeader}>
           <Text style={modalStyles.modalTitle}>Select</Text>
         </View>
-
         {STATIC_SESSION_DATA && STATIC_SESSION_DATA.length > 0 ? (
           <ScrollView style={modalStyles.officeListScrollView}>
             {STATIC_SESSION_DATA.map((ses, index) => (
@@ -433,7 +448,7 @@ const AdminHomeLayout = () => {
             tintColor="#007AFF"
             title="Refreshing..."
           />}
-          >
+      >
 
         <View style={styles.userInfo}>
           <View style={{ flex: 1 }}>
@@ -450,7 +465,7 @@ const AdminHomeLayout = () => {
               <Text style={styles.changeOfficeButtonText}>Change Office</Text>
             </TouchableOpacity>
           </View> */}
-          
+
         </View>
         <View style={styles.topcard}>
           <Slider />
@@ -694,7 +709,7 @@ const styles = StyleSheet.create({
     marginBottom: 1,
     // backgroundColor: '#BCCEF8',   
     borderRadius: 10,
-    borderWidth: 1,
+    borderWidth: 0.4,
     borderColor: '#ff0000ff'
     // borderTopRightRadius: 100,
     // borderBottomRightRadius: 100,
@@ -708,7 +723,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 8,
     marginTop: 8,
-    margin: 5, 
+    margin: 5,
   },
 
   cont: {
@@ -717,9 +732,10 @@ const styles = StyleSheet.create({
   iconRectangle: {
     width: 70,
     height: 70,
-    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth:0.3,
+    borderRadius:20,
     // marginBottom: 5,
     // shadowOffset: { width: 0, height: 6 },
     // shadowOpacity: 0.3,
@@ -732,7 +748,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#003109ff',
     textAlign: 'center',
-    marginBottom:15
+    marginBottom: 15
   },
 
   eCornerContainer: {
@@ -741,9 +757,9 @@ const styles = StyleSheet.create({
 
   gridContainer: {
     margin: 5,
-    padding: 0,
-    margin:10,
-    backgroundColor: '#FAF7F0',
+    padding: -10,
+    margin: 10,
+    // backgroundColor: '#FAF7F0',
     flexDirection: 'row',
     flexWrap: 'wrap',
     // borderRadius: 50,
@@ -759,7 +775,7 @@ const styles = StyleSheet.create({
   },
   gridItem: {
     width: '25%',
-    // marginBottom: 15,
+    marginBottom: 10,
     // borderRadius: 12,
   },
 
@@ -769,10 +785,10 @@ const styles = StyleSheet.create({
   },
 
   ModelButton: {
-    backgroundColor: colors.dangerL,
+    backgroundColor: "#f2dcc4ff",
     paddingVertical: 8,
     paddingHorizontal: 16,
-    borderRadius: 8,
+    borderRadius: 18,
     elevation: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },

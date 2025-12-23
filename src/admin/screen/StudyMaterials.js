@@ -147,13 +147,13 @@ const StudyMaterials = () => {
             onPress={() => setSelectedFilter('MS Word')}>
             <Text>MS Word</Text>
           </TouchableOpacity>
-
           {/* <TouchableOpacity
             style={[styles.filterButton, selectedFilter === 'English' && styles.selectedButton]}
             onPress={() => setSelectedFilter('English')}>
             <Text>English</Text>
           </TouchableOpacity> */}
 
+          
         </View>
 
         {loading ? (

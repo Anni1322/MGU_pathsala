@@ -1,9 +1,14 @@
 
 let adminApiList = {
  "login": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/GetAdmimLogin",
+
+ 
  "getTodayBirhtList": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/getTodayBirhtList",
  "getCourseWiseDashCount": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/getCourseWiseDashCount",
  "Get_File_Type_Masters": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/Get_File_Type_Masters",
+
+
+ "getCurrentAcademicSession": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/getCurrentAcademicSession",
 
  "getStudyMaterialList": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/getStudyMaterialList",
  "saveStudyMaterailFile": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/saveStudyMaterailFile",

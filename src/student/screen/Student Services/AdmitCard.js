@@ -42,6 +42,7 @@ const AdmitCard = () => {
     setLoading(true);
     try {
       const sessionData = await SessionService.getSession();
+      console.log(sessionData,'sessionData')
       const payload = {
         LOGIN_TYPE: sessionData?.[0]?.LOGIN_TYPE,
         STUDENT_ID: sessionData?.STUDENT_ID,

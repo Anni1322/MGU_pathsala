@@ -46,7 +46,7 @@
 
 
 
-    <application
+    <application       
       android:name=".MainApplication"
       android:label="@string/app_name"
       android:icon="@mipmap/ic_launcher"
@@ -54,6 +54,7 @@
       android:allowBackup="false"
       android:theme="@style/AppTheme"
       android:supportsRtl="true">
+      
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"

@@ -182,7 +182,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 20,
     paddingLeft: 10,
-    elevation:55,
+    elevation:65,
+    
   },
   headerTitle: {
     flex: 1,

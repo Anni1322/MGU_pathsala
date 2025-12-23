@@ -1,16 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Animated,
-  Switch,
-  ScrollView,
-  Dimensions,
-  Linking,
-  Alert
-} from "react-native";
+import {View,Text,TouchableOpacity,StyleSheet,Animated,Switch,ScrollView,Dimensions,Linking,Alert} from "react-native";
 import { useNavigation } from '@react-navigation/native';
 
 import AuthService from "../../../common/Services/AuthService";

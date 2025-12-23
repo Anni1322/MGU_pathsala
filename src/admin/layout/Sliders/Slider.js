@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   userCard: {
-    backgroundColor: colors.footercolor,
+    backgroundColor: colors.dangerL,
     padding: 10,
     borderRadius: 15,
     marginBottom: 10,
@@ -185,12 +185,12 @@ const styles = StyleSheet.create({
     zIndex: 2, // above overlay
   },
   title: {
-    color: colors.background,
+    color: colors.textPrimary,
     fontSize: width * 0.045,
     fontWeight: 'bold',
   },
   subtitle: {
-    color: colors.background,
+    color: colors.textPrimary,
     marginTop: 5,
     fontSize: width * 0.035,
   },
