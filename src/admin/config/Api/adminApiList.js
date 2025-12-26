@@ -11,6 +11,7 @@ let adminApiList = {
  "getCurrentAcademicSession": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/getCurrentAcademicSession",
 
  "getStudyMaterialList": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/getStudyMaterialList",
+ "getStudyMaterialDashCount": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/getStudyMaterialDashCount",
  "saveStudyMaterailFile": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/saveStudyMaterailFile",
  "SaveUploadMaterialFileApproval": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/SaveUploadMaterialFileApproval",
  "deleteUploadMaterialAssignmentFile": "/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/deleteUploadMaterialAssignmentFile",

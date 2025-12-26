@@ -76,6 +76,7 @@ const AdminHomeLayout = () => {
   const [MyCourse, setMyCourse] = useState(null);
   const [MyStudent, setStudent] = useState(null);
   const [MyAssignment, setMyAssignment] = useState(null);
+  const [MyStudyMaterial, setMyStudyMaterial] = useState(null);
 
   const [SemesterValue, setSemesterValue] = useState(null);
   const [SessionValue, setSessionValue] = useState(null);
@@ -113,9 +114,14 @@ const AdminHomeLayout = () => {
     MyCourse?.CourseCount?.[0]?.CourseCount || 0,
     [MyCourse]
   );
+
   const MyAssignmentCount = useMemo(() =>
-    MyAssignment?.CourseCount?.[0]?.CourseCount || 0,
+    MyAssignment?.StudyAssignmentDashCount?.[0]?.assignment_count || 0,
     [MyAssignment]
+  );
+  const MyStudyMaterialCount = useMemo(() =>
+    MyStudyMaterial?.StudyDashCount?.[0]?.Material_count || 0,
+    [MyStudyMaterial]
   );
 
   // ^--- API Callbacks ---
@@ -133,7 +139,6 @@ const AdminHomeLayout = () => {
       // alert()
     }
   }, []);
-
 
   const fetchMystudents = useCallback(async (empId, session, semester) => {
     try {
@@ -167,12 +172,51 @@ const AdminHomeLayout = () => {
       const response = await HttpService.get(CourseWiseDashCountApi, payload);
       if (response?.status === 200) {
         setMyCourse(response.data);
-        setMyAssignment({
-          Semester_Id: semester,
-          Academic_session: session,
-          Emp_Id: empId,
-          data: response.data
-        });
+
+        // setMyAssignment({
+        //   Semester_Id: semester,
+        //   Academic_session: session,
+        //   Emp_Id: empId,
+        //   data: response.data
+        // });
+
+      }
+    } catch (error) {
+      console.error("fetchMyCourses failed:", error);
+    }
+  }, []);
+
+  const fetchMyassingment = useCallback(async (empId, session, semester) => {
+    try {
+      if (!empId) return;
+      const payload = {
+        Semester_Id: semester,
+        Academic_session: session,
+        Created_By: empId,
+      };
+      const getStudyAssignmentDashCountApi = getApiList().getStudyAssignmentDashCount;
+      const response = await HttpService.get(getStudyAssignmentDashCountApi, payload);
+      // console.log(response?.data?.StudyAssignmentDashCount[0].assignment_count, "response")
+      if (response?.status === 200) {
+      setMyAssignment(response?.data);
+      }
+    } catch (error) {
+      console.error("fetchMyCourses failed:", error);
+    }
+  }, []);
+
+
+  const fetchStudyMaterials = useCallback(async (empId) => {
+    try {
+      if (!empId) return;
+      const payload = {
+        Created_By: empId,
+      };
+      const getStudyMaterialDashCountApi = getApiList().getStudyMaterialDashCount;
+      const response = await HttpService.get(getStudyMaterialDashCountApi, payload);
+      console.log(response?.data, "response")
+      if (response?.status === 200) {
+      setMyStudyMaterial(response?.data);
       }
     } catch (error) {
       console.error("fetchMyCourses failed:", error);
@@ -186,7 +230,9 @@ const AdminHomeLayout = () => {
     try {
       await Promise.all([
         fetchMyCourses(empId, session, semester),
-        fetchMystudents(empId, session, semester)
+        fetchMystudents(empId, session, semester),
+        fetchMyassingment(empId, session, semester),
+        fetchStudyMaterials(empId),
       ]);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -194,7 +240,7 @@ const AdminHomeLayout = () => {
     } finally {
       setLoading(false);
     }
-  }, [fetchMyCourses, fetchMystudents]);
+  }, [fetchMyCourses, fetchMystudents, fetchMyassingment, fetchStudyMaterials]);
 
   const fetchInitialDataAndSetup = useCallback(async () => {
     setLoading(true);
@@ -213,8 +259,8 @@ const AdminHomeLayout = () => {
       const semesterFromStorage = sessionData?.SelectedSemester || STATIC_SEMESTERS[0].key;
       setSelectedSession(sessionFromStorage);
       setSelectedSemester(semesterFromStorage);
-      setSessionValue(sessionData?.SelectedSession)
-      // setSessionValue(STATIC_SESSION_DATA[0].label)
+      // setSessionValue(sessionData?.SelectedSession)
+      setSessionValue(STATIC_SESSION_DATA[0].label)
       setSemesterValue(STATIC_SEMESTERS[0].label)
 
       if (initialEmpId) {
@@ -238,6 +284,7 @@ const AdminHomeLayout = () => {
     setSessionValue(data?.label)
     setModalVisibleSession(false)
   }, [])
+
   const SemesterChange = useCallback(async (data) => {
     // console.log(data?.key,"data?.key")
     setSelectedSemester(data?.key);
@@ -295,7 +342,6 @@ const AdminHomeLayout = () => {
       .map(item => {
         let count = "";
         let data = null;
-
         switch (item.name) {
           case 'My Courses':
             count = myCourseCount;
@@ -309,13 +355,15 @@ const AdminHomeLayout = () => {
             count = MyAssignmentCount;
             data = MyAssignment;
             break;
+          case 'Study Materials':
+            count = MyStudyMaterialCount;
+            data = MyStudyMaterial;
+            break;
           default:
             break;
         }
-
         return { ...item, count: count, data: data };
       })
-
       .filter(item => item.id),
     // ... dependencies
   );
@@ -734,8 +782,8 @@ const styles = StyleSheet.create({
     height: 70,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth:0.3,
-    borderRadius:20,
+    borderWidth: 0.3,
+    borderRadius: 20,
     // marginBottom: 5,
     // shadowOffset: { width: 0, height: 6 },
     // shadowOpacity: 0.3,

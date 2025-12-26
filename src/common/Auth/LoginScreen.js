@@ -1,21 +1,8 @@
 //with otp and fingurprint
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableWithoutFeedback,
-  Keyboard,
-  Alert,
-  ActivityIndicator,
-  Image,
-  StatusBar,
-} from "react-native";
+// import axios from "axios";
+import {View,Text,TextInput,TouchableOpacity,StyleSheet,KeyboardAvoidingView,Platform,TouchableWithoutFeedback,
+  Keyboard,Alert,ActivityIndicator,Image,StatusBar,} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import * as Keychain from "react-native-keychain";
@@ -31,8 +18,8 @@ const LoginScreen = () => {
   // const [userid, setuserid] = useState("MIS1004");
   // const [password, setPassword] = useState("Akdave22@#");
 
-  // const [userid, setuserid] = useState("MIS1033");
-  // const [password, setPassword] = useState("Shree@164$");
+  const [userid, setuserid] = useState("MIS1033");
+  const [password, setPassword] = useState("Shree@164$");
 
   // const [userid, setuserid] = useState("MIS10108");
   // const [password, setPassword] = useState("Saurabh@12345");
@@ -52,8 +39,8 @@ const LoginScreen = () => {
   // const [userid, setuserid] = useState("220120244429");
   // const [password, setPassword] = useState("BDZH24N6");
 
-  const [userid, setuserid] = useState("MIS1017");
-  const [password, setPassword] = useState("MISAMIT2025");
+  // const [userid, setuserid] = useState("MIS1017");
+  // const [password, setPassword] = useState("MISAMIT2025");
 
   // const [userid, setuserid] = useState("IGKVGUEST");
   // const [password, setPassword] = useState("igkv@2020");
@@ -183,20 +170,20 @@ const LoginScreen = () => {
 
 
  
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const res = await axios.get(
-        "https://mguvv.ac.in/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/GetAdmimLogin?user_id=1017&password=MISAMIT2025&ip_address=192.162.1.38"
-      );
-      console.log(res);
-    } catch (error) {
-      console.log("ERROR 👉", error);
-    }
-  };
+// useEffect(() => {
+//   const fetchData = async () => {
+//     try {
+//       const res = await axios.get(
+//         "https://mguvv.ac.in/Mobile_App_Services/EKrishiPathshala/MISAdmin_New.asmx/GetAdmimLogin?user_id=1017&password=MISAMIT2025&ip_address=192.162.1.38"
+//       );
+//       console.log(res);
+//     } catch (error) {
+//       console.log("ERROR 👉", error);
+//     }
+//   };
 
-  fetchData();
-}, []);
+//   fetchData();
+// }, []);
 
   // with masterid
   const handleLogin = async () => {
@@ -280,23 +267,25 @@ useEffect(() => {
   try {
     setLoading(true);
 
-    // const isFaculty = userid.toUpperCase().startsWith("MIS");
-    // const payload = {
-    //   [isFaculty ? "FACULTY_ID" : "STUDENT_ID"]: userid,
-    //   user_id: userid,
-    //   ip_address: "0.0.0.0",
-    //   PASSWORD: password,
-    // };
-
+       // igkvlog
     const isFaculty = userid.toUpperCase().startsWith("MIS");
-    const cleanedUserid = userid.toUpperCase().startsWith("MIS") ? userid.slice(3) : userid;
     const payload = {
-      // [isFaculty ? "FACULTY_ID" : "STUDENT_ID"]: isFaculty ? cleanedUserid : userid,
-      [isFaculty ? "FACULTY_ID" : "STUDENT_ID"]:  cleanedUserid,
-      user_id: cleanedUserid,
+      [isFaculty ? "FACULTY_ID" : "STUDENT_ID"]: userid,
+      user_id: userid,
       ip_address: "0.0.0.0",
-      password: password,
+      PASSWORD: password,
     };
+
+    // mgulog
+    // const isFaculty = userid.toUpperCase().startsWith("MIS");
+    // const cleanedUserid = userid.toUpperCase().startsWith("MIS") ? userid.slice(3) : userid;
+    // const payload = {
+    //   // [isFaculty ? "FACULTY_ID" : "STUDENT_ID"]: isFaculty ? cleanedUserid : userid,
+    //   [isFaculty ? "FACULTY_ID" : "STUDENT_ID"]:  cleanedUserid,
+    //   user_id: cleanedUserid,
+    //   ip_address: "0.0.0.0",
+    //   password: password,
+    // };
 
 
 

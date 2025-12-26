@@ -14,6 +14,7 @@ import alertService from '../../common/Services/alert/AlertService';
 import { API_BASE_URL } from '../../common/config/BaseUrl';
 // import colors from '../../common/config/colors';
 import CustomRefreshControl from '../../common/RefreshControl';
+import colors from '../../common/config/colors';
 
 
 const DUMMY_COURSE_COUNTS = [
@@ -63,7 +64,7 @@ const AssignmentDashboard = () => {
 
     // Function to handle viewing/downloading the Assignment File
     const handleViewFile = async (filePath) => {
-    
+
         if (!filePath) {
             alertService.show({
                 title: 'Error',
@@ -76,7 +77,7 @@ const AssignmentDashboard = () => {
         setLoading(true);
         try {
             const fullPath = API_BASE_URL + '/' + filePath;
-            await downloadFile(fullPath, `${filePath.split('/').pop()}`); 
+            await downloadFile(fullPath, `${filePath.split('/').pop()}`);
             Alert.alert('Download', 'Simulated download started for ' + filePath.split('/').pop());
         } catch (error) {
             Alert.alert('Download Failed', error?.message || 'Something went wrong');
@@ -105,70 +106,70 @@ const AssignmentDashboard = () => {
         }
     }, []);
 
- const GetApprovalListCount = useCallback(async () => {
-  try {
-    setLoading(true);
+    const GetApprovalListCount = useCallback(async () => {
+        try {
+            setLoading(true);
 
-    const {
-      getStudyAssignmentDashCount,
-      getSubmittedAssignmentStudentCount,
-    } = getAdminApiList();
+            const {
+                getStudyAssignmentDashCount,
+                getSubmittedAssignmentStudentCount,
+            } = getAdminApiList();
 
-    if (!getStudyAssignmentDashCount || !getSubmittedAssignmentStudentCount) {
-      throw new Error("API endpoint not found.");
-    }
+            if (!getStudyAssignmentDashCount || !getSubmittedAssignmentStudentCount) {
+                throw new Error("API endpoint not found.");
+            }
 
-    const sessionData = await SessionService.getSession();
-    const profile = sessionData?.LoginDetail?.[0];
+            const sessionData = await SessionService.getSession();
+            const profile = sessionData?.LoginDetail?.[0];
 
-    if (!profile?.Emp_Id) {
-      throw new Error("Invalid session or user data");
-    }
+            if (!profile?.Emp_Id) {
+                throw new Error("Invalid session or user data");
+            }
 
-    const countPayload = {
-      Academic_session: sessionData.SelectedSession,
-      Semester_Id: sessionData.SelectedSemester,
-      Created_By: profile.Emp_Id,
-    };
+            const countPayload = {
+                Academic_session: sessionData.SelectedSession,
+                Semester_Id: sessionData.SelectedSemester,
+                Created_By: profile.Emp_Id,
+            };
 
-    const listPayload = {
-      Academic_session: sessionData.SelectedSession,
-      Emp_Id: profile.Emp_Id,
-      Semester_Id: sessionData.SelectedSemester,
-      CourseID : ''
-    };
+            const listPayload = {
+                Academic_session: sessionData.SelectedSession,
+                Emp_Id: profile.Emp_Id,
+                Semester_Id: sessionData.SelectedSemester,
+                CourseID: ''
+            };
 
-    const [countRes, listRes] = await Promise.all([
-      HttpService.get(getStudyAssignmentDashCount, countPayload),
-      HttpService.get(getSubmittedAssignmentStudentCount, listPayload),
-    ]);
+            const [countRes, listRes] = await Promise.all([
+                HttpService.get(getStudyAssignmentDashCount, countPayload),
+                HttpService.get(getSubmittedAssignmentStudentCount, listPayload),
+            ]);
 
-    const approvalResult = listRes?.data?.AssignmentSubmittedStudentCount ?? {};
-    console.log(approvalResult,"approvalResult")
+            const approvalResult = listRes?.data?.AssignmentSubmittedStudentCount ?? {};
+            console.log(approvalResult, "approvalResult")
 
-    setAssignmentCounts({
-      courseWise: countRes?.data?.StudyAssignmentDashCount ?? [],
-      assignmentWise: approvalResult ?? [],
-    //   summary: {
-    //     total: Number(approvalResult.Total_Count || 0),
-    //     uploaded: Number(approvalResult.Upload_Count || 0),
-    //     sentToStudent: Number(approvalResult.Sent_To_Student_Count || 0),
-    //     rejected: Number(approvalResult.Reject_Count || 0),
-    //   },
-    });
+            setAssignmentCounts({
+                courseWise: countRes?.data?.StudyAssignmentDashCount ?? [],
+                assignmentWise: approvalResult ?? [],
+                //   summary: {
+                //     total: Number(approvalResult.Total_Count || 0),
+                //     uploaded: Number(approvalResult.Upload_Count || 0),
+                //     sentToStudent: Number(approvalResult.Sent_To_Student_Count || 0),
+                //     rejected: Number(approvalResult.Reject_Count || 0),
+                //   },
+            });
 
-  } catch (error) {
-    Alert.alert(
-      "Failed to Load Assignments",
-      error?.message || "Something went wrong"
-    );
-  } finally {
-    setLoading(false);
-  }
-}, []);
+        } catch (error) {
+            Alert.alert(
+                "Failed to Load Assignments",
+                error?.message || "Something went wrong"
+            );
+        } finally {
+            setLoading(false);
+        }
+    }, []);
 
 
- 
+
 
     useEffect(() => {
         getAssignmentCounts();
@@ -262,13 +263,15 @@ const AssignmentDashboard = () => {
     return (
         <View style={styles.body}>
             <View style={styles.container}>
-                <View style={styles.dashHeader}>
+                <Header />
+                {/* <View style={styles.dashHeader}>
                     <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                         <FontAwesome6 name="arrow-left" size={20} color={'#fff'} />
                     </TouchableOpacity>
                     <Text style={styles.dashTitle}>Assignment Dash Count</Text>
-                </View>
+                </View> */}
                 <CustomRefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+
                 <ScrollView contentContainerStyle={styles.scrollContent}>
                     <View style={styles.assignmentBanner}>
                         <View style={styles.iconCircle}>
@@ -278,8 +281,8 @@ const AssignmentDashboard = () => {
                     </View>
 
                     <TouchableOpacity style={styles.uploadSection} onPress={() => navigation.navigate('MyAssignmentDesh')}>
-                        <FontAwesome6 name="cloud-arrow-up" solid size={30} color={'#4C9A2A'} />
-                        <Text style={styles.uploadText}>Upload New Assignment</Text>
+                        <FontAwesome6 name="cloud-arrow-up" solid size={30} color={'#fffffdff'} />
+                        {/* <Text style={styles.uploadText}>Upload New Assignment</Text> */}
                     </TouchableOpacity>
                     {loading ? (
                         <ActivityIndicator size="large" color={colors.primary} style={styles.loader} />
@@ -326,17 +329,17 @@ export default AssignmentDashboard;
 
 // --- Colors and Styles Definitions (Duplicated for completeness) ---
 
-const colors = {
-    primary: '#007bff',
-    primaryDark: '#0056b3',
-    secondary: '#4C9A2A',
-    dangerD: '#dc3545',
-    success: '#28a745',
-    text: '#333',
-    textWhite: '#fff',
-    background: '#F5EFE6',
-    bgcolor: '#007bff',
-};
+// const colors = {
+//     primary: '#007bff',
+//     primaryDark: '#0056b3',
+//     secondary: '#4C9A2A',
+//     dangerD: '#dc3545',
+//     success: '#28a745',
+//     text: '#333',
+//     textWhite: '#fff',
+//     background: '#F5EFE6',
+//     bgcolor: '#007bff',
+// };
 
 const styles = StyleSheet.create({
     body: {
@@ -401,21 +404,39 @@ const styles = StyleSheet.create({
 
     // --- Upload Section Styles ---
     uploadSection: {
+        // flexDirection: 'row',
+        // alignItems: 'center',
+        // justifyContent: 'center',
+        // backgroundColor: '#e6ffe6',
+        // paddingVertical: 15,
+        // marginBottom: 15,
+        // borderRadius: 8,
+        // borderWidth: 1,
+        // borderColor: '#a3e3a3',
+        // marginHorizontal: 10,
+        // shadowColor: "#000",
+        // shadowOffset: { width: 0, height: 1 },
+        // shadowOpacity: 0.2,
+        // shadowRadius: 1.41,
+        // elevation: 2,
+
+
+
+
+        position: 'absolute',
+        bottom: 20,
+        right: 20,
+        backgroundColor: '#f63a19c3',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#e6ffe6',
+        width: 80,
+        height: 80,
+        borderRadius: 50,
+        elevation: 35,
+        paddingHorizontal: 15,
         paddingVertical: 15,
-        marginBottom: 15,
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: '#a3e3a3',
-        marginHorizontal: 10,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.2,
-        shadowRadius: 1.41,
-        elevation: 2,
+
     },
     uploadText: {
         marginLeft: 10,
@@ -435,8 +456,8 @@ const styles = StyleSheet.create({
         marginVertical: 10,
     },
     tableTitle: {
-        backgroundColor: '#0056b3',
-        color: colors.textWhite,
+        backgroundColor: '#f8d8d1ff',
+        color: colors.primary,
         fontSize: 18,
         fontWeight: 'bold',
         paddingVertical: 10,
@@ -445,7 +466,7 @@ const styles = StyleSheet.create({
     },
     tableHeader: {
         flexDirection: 'row',
-        backgroundColor: colors.bgcolor,
+        backgroundColor: colors.cardcolor,
         paddingVertical: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
@@ -463,7 +484,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 5,
         textAlign: 'center',
         fontSize: 12,
-        color: colors.text,
+        color: colors.secondary,
         minWidth: 80,
         // Important: Remove padding from touchable cells to center content correctly
     },
@@ -482,7 +503,7 @@ const styles = StyleSheet.create({
     },
     headerCell: {
         fontWeight: 'bold',
-        color: colors.textWhite,
+        color: colors.danger,
         fontSize: 13,
     },
     loader: {

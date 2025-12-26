@@ -208,7 +208,7 @@ export default function UploadAssignments() {
         setTitle("");
         setSelectedFile(null);
 
-        navigation.navigate('StudyMaterials');
+        navigation.replace('MyAssignment');
       } else {
         // Handle server-side failure message
         Alert.alert("Submission Failed", result?.Message || "The server returned an unexpected response.");
@@ -439,13 +439,12 @@ export default function UploadAssignments() {
           } finally {
             setLoading(false);
             setIsModalVisible(false);
-            navigation.navigate('StudyMaterials')
+            navigation.navigate('MyAssignment')
           }
         }
       },
     ]);
   }, [selectedLabel, selectedItems, studyMaterialTotalList, studyMaterialGetApprovalList, setLoading, setSelectedItems, setRemark, remark]);
-
 
   const MaterialListModal = ({ isVisible, onClose, data, label }) => {
     return (

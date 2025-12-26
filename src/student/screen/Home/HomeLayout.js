@@ -307,18 +307,17 @@ const styles = StyleSheet.create({
   iconRectangle: {
     width: 70,
     height: 70,
-    borderRadius: 15,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 5,
-    borderWidth: 0.7,
-    borderRadius: 10,
+    borderWidth: 0.4,
+    borderRadius: 15,
     // backgroundColor:'red'
 
     // shadowOffset: { width: 0, height: 6 },
     // shadowOpacity: 0.3,
     // shadowRadius: 8,
-    // elevation: 10,
+    // elevation: 0.1,
     // backgroundColor: '#fff',
   },
 
