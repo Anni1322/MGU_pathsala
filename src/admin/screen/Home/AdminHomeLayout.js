@@ -42,26 +42,39 @@ const IconText = React.memo(({ label, iconLib = 'MaterialIcons', iconName, iconS
 
 // --- Static/Memoized Data ---
 const STATIC_SEMESTERS = [
-  { key: 1, label: 'I Semester' },
-  { key: 2, label: 'II Semester' }
+  { semester_id: 1, label: 'I Semester' },
+  { semester_id: 2, label: 'II Semester' }
 ];
 
 const STATIC_SESSION_DATA = [
   // { key: 26, label: '2026-27' },
-  { key: 25, label: '2025-26' },
-  { key: 24, label: '2024-25' },
-  { key: 23, label: '2023-24' },
-  { key: 22, label: '2022-23' },
-  { key: 21, label: '2021-22' },
-  { key: 20, label: '2020-21' },
-  { key: 19, label: '2019-20' },
-  { key: 18, label: '2018-19' },
-  { key: 17, label: '2017-18' },
-  { key: 16, label: '2016-17' },
-  { key: 15, label: '2015-16' },
-  { key: 14, label: '2014-15' },
-  { key: 13, label: '2013-14' }
+  { session_id: 26, label: '2026-27' },
+  { session_id: 25, label: '2025-26' },
+  { session_id: 24, label: '2024-25' },
+  { session_id: 23, label: '2023-24' },
+  { session_id: 22, label: '2022-23' },
+  { session_id: 21, label: '2021-22' },
+  { session_id: 20, label: '2020-21' },
+  { session_id: 19, label: '2019-20' },
+  { session_id: 18, label: '2018-19' },
+  { session_id: 17, label: '2017-18' },
+  { session_id: 16, label: '2016-17' },
+  { session_id: 15, label: '2015-16' },
+  { session_id: 14, label: '2014-15' },
+  { session_id: 13, label: '2013-14' }
 ];
+
+// const STATIC_SEMESTERS = [
+//   { semester_id: 1, Semester: 'I Semester' },
+//   { semester_id: 2, Semester: 'II Semester' }
+// ];
+
+// const STATIC_SESSION_DATA = [
+//   { session_id: 25, SESSION: '2025-26' },
+//   { session_id: 24, SESSION: '2024-25' },
+//   { session_id: 23, SESSION: '2023-24' }
+// ];
+
 
 
 // --- Main Component ---
@@ -79,50 +92,131 @@ const AdminHomeLayout = () => {
   const [SessionValue, setSessionValue] = useState(null);
   // const [MyStudyMaterials, setMyStudyMaterials] = useState([]);  
 
-  const [selectedSession, setSelectedSession] = useState(STATIC_SESSION_DATA[0].key);
+  const [selectedSession, setSelectedSession] = useState(STATIC_SESSION_DATA[0].session_id);
   // const [selectedSession, setSelectedSession] = useState();
-  const [selectedSemester, setSelectedSemester] = useState(STATIC_SEMESTERS[0].key);
+  const [selectedSemester, setSelectedSemester] = useState(STATIC_SEMESTERS[0].semester_id);
   const [EmpId, setEmpId] = useState(null);
   const [officeList, setOfficeList] = useState([]);
-
-  // const [session, setSession] = useState([]);  
-  const [isModalVisible, setModalVisible] = useState(false);
-  const openModal = useCallback(() => setModalVisible(true), []);
-  const closeModal = useCallback(() => setModalVisible(false), []);
-
   // session
   const [isModalVisibleSession, setModalVisibleSession] = useState(false);
-  const openModalSession = useCallback(() => setModalVisibleSession(true), []);
-  const closeModalSession = useCallback(() => setModalVisibleSession(false), []);
-
   // semester
   const [isModalVisibleSemester, setModalVisibleSemester] = useState(false);
-  const openModalSemester = useCallback(() => setModalVisibleSemester(true), []);
-  const closeModalSemester = useCallback(() => setModalVisibleSemester(false), []);
+ 
+  // ^--- method call ---
+  const SessionChange = useCallback(async (data) => {
+    // console.log(data?.session_id,"data?.session_id")
+    setSelectedSession(data?.session_id);
+    setSessionValue(data?.label)
+    setModalVisibleSession(false)
+  }, [])
+
+  const SemesterChange = useCallback(async (data) => {
+    // console.log(data?.session_id,"data?.session_id")
+    setSelectedSemester(data?.semester_id);
+    setSemesterValue(data?.label)
+    setModalVisibleSemester(false);
+  }, [])
+
+
+  // --- Rendering ---
+  const handleRefresh = useCallback(() => {
+    fetchInitialDataAndSetup();
+  }, [
+    fetchInitialDataAndSetup
+  ]);
 
 
 
-  const myStudentCount = useMemo(() =>
-    MyStudent?.reduce((sum, item) => sum + Number(item.TotalStudents || 0), 0) || 0,
-    [MyStudent]
-  );
 
-  const myCourseCount = useMemo(() =>
-    MyCourse?.CourseCount?.[0]?.CourseCount || 0,
-    [MyCourse]
-  );
+  // ^--- API call ---
+  useEffect(() => {
+    fetchInitialDataAndSetup();
+  }, [fetchInitialDataAndSetup]);
 
-  const MyAssignmentCount = useMemo(() =>
-    MyAssignment?.StudyAssignmentDashCount?.[0]?.assignment_count || 0,
-    [MyAssignment]
-  );
-  const MyStudyMaterialCount = useMemo(() =>
-    MyStudyMaterial?.StudyDashCount?.[0]?.Material_count || 0,
-    [MyStudyMaterial]
-  );
+ useEffect(() => {
+    if (EmpId) {
+      const updateSessionAndRefresh = async () => {
+        try {
+          const currentSession = await SessionService.getSession();
+          if (!currentSession) return;
+          const updatedSession = {
+            ...currentSession,
+            SelectedSemester: selectedSemester,
+            SelectedSession: selectedSession,
+          };
+          await SessionService.saveSession(updatedSession);
+          await loadData(selectedSession, selectedSemester, EmpId);
+        } catch (error) {
+          console.error("Failed to update session:", error);
+        }
+      };
+      updateSessionAndRefresh();
+      getCurrentAcademicSession();
+    }
+  }, [selectedSemester, selectedSession, EmpId, loadData]);
 
-  // ^--- API Callbacks ---
+  
+
+
+  
+  const fetchInitialDataAndSetup = useCallback(async () => {
+    console.log("fetchInitialDataAndSetup call");
+    setLoading(true);
+    try {
+      const sessionData = await SessionService.getSession();
+      const profile = sessionData?.LoginDetail?.[0];
+      const initialEmpId = profile?.Emp_Id;
+
+      setEmpId(initialEmpId);
+      setProfileData(profile);
+      console.log(sessionData?.LoginDetail, "office list")
+      setOfficeList(sessionData?.LoginDetail)
+
+      // const sessionFromStorage = sessionData?.SelectedSession ;
+      const sessionFromStorage = sessionData?.SelectedSession || STATIC_SESSION_DATA[0].session_id;
+      const semesterFromStorage = sessionData?.SelectedSemester || STATIC_SEMESTERS[0].semester_id;
+      setSelectedSession(sessionFromStorage);
+      setSelectedSemester(semesterFromStorage);
+      // setSessionValue(sessionData?.SelectedSession)
+      setSessionValue(STATIC_SESSION_DATA[0].label)
+      setSemesterValue(STATIC_SEMESTERS[0].label)
+
+      if (initialEmpId) {
+        await loadData(sessionFromStorage, semesterFromStorage, initialEmpId);
+      }
+    } catch (error) {
+      console.error("Error loading initial data:", error);
+      Alert.alert("Error", "Failed to load initial data.");
+    } finally {
+      setLoading(false);
+    }
+  }, [loadData]);
+
+  const loadData = useCallback(async (session, semester, empId) => {
+     console.log("loadData call");
+    if (!empId) return;
+    setLoading(true);
+    try {
+      await Promise.all([
+        fetchMyCourses(empId, session, semester),
+        fetchMystudents(empId, session, semester),
+        fetchMyassingment(empId, session, semester),
+        fetchStudyMaterials(empId),
+      ]);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      Alert.alert("Error", "Failed to fetch dashboard data.");
+    } finally {
+      setLoading(false);
+    }
+  }, [fetchMyCourses, fetchMystudents, fetchMyassingment, fetchStudyMaterials]);
+
+
+
+
+// ^--- API Callbacks ---
   const getCurrentAcademicSession = useCallback(async () => {
+     console.log("ok3");
     try {
       const getCurrentAcademicSessionApi = getApiList().getCurrentAcademicSession;
       const payload = {};
@@ -138,6 +232,7 @@ const AdminHomeLayout = () => {
   }, []);
 
   const fetchMystudents = useCallback(async (empId, session, semester) => {
+     console.log("fetchMystudents call");
     try {
       if (!empId) return;
       const DegreeTypeWiseStudentListApi = getApiList().getDegreeTypeWiseDashCount;
@@ -158,6 +253,7 @@ const AdminHomeLayout = () => {
   }, []);
 
   const fetchMyCourses = useCallback(async (empId, session, semester) => {
+     console.log("fetchMyCourses call");
     try {
       if (!empId) return;
       const payload = {
@@ -184,6 +280,7 @@ const AdminHomeLayout = () => {
   }, []);
 
   const fetchMyassingment = useCallback(async (empId, session, semester) => {
+     console.log("fetchMyassingment call");
     try {
       if (!empId) return;
       const payload = {
@@ -202,8 +299,8 @@ const AdminHomeLayout = () => {
     }
   }, []);
 
-
   const fetchStudyMaterials = useCallback(async (empId) => {
+     console.log("fetchStudyMaterials call");
     try {
       if (!empId) return;
       const payload = {
@@ -211,7 +308,7 @@ const AdminHomeLayout = () => {
       };
       const getStudyMaterialDashCountApi = getApiList().getStudyMaterialDashCount;
       const response = await HttpService.get(getStudyMaterialDashCountApi, payload);
-      console.log(response?.data, "response")
+      // console.log(response?.data, "response")
       if (response?.status === 200) {
         setMyStudyMaterial(response?.data);
       }
@@ -221,121 +318,48 @@ const AdminHomeLayout = () => {
   }, []);
 
 
-  const loadData = useCallback(async (session, semester, empId) => {
-    if (!empId) return;
-    setLoading(true);
-    try {
-      await Promise.all([
-        fetchMyCourses(empId, session, semester),
-        fetchMystudents(empId, session, semester),
-        fetchMyassingment(empId, session, semester),
-        fetchStudyMaterials(empId),
-      ]);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      Alert.alert("Error", "Failed to fetch dashboard data.");
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchMyCourses, fetchMystudents, fetchMyassingment, fetchStudyMaterials]);
+// ^--- count section
+  const myStudentCount = useMemo(() =>
+    MyStudent?.reduce((sum, item) => sum + Number(item.TotalStudents || 0), 0) || 0,
+    [MyStudent]
+  );
 
-  const fetchInitialDataAndSetup = useCallback(async () => {
-    setLoading(true);
-    try {
-      const sessionData = await SessionService.getSession();
-      const profile = sessionData?.LoginDetail?.[0];
-      const initialEmpId = profile?.Emp_Id;
+  const myCourseCount = useMemo(() =>
+    MyCourse?.CourseCount?.[0]?.CourseCount || 0,
+    [MyCourse]
+  );
 
-      setEmpId(initialEmpId);
-      setProfileData(profile);
-      console.log(sessionData?.LoginDetail, "office list")
-      setOfficeList(sessionData?.LoginDetail)
+  const MyAssignmentCount = useMemo(() =>
+    MyAssignment?.StudyAssignmentDashCount?.[0]?.assignment_count || 0,
+    [MyAssignment]
+  );
 
-      // const sessionFromStorage = sessionData?.SelectedSession ;
-      const sessionFromStorage = sessionData?.SelectedSession || STATIC_SESSION_DATA[0].key;
-      const semesterFromStorage = sessionData?.SelectedSemester || STATIC_SEMESTERS[0].key;
-      setSelectedSession(sessionFromStorage);
-      setSelectedSemester(semesterFromStorage);
-      // setSessionValue(sessionData?.SelectedSession)
-      setSessionValue(STATIC_SESSION_DATA[0].label)
-      setSemesterValue(STATIC_SEMESTERS[0].label)
+  const MyStudyMaterialCount = useMemo(() =>
+    MyStudyMaterial?.StudyDashCount?.[0]?.Material_count || 0,
+    [MyStudyMaterial]
+  );
 
-      if (initialEmpId) {
-        await loadData(sessionFromStorage, semesterFromStorage, initialEmpId);
-      }
-    } catch (error) {
-      console.error("Error loading initial data:", error);
-      Alert.alert("Error", "Failed to load initial data.");
-    } finally {
-      setLoading(false);
-    }
-  }, [loadData]);
-
-  useEffect(() => {
-    fetchInitialDataAndSetup();
-  }, [fetchInitialDataAndSetup]);
-
-  const SessionChange = useCallback(async (data) => {
-    // console.log(data?.key,"data?.key")
-    setSelectedSession(data?.key);
-    setSessionValue(data?.label)
-    setModalVisibleSession(false)
-  }, [])
-
-  const SemesterChange = useCallback(async (data) => {
-    // console.log(data?.key,"data?.key")
-    setSelectedSemester(data?.key);
-    setSemesterValue(data?.label)
-    setModalVisibleSemester(false);
-  }, [])
+  // onOfficeSelect = async (office) => {
+  //   console.log(office, "office list")
+  //   closeModal();
 
 
-  useEffect(() => {
-    if (EmpId) {
-      const updateSessionAndRefresh = async () => {
-        try {
-          const currentSession = await SessionService.getSession();
-          if (!currentSession) return;
-          const updatedSession = {
-            ...currentSession,
-            SelectedSemester: selectedSemester,
-            SelectedSession: selectedSession,
-          };
-          await SessionService.saveSession(updatedSession);
-          // await loadData(selectedSession, selectedSemester, EmpId);
-        } catch (error) {
-          console.error("Failed to update session:", error);
-        }
-      };
-      updateSessionAndRefresh();
-      getCurrentAcademicSession();
-    }
-  }, [selectedSemester, selectedSession, EmpId, loadData]);
+  //   //  try {
+  //   //       const currentSession = await SessionService.getSession();
+  //   //       if (!currentSession) return;
+  //   //       const updatedSession = {
+  //   //         ...currentSession,
+  //   //         SelectedSemester: selectedSemester,
+  //   //         SelectedSession: selectedSession,
+  //   //       };
+  //   //       await SessionService.saveSession(updatedSession);
+  //   //       await loadData(selectedSession, selectedSemester, EmpId);
 
-  onOfficeSelect = async (office) => {
-    console.log(office, "office list")
-    closeModal();
+  //   //     } catch (error) {
+  //   //       console.error("Failed to update session:", error);
+  //   //     }
 
-
-    //  try {
-    //       const currentSession = await SessionService.getSession();
-    //       if (!currentSession) return;
-    //       const updatedSession = {
-    //         ...currentSession,
-    //         SelectedSemester: selectedSemester,
-    //         SelectedSession: selectedSession,
-    //       };
-    //       await SessionService.saveSession(updatedSession);
-    //       await loadData(selectedSession, selectedSemester, EmpId);
-
-    //     } catch (error) {
-    //       console.error("Failed to update session:", error);
-    //     }
-
-  }
-
-
-
+  // }
 
 
   const updatedMenu = useMemo(() =>
@@ -370,161 +394,7 @@ const AdminHomeLayout = () => {
   );
 
 
-
-  // --- API Logic ---
-  // const loadDashboardData = useCallback(async (empId, session, semester) => {
-  //   if (!empId) return;
-  //   setLoading(true);
-  //   try {
-  //     const payload = { 
-  //       Academic_session: session, 
-  //       Semester_Id: semester, 
-  //       emp_id: empId, 
-  //       Emp_Id: empId, 
-  //       Created_By: empId 
-  //     };
-      
-  //     const [courses, students, assignments, materials] = await Promise.all([
-  //       HttpService.get(getApiList().getCourseWiseDashCount, payload),
-  //       HttpService.get(getApiList().getDegreeTypeWiseDashCount, payload),
-  //       HttpService.get(getApiList().getStudyAssignmentDashCount, payload),
-  //       HttpService.get(getApiList().getStudyMaterialDashCount, { Created_By: empId }),
-  //     ]);
-  //     console.log(courses,"courses")
-  //     console.log(students,"students")
-  //     console.log(assignments,"assignments")
-  //     console.log(materials,"materials")
-
-  //     if (courses?.status === 200) setMyCourse(courses.data);
-  //     if (students?.status === 200) setStudent(students.data.DegreeTypeWiseStudentCount);
-  //     if (assignments?.status === 200) setMyAssignment(assignments.data);
-  //     if (materials?.status === 200) setMyStudyMaterial(materials.data);
-
-  //     // Sync selection to SessionService
-  //     const currentSession = await SessionService.getSession();
-  //     if (currentSession) {
-  //       await SessionService.saveSession({
-  //         ...currentSession,
-  //         SelectedSession: session,
-  //         SelectedSemester: semester
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.error("Dashboard Fetch Error:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }, []);
-
-
-  const loadDashboardData = useCallback(async (empId, session, semester) => {
-  if (!empId) return;
-  setLoading(true);
-  try {
-      
-    const payload = { 
-      Academic_session: session, 
-      Semester_Id: semester, 
-      emp_id: empId, 
-      Emp_Id: empId, 
-      Created_By: empId 
-    };
-
-    console.log("Payload:", payload);  // Log payload for debugging
-
- 
-    
-    const [courses, students, assignments, materials] = await Promise.all([
-      HttpService.get(getApiList().getCourseWiseDashCount, payload),
-      HttpService.get(getApiList().getDegreeTypeWiseDashCount, payload),
-      HttpService.get(getApiList().getStudyAssignmentDashCount, payload),
-      HttpService.get(getApiList().getStudyMaterialDashCount, { Created_By: empId }),
-    ]);
-
-    console.log(courses, "courses");
-    console.log(students, "students");
-    console.log(assignments, "assignments");
-    console.log(materials, "materials");
-
-    // if (courses?.status === 200 && courses.data) setMyCourse(courses.data);
-    // if (students?.status === 200 && students.data) setStudent(students.data.DegreeTypeWiseStudentCount);
-    // if (assignments?.status === 200 && assignments.data) setMyAssignment(assignments.data);
-    // if (materials?.status === 200 && materials.data) setMyStudyMaterial(materials.data);
-
-    // Sync selection to SessionService
-    const currentSession = await SessionService.getSession();
-    if (currentSession) {
-      await SessionService.saveSession({
-        ...currentSession,
-        SelectedSession: session,
-        SelectedSemester: semester
-      });
-    }
-  } catch (error) {
-    console.error("Dashboard Fetch Error:", error);  // Log the full error for more details
-  } finally {
-    setLoading(false);
-  }
-}, []);
-
-
-  const fetchInitialData = useCallback(async () => {
-    setLoading(true);
-    const sessionData = await SessionService.getSession();
-    const profile = sessionData?.LoginDetail?.[0];
-    
-    if (profile) {
-      setProfileData(profile);
-      setEmpId(profile.Emp_Id);
-      
-      // Use stored selection or defaults
-      const sess = sessionData?.SelectedSession || STATIC_SESSION_DATA[0].key;
-      const sem = sessionData?.SelectedSemester || STATIC_SEMESTERS[0].key;
-      
-      setSelectedSession(sess);
-      setSelectedSemester(sem);
-      
-      // Set Labels for UI
-      setSessionValue(STATIC_SESSION_DATA.find(s => s.key === sess)?.label || "2025-26");
-      setSemesterValue(STATIC_SEMESTERS.find(s => s.key === sem)?.label || "I Semester");
-      // console.log(profile.Emp_Id, sess, sem,"profile.Emp_Id, sess, sem")
-
-      await loadDashboardData(profile.Emp_Id, sess, sem);
-    }
-    setLoading(false);
-  }, [loadDashboardData]);
-
-  useEffect(() => {
-    fetchInitialData();
-  }, []);
-  // --- Handlers ---
-  const handleSessionSelect = (item) => {
-    setSessionValue(item.label);
-    setSelectedSession(item.key);
-    setModalVisibleSession(false);
-    // loadDashboardData(EmpId, item.key, selectedSemester);
-  };
-
-  const handleSemesterSelect = (item) => {
-    setSemesterValue(item.label);
-    setSelectedSemester(item.key);
-    setModalVisibleSemester(false);
-    // loadDashboardData(EmpId, selectedSession, item.key);
-  };
-
-
-
-    // const updatedMenu = useMemo(() => facultyMenu.map(item => {
-    //   let count = 0;
-    //   if (item.name === 'My Courses') count = MyCourse?.CourseCount?.[0]?.CourseCount || 0;
-    //   else if (item.name === 'My Students') count = MyStudent?.reduce((sum, i) => sum + Number(i.TotalStudents || 0), 0) || 0;
-    //   else if (item.name === 'My Assignment') count = MyAssignment?.StudyAssignmentDashCount?.[0]?.assignment_count || 0;
-    //   else if (item.name === 'Study Materials') count = MyStudyMaterial?.StudyDashCount?.[0]?.Material_count || 0;
-    //   return { ...item, count, data: item.data }; 
-    // }), [MyCourse, MyStudent, MyAssignment, MyStudyMaterial]);
   
-
-
   const renderGridItem = (item) => (
     <TouchableOpacity 
       key={item.id}
@@ -543,15 +413,6 @@ const AdminHomeLayout = () => {
     </TouchableOpacity>
   );
 
-
-
-  // --- Rendering ---
-  const handleRefresh = useCallback(() => {
-    // fetchInitialDataAndSetup();
-  }, [
-    // fetchInitialDataAndSetup
-
-  ]);
 
   if (loading && !profileData) {
     return <View style={styles.spinnerWithText}>
@@ -606,7 +467,7 @@ const AdminHomeLayout = () => {
           <ScrollView style={modalStyles.officeListScrollView}>
             {STATIC_SESSION_DATA.map((ses, index) => (
               <TouchableOpacity
-                key={ses.key || index}
+                key={ses.session_id || index}
                 onPress={() => SessionChange(ses)}
                 style={modalStyles.officeListItem}>
                 <Text style={modalStyles.officeItemText}>
@@ -638,7 +499,7 @@ const AdminHomeLayout = () => {
           <ScrollView style={modalStyles.officeListScrollView}>
             {STATIC_SEMESTERS.map((sem, index) => (
               <TouchableOpacity
-                key={sem.key || index}
+                key={sem.semester_id || index}
                 onPress={() => SemesterChange(sem)}
                 style={modalStyles.officeListItem}>
                 <Text style={modalStyles.officeItemText}>
@@ -802,7 +663,7 @@ const AdminHomeLayout = () => {
         <ScrollView 
           style={styles.content} 
           showsVerticalScrollIndicator={false}
-          refreshControl={<RefreshControl refreshing={loading} onRefresh={fetchInitialData} colors={[colors.footercolor]} />}
+          refreshControl={<RefreshControl refreshing={loading} onRefresh={handleRefresh} colors={[colors.footercolor]} />}
         >
           <View style={styles.decorativeHeader}>
             <View style={styles.decorativeCircle} />
@@ -869,7 +730,7 @@ const AdminHomeLayout = () => {
                 <Text style={styles.modalHeader}>Select Session</Text>
                 <ScrollView>
                   {STATIC_SESSION_DATA.map((item) => (
-                    <TouchableOpacity key={item.key} style={styles.modalItem} onPress={() => handleSessionSelect(item)}>
+                    <TouchableOpacity key={item.key} style={styles.modalItem} onPress={() => SessionChange(item)}>
                       <Text style={styles.modalItemText}>{item.label}</Text>
                     </TouchableOpacity>
                   ))}
@@ -886,7 +747,7 @@ const AdminHomeLayout = () => {
               <View style={styles.modalContent}>
                 <Text style={styles.modalHeader}>Select Semester</Text>
                 {STATIC_SEMESTERS.map((item) => (
-                  <TouchableOpacity key={item.key} style={styles.modalItem} onPress={() => handleSemesterSelect(item)}>
+                  <TouchableOpacity key={item.semester_id} style={styles.modalItem} onPress={() => SemesterChange(item)}>
                     <Text style={styles.modalItemText}>{item.label}</Text>
                   </TouchableOpacity>
                 ))}

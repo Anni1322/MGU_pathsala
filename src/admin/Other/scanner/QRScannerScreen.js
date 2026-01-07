@@ -588,7 +588,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Platform, PermissionsAndroid } from 'react-native';
-import * as CameraKit from 'react-native-camera-kit';
+// import * as CameraKit from 'react-native-camera-kit';
 
 export default function QRScannerScreen() {
   const [scannedValue, setScannedValue] = useState(null);
@@ -629,7 +629,7 @@ export default function QRScannerScreen() {
   };
 
   // Use the correct Camera component from CameraKit
-  const Camera = CameraKit.Camera;
+  // const Camera = CameraKit.Camera;
 
   if (!hasCameraPermission) {
     return (
@@ -639,13 +639,13 @@ export default function QRScannerScreen() {
     );
   }
 
-  if (!Camera) {
-    return (
-      <View style={styles.permissionContainer}>
-        <Text style={styles.permissionText}>Camera component is NOT available!</Text>
-      </View>
-    );
-  }
+  // if (!Camera) {
+  //   return (
+  //     <View style={styles.permissionContainer}>
+  //       <Text style={styles.permissionText}>Camera component is NOT available!</Text>
+  //     </View>
+  //   );
+  // }
 
   return (
     <View style={styles.container}>

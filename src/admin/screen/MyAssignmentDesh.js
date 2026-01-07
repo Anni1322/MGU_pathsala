@@ -1,3 +1,410 @@
+// import React, { useState, useCallback, useEffect } from 'react';
+// import { View, Text, StyleSheet, SafeAreaView, StatusBar, TextInput, TouchableOpacity, ScrollView, Alert, Modal, ActivityIndicator } from 'react-native';
+// import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+// import { pick, types } from '@react-native-documents/picker';
+// import SessionService from "../../common/Services/SessionService";
+// import getAdminApiList from '../config/Api/adminApiList';
+// import { HttpService } from "../../common/Services/HttpService";
+// import { downloadFile } from "../../common/Services/pdfService";
+// import { API_BASE_URL } from '../../common/config/BaseUrl';
+// import { CheckBox } from 'react-native-elements';
+// import { useNavigation } from '@react-navigation/native';
+
+// const ModernColors = {
+//   background: '#F8FAFC',
+//   card: '#FFFFFF',
+//   primary: '#3B82F6',
+//   secondary: '#64748B',
+//   success: '#10B981',
+//   danger: '#EF4444',
+//   warning: '#F59E0B',
+//   textMain: '#1E293B',
+//   textSub: '#64748B',
+//   inputBg: '#F1F5F9',
+//   border: '#E2E8F0',
+// };
+
+// const COURSE_OPTIONS = [
+//   { id: '3229', name: 'EPF-6211' },
+//   { id: '3230', name: 'EPF-6212' },
+//   { id: '3231', name: 'EPF-6213' }
+// ];
+
+// const LANGUAGE_OPTIONS = [
+//   { id: '1', name: 'Hindi' },
+//   { id: '2', name: 'English' }
+// ];
+
+// export default function UploadAssignments() {
+//   const navigation = useNavigation();
+  
+//   // State Management
+//   const [loading, setLoading] = useState(false);
+//   const [studyMaterialTotalList, setTotalList] = useState([]);
+//   const [studyMaterialQueuedList, setQueuedList] = useState([]);
+//   const [selectedLabel, setSelectedLabel] = useState("");
+//   const [isModalVisible, setIsModalVisible] = useState(false);
+  
+//   // Form State
+//   const [selectedFile, setSelectedFile] = useState(null);
+//   const [title, setTitle] = useState('');
+//   const [marks, setMarks] = useState('');
+//   const [remark, setRemark] = useState('');
+//   const [selectedCourseId, setSelectedCourseId] = useState('');
+//   const [selectedLanguageId, setSelectedLanguageId] = useState('');
+//   const [selectedFileTypeId, setSelectedFileTypeId] = useState('');
+//   const [fileTypelist, setFileTypeList] = useState([]);
+  
+//   // Selection State
+//   const [selectedItems, setSelectedItems] = useState([]);
+//   const [dropdownModalVisible, setDropdownModalVisible] = useState(false);
+//   const [currentDropdownType, setCurrentDropdownType] = useState(null);
+
+//   // --- API LOGIC ---
+
+//   const fetchDashboardData = useCallback(async () => {
+//     setLoading(true);
+//     try {
+//       const apiList = getAdminApiList();
+//       const sessionData = await SessionService.getSession();
+//       const profile = sessionData?.LoginDetail?.[0];
+      
+//       const payloadBase = { 
+//         Academic_session: sessionData?.SelectedSession, 
+//         Emp_Id: profile.Emp_Id, 
+//         isForMaterial: 0,
+//         isForMaterialYouTube: ''
+//       };
+      
+//       // Fetch Approved and Pending Lists
+//       const [totalRes, pendingRes, typeRes] = await Promise.all([
+//         HttpService.get(apiList.getAssignmentMaterailApprovalDashCountList, { ...payloadBase, is_approved: 'Y' }),
+//         HttpService.get(apiList.getAssignmentMaterailApprovalDashCountList, { ...payloadBase, is_approved: 'N' }),
+//         HttpService.get(apiList.Get_File_Type_Masters, { Emp_Id: profile.Emp_Id })
+//       ]);
+
+//       setTotalList(totalRes?.data?.UploadApprovalResult?.GetUploadApprovalList || []);
+//       setQueuedList(pendingRes?.data?.UploadApprovalResult?.GetUploadApprovalList || []);
+      
+//       const types = typeRes?.data?.MaterialMastersResult?.File_Type_Masters || [];
+//       setFileTypeList(types);
+//       if (types.length > 0) setSelectedFileTypeId(types[0].File_Type_ID);
+
+//     } catch (error) {
+//       Alert.alert("Error", "Failed to sync dashboard data.");
+//     } finally {
+//       setLoading(false);
+//     }
+//   }, []);
+
+//   useEffect(() => { fetchDashboardData(); }, [fetchDashboardData]);
+
+//   // Handle File Pick
+//   const handleFileSelection = async () => {
+//     try {
+//       const result = await pick({ type: types.allFiles });
+//       if (result.length > 0) setSelectedFile(result[0]);
+//     } catch (err) {
+//       if (err.code !== 'DOCUMENT_PICKER_CANCELED') console.error(err);
+//     }
+//   };
+
+//   // Submit Logic
+//   const handleSubmit = async () => {
+//     if (!selectedCourseId || !title.trim() || !selectedFile) {
+//       Alert.alert("Missing Info", "Please select a Course, Title, and File.");
+//       return;
+//     }
+
+//     setLoading(true);
+//     try {
+//       const sessionData = await SessionService.getSession();
+//       const empId = sessionData?.LoginDetail[0]?.Emp_Id;
+      
+//       const formData = new FormData();
+//       formData.append("course_id", selectedCourseId);
+//       formData.append("language_id", selectedLanguageId);
+//       formData.append("file_type_id", selectedFileTypeId);
+//       formData.append("title", title);
+//       formData.append("emp_id", empId);
+//       formData.append("marks", marks);
+//       formData.append("File_Size", selectedFile.size.toString());
+//       formData.append("file_name", selectedFile.name);
+//       formData.append("file", {
+//         uri: selectedFile.uri,
+//         name: selectedFile.name,
+//         type: selectedFile.type || 'application/pdf',
+//       });
+
+//       const response = await HttpService.post(getAdminApiList().saveStudyAssignemtnFile, formData);
+//       if (response?.data?.UploadAssignmentResult?.Success === "1") {
+//         Alert.alert("Success", "Assignment Uploaded!");
+//         navigation.replace('MyAssignment');
+//       }
+//     } catch (error) {
+//       Alert.alert("Error", "Upload failed.");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   // --- UI COMPONENTS ---
+
+//   const StatCard = ({ count, label, icon, color, onPress }) => (
+//     <TouchableOpacity onPress={onPress} style={styles.statCard} activeOpacity={0.7}>
+//       <View style={[styles.statIconContainer, { backgroundColor: color + '15' }]}>
+//         <FontAwesome6 name={icon} size={16} color={color} />
+//       </View>
+//       <View>
+//         <Text style={styles.statCount}>{count}</Text>
+//         <Text style={styles.statLabel}>{label}</Text>
+//       </View>
+//     </TouchableOpacity>
+//   );
+
+//   return (
+//     <SafeAreaView style={styles.container}>
+//       <StatusBar barStyle="dark-content" backgroundColor="#FFF" />
+      
+//       <View style={styles.header}>
+//         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
+//            <FontAwesome6 name="arrow-left" size={18} color={ModernColors.textMain} />
+//         </TouchableOpacity>
+//         <Text style={styles.headerTitle}>Upload Center</Text>
+//         <View style={{ width: 40 }} />
+//       </View>
+
+//       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        
+//         {/* Statistics Row */}
+//         <View style={styles.statsGrid}>
+//           <StatCard 
+//             count={studyMaterialTotalList.length} 
+//             label="Approved" 
+//             icon="check-double" 
+//             color={ModernColors.success} 
+//             onPress={() => { setSelectedLabel("Total Assignments"); setIsModalVisible(true); }}
+//           />
+//           <StatCard 
+//             count={studyMaterialQueuedList.length} 
+//             label="Queued" 
+//             icon="hourglass-half" 
+//             color={ModernColors.warning} 
+//             onPress={() => { setSelectedLabel("Assignments in Queued"); setIsModalVisible(true); }}
+//           />
+//         </View>
+
+//         {/* Form Card */}
+//         <View style={styles.formCard}>
+//           <Text style={styles.formHeading}>Assignment Details</Text>
+
+//           <View style={styles.inputGroup}>
+//             <Text style={styles.label}>Course</Text>
+//             <TouchableOpacity 
+//               onPress={() => { setCurrentDropdownType('course'); setDropdownModalVisible(true); }} 
+//               style={styles.dropTrigger}
+//             >
+//               <Text style={selectedCourseId ? styles.dropText : styles.dropPlaceholder}>
+//                 {COURSE_OPTIONS.find(o => o.id === selectedCourseId)?.name || "Select Course"}
+//               </Text>
+//               <FontAwesome6 name="chevron-down" size={12} color={ModernColors.secondary} />
+//             </TouchableOpacity>
+//           </View>
+
+//           <View style={styles.inputGroup}>
+//             <Text style={styles.label}>Assignment Title</Text>
+//             <TextInput 
+//               style={styles.modernInput} 
+//               placeholder="Enter title here..." 
+//               value={title} 
+//               onChangeText={setTitle} 
+//             />
+//           </View>
+
+//           <View style={styles.inputGroup}>
+//             <Text style={styles.label}>Total Marks</Text>
+//             <TextInput 
+//               style={styles.modernInput} 
+//               placeholder="e.g. 50" 
+//               keyboardType="numeric"
+//               value={marks} 
+//               onChangeText={setMarks} 
+//             />
+//           </View>
+
+//           {/* Improved Upload Button */}
+//           <TouchableOpacity 
+//             style={[styles.uploadBox, selectedFile && styles.uploadBoxActive]} 
+//             onPress={handleFileSelection}
+//           >
+//             <FontAwesome6 
+//               name={selectedFile ? "file-circle-check" : "file-arrow-up"} 
+//               size={28} 
+//               color={selectedFile ? ModernColors.success : ModernColors.primary} 
+//             />
+//             <Text style={styles.uploadMainText}>
+//               {selectedFile ? selectedFile.name : "Choose Assignment File"}
+//             </Text>
+//             {selectedFile && <Text style={styles.fileSizeText}>{(selectedFile.size / 1024).toFixed(2)} KB</Text>}
+//           </TouchableOpacity>
+
+//           <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+//             <Text style={styles.submitButtonText}>Upload Assignment</Text>
+//           </TouchableOpacity>
+//         </View>
+//       </ScrollView>
+
+//       {/* Modern List Modal (Replacing Tables) */}
+//       <Modal visible={isModalVisible} animationType="slide" transparent>
+//         <View style={styles.modalBackdrop}>
+//           <View style={styles.modalSheet}>
+//             <View style={styles.sheetHeader}>
+//               <Text style={styles.sheetTitle}>{selectedLabel}</Text>
+//               <TouchableOpacity onPress={() => setIsModalVisible(false)}>
+//                 <FontAwesome6 name="xmark" size={20} color={ModernColors.textMain} />
+//               </TouchableOpacity>
+//             </View>
+            
+//             <TextInput 
+//               placeholder="Add removal/approval remark..." 
+//               style={styles.remarkInput}
+//               value={remark}
+//               onChangeText={setRemark}
+//             />
+
+//             <ScrollView contentContainerStyle={{ padding: 20 }}>
+//               {(selectedLabel === "Total Assignments" ? studyMaterialTotalList : studyMaterialQueuedList).map((item, index) => (
+//                 <View key={index} style={styles.listItem}>
+//                   <CheckBox
+//                     checked={selectedItems.includes(item.Study_Assignment_ID)}
+//                     onPress={() => {
+//                         const id = item.Study_Assignment_ID;
+//                         setSelectedItems(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
+//                     }}
+//                     containerStyle={{ padding: 0, margin: 0 }}
+//                   />
+//                   <View style={{ flex: 1, marginLeft: 10 }}>
+//                     <Text style={styles.itemMainText}>{item.Study_Assingment_Title}</Text>
+//                     <Text style={styles.itemSubText}>{item.Course_Code}</Text>
+//                   </View>
+//                   <TouchableOpacity onPress={() => downloadFile(`${API_BASE_URL}/${item.Study_Material_File}`, 'Assignment.pdf')}>
+//                     <FontAwesome6 name="download" size={18} color={ModernColors.primary} />
+//                   </TouchableOpacity>
+//                 </View>
+//               ))}
+//             </ScrollView>
+//           </View>
+//         </View>
+//       </Modal>
+
+//       {/* Shared Dropdown Modal */}
+//       <Modal visible={dropdownModalVisible} transparent animationType="fade">
+//         <View style={styles.dropdownOverlay}>
+//           <View style={styles.dropdownCard}>
+//              <Text style={styles.dropdownHeader}>Select Option</Text>
+//              {(currentDropdownType === 'course' ? COURSE_OPTIONS : LANGUAGE_OPTIONS).map((opt) => (
+//                <TouchableOpacity 
+//                 key={opt.id} 
+//                 style={styles.dropItem}
+//                 onPress={() => {
+//                     if (currentDropdownType === 'course') setSelectedCourseId(opt.id);
+//                     else setSelectedLanguageId(opt.id);
+//                     setDropdownModalVisible(false);
+//                 }}
+//                >
+//                  <Text style={styles.dropItemText}>{opt.name}</Text>
+//                </TouchableOpacity>
+//              ))}
+//              <TouchableOpacity style={styles.dropClose} onPress={() => setDropdownModalVisible(false)}>
+//                <Text style={{ color: ModernColors.danger, fontWeight: 'bold' }}>Cancel</Text>
+//              </TouchableOpacity>
+//           </View>
+//         </View>
+//       </Modal>
+
+//       {loading && <View style={styles.fullLoader}><ActivityIndicator size="large" color={ModernColors.primary} /></View>}
+//     </SafeAreaView>
+//   );
+// }
+
+// const styles = StyleSheet.create({
+//   container: { flex: 1, backgroundColor: ModernColors.background },
+//   header: { 
+//     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', 
+//     padding: 20, backgroundColor: '#FFF', borderBottomWidth: 1, borderBottomColor: ModernColors.border 
+//   },
+//   headerTitle: { fontSize: 18, fontWeight: '800', color: ModernColors.textMain },
+//   scrollContent: { padding: 20 },
+  
+//   // Stats
+//   statsGrid: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 },
+//   statCard: { 
+//     backgroundColor: '#FFF', width: '48%', padding: 16, borderRadius: 16, 
+//     flexDirection: 'row', alignItems: 'center', elevation: 2 
+//   },
+//   statIconContainer: { padding: 10, borderRadius: 12, marginRight: 12 },
+//   statCount: { fontSize: 18, fontWeight: '800', color: ModernColors.textMain },
+//   statLabel: { fontSize: 11, color: ModernColors.secondary, fontWeight: '600' },
+
+//   // Form Card
+//   formCard: { backgroundColor: '#FFF', borderRadius: 20, padding: 20, elevation: 4 },
+//   formHeading: { fontSize: 16, fontWeight: '700', color: ModernColors.textMain, marginBottom: 20 },
+//   inputGroup: { marginBottom: 15 },
+//   label: { fontSize: 12, fontWeight: '700', color: ModernColors.secondary, marginBottom: 6, marginLeft: 4 },
+//   modernInput: { 
+//     backgroundColor: ModernColors.inputBg, padding: 14, borderRadius: 12, fontSize: 15, color: ModernColors.textMain 
+//   },
+//   dropTrigger: {
+//     backgroundColor: ModernColors.inputBg, padding: 14, borderRadius: 12, 
+//     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'
+//   },
+//   dropText: { fontSize: 15, color: ModernColors.textMain, fontWeight: '500' },
+//   dropPlaceholder: { fontSize: 15, color: '#94A3B8' },
+
+//   // Upload Area
+//   uploadBox: {
+//     borderWidth: 2, borderColor: ModernColors.primary, borderStyle: 'dashed',
+//     backgroundColor: '#F0F7FF', borderRadius: 16, padding: 20, alignItems: 'center', marginVertical: 15
+//   },
+//   uploadBoxActive: { borderColor: ModernColors.success, backgroundColor: '#F0FDF4' },
+//   uploadMainText: { marginTop: 10, fontSize: 14, fontWeight: '700', color: ModernColors.textMain, textAlign: 'center' },
+//   fileSizeText: { fontSize: 11, color: ModernColors.secondary, marginTop: 2 },
+
+//   // Submit
+//   submitButton: { backgroundColor: ModernColors.primary, padding: 16, borderRadius: 14, alignItems: 'center', marginTop: 10 },
+//   submitButtonText: { color: '#FFF', fontWeight: '800', fontSize: 16 },
+
+//   // Modal Sheet
+//   modalBackdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' },
+//   modalSheet: { backgroundColor: '#FFF', borderTopLeftRadius: 25, borderTopRightRadius: 25, height: '80%' },
+//   sheetHeader: { flexDirection: 'row', justifyContent: 'space-between', padding: 20, borderBottomWidth: 1, borderBottomColor: '#F1F5F9' },
+//   sheetTitle: { fontSize: 17, fontWeight: '800', color: ModernColors.textMain },
+//   remarkInput: { margin: 20, backgroundColor: ModernColors.inputBg, padding: 12, borderRadius: 10 },
+//   listItem: { flexDirection: 'row', alignItems: 'center', paddingVertical: 15, borderBottomWidth: 1, borderBottomColor: '#F1F5F9' },
+//   itemMainText: { fontSize: 14, fontWeight: '700', color: ModernColors.textMain },
+//   itemSubText: { fontSize: 12, color: ModernColors.secondary },
+
+//   // Dropdown Modal
+//   dropdownOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.3)', justifyContent: 'center', padding: 30 },
+//   dropdownCard: { backgroundColor: '#FFF', borderRadius: 20, padding: 10 },
+//   dropdownHeader: { textAlign: 'center', padding: 15, fontWeight: '800', borderBottomWidth: 1, borderBottomColor: '#EEE' },
+//   dropItem: { padding: 18, borderBottomWidth: 1, borderBottomColor: '#F8FAFC' },
+//   dropItemText: { fontSize: 16, textAlign: 'center', color: ModernColors.textMain },
+//   dropClose: { padding: 15, alignItems: 'center' },
+
+//   fullLoader: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(255,255,255,0.7)', justifyContent: 'center', alignItems: 'center', zIndex: 999 }
+// });
+
+
+
+
+
+
+
+
+
+
+
 import React, { useState, useCallback, useEffect } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, StatusBar, TextInput, TouchableOpacity, ScrollView, Alert, Modal, Image } from 'react-native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
