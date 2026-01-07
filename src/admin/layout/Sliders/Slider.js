@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   userCard: {
-    backgroundColor: colors.dangerL,
+    backgroundColor: '#1a04503f',
     padding: 10,
     borderRadius: 15,
     marginBottom: 10,

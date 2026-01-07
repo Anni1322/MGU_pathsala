@@ -64,6 +64,7 @@ export default {
   primary: '#004D40',
   secondary: '#FFB300',
   background: '#ffffffff',
+  backgroundlite: '#F5F5F5',
   textPrimary: '#212121',
   textSecondary: '#4CAF50',
   white: '#ffffff',
@@ -81,6 +82,7 @@ export default {
   tablerow:'#ffffffff',
   footercolor:'#030337',
   bgcolor:'#1a0167ff',
+  header:'#1a04507a',
 };
 
 // // ### 🎨 **Theme 5 – Soft Pastels**

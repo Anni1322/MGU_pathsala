@@ -159,7 +159,7 @@ export default function UploadAssignments() {
     }
 
     // setIsSubmitting(true); // Start loading state
- 
+
     try {
       // Fetch Employee/User ID
       const sessionData = await SessionService.getSession();
@@ -457,6 +457,7 @@ export default function UploadAssignments() {
                 <FontAwesome6 name="xmark" size={24} color={Colors.lightText} />
               </TouchableOpacity>
             </View>
+            
             <TextInput
               style={modalStyles.remarkInput}
               placeholder="Enter remark"
@@ -579,7 +580,7 @@ export default function UploadAssignments() {
     </Modal>
   );
 
-
+// uicode
   return (
     <View style={styles.safeArea}>
       <StatusBar barStyle="light-content" backgroundColor={Colors.primaryBlue} />
@@ -627,8 +628,7 @@ export default function UploadAssignments() {
               setCurrentDropdownType('course');
               setDropdownModalVisible(true);
             }}
-            placeholder="Select Course"
-          />
+            placeholder="Select Course"/>
           {/* <DropdownField
             selectedId={selectedChapterId}
             options={CHAPTER_OPTIONS}
@@ -802,7 +802,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: Colors.lightBeige,
+    backgroundColor: Colors.lightPurple,
     paddingVertical: 15,
     paddingHorizontal: 15,
     marginVertical: 8,

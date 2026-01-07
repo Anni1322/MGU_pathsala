@@ -47,9 +47,9 @@ const MyModal = ({ visible, onClose, studentData }) => {
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.overlay}>
           {/* Prevent Outside Click Closing When Touching Inside */}
-          <TouchableWithoutFeedback onPress={() => {}}>
+          <TouchableWithoutFeedback onPress={() => { }}>
             <View style={styles.bottomSheet}>
-              
+
               <View style={styles.line} />
 
               <View style={styles.cardContainer}>
@@ -59,7 +59,7 @@ const MyModal = ({ visible, onClose, studentData }) => {
                     navigation.navigate('Student', { student: studentData });
                     onClose();
                   }}>
-                  <FontAwesome6 name="user" size={24} color={colors.background}  />
+                  <FontAwesome6 name="user" size={24} color={colors.secondary} />
                   <Text style={styles.cardText}>Student MorGurukul</Text>
                 </TouchableOpacity>
 
@@ -69,7 +69,7 @@ const MyModal = ({ visible, onClose, studentData }) => {
                     navigation.navigate('adminStudentHome', { student: studentData });
                     onClose();
                   }}>
-                  <FontAwesome6 name="eye" size={24} color={colors.background} />
+                  <FontAwesome6 name="eye" size={24} color={colors.secondary} />
                   <Text style={styles.cardText}>View Other Details</Text>
                 </TouchableOpacity>
               </View>
@@ -86,13 +86,13 @@ const MyModal = ({ visible, onClose, studentData }) => {
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.73)', // Dim background
+    backgroundColor: 'rgba(41, 37, 37, 0.73)', // Dim background
     justifyContent: 'flex-end',         // Push modal to bottom
   },
 
   bottomSheet: {
     width: '100%',
-    backgroundColor: '#fff',
+    backgroundColor: '#e9e9e9ff',
     padding: 20,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -117,15 +117,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 15,
     marginBottom: 12,
-    backgroundColor: colors.footercolor,
-    borderRadius: 10,
+    backgroundColor: colors.background,
+    borderRadius: 50,
   },
 
   cardText: {
     marginLeft: 10,
     fontSize: 16,
     fontWeight: 'bold',
-    color:'#fff'
+    color: '#630000ff'
   },
 });
 

@@ -260,6 +260,7 @@ const AssignmentDashboard = () => {
         </View>
     );
 
+    // uicode
     return (
         <View style={styles.body}>
             <View style={styles.container}>
@@ -344,7 +345,7 @@ export default AssignmentDashboard;
 const styles = StyleSheet.create({
     body: {
         flex: 1,
-        backgroundColor: colors.background,
+        backgroundColor: colors.backgroundlite,
     },
     container: {
         flex: 1,
@@ -377,14 +378,16 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingVertical: 30,
         marginVertical: 10,
-        backgroundColor: '#fff',
+        backgroundColor: '#ffffffff',
         borderRadius: 10,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3.84,
-        elevation: 5,
+        // shadowColor: "#000",
+        // shadowOffset: { width: 0, height: 2 },
+        // shadowOpacity: 0.1,
+        // shadowRadius: 3.84,
+        elevation: 20,
     },
+
+
     iconCircle: {
         width: 70,
         height: 70,
@@ -434,8 +437,9 @@ const styles = StyleSheet.create({
         height: 80,
         borderRadius: 50,
         elevation: 35,
-        paddingHorizontal: 15,
-        paddingVertical: 15,
+        // paddingHorizontal: 15,
+        // paddingVertical: 15,
+
 
     },
     uploadText: {
@@ -448,12 +452,13 @@ const styles = StyleSheet.create({
     // --- Table Styles ---
     tableContainer: {
         marginBottom: 20,
-        backgroundColor: '#fff',
+        backgroundColor: '#ff5858ff',
         borderRadius: 10,
         overflow: 'hidden',
         borderWidth: 1,
         borderColor: '#ddd',
         marginVertical: 10,
+        elevation:35
     },
     tableTitle: {
         backgroundColor: '#f8d8d1ff',
@@ -470,6 +475,8 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
+        elevation:55
+
     },
     tableRow: {
         flexDirection: 'row',
@@ -486,20 +493,19 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: colors.secondary,
         minWidth: 80,
-        // Important: Remove padding from touchable cells to center content correctly
+        
     },
-    // Style for touchable cells to ensure alignment and readability
+ 
     interactiveCell: {
         justifyContent: 'center',
         alignItems: 'center',
-        paddingVertical: 10, // Override row padding for individual touchable cell
-        // Optional: Add a subtle highlight for touchable areas
+        paddingVertical: 10,  
         // backgroundColor: '#f9f9f9', 
     },
     interactiveText: {
         fontSize: 13,
         fontWeight: 'bold',
-        color: colors.primaryDark, // Highlight interactive text color
+        color: colors.primaryDark, 
     },
     headerCell: {
         fontWeight: 'bold',
