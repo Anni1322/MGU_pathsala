@@ -69,10 +69,12 @@ const LoginScreen = () => {
   // ============================================
   // LOGIC SECTION
   // ============================================
-  // const [userid, setuserid] = useState("MIS1033");
-  // const [password, setPassword] = useState("Shree@164$");
   const [userid, setuserid] = useState("MIS1033");
   const [password, setPassword] = useState("Shree@164$");
+  // const [userid, setuserid] = useState("20202595");
+  // const [password, setPassword] = useState("Nikki@21");
+  // const [userid, setuserid] = useState("");
+  // const [password, setPassword] = useState("");
   const [secure, setSecure] = useState(true);
   const [loading, setLoading] = useState(false);
   const [biometryType, setBiometryType] = useState(null);
@@ -196,6 +198,9 @@ const LoginScreen = () => {
       PASSWORD: password,
     };
 
+
+    // mguvv
+
       // const isFaculty = userid.toUpperCase().startsWith("MIS");
       // console.log(isFaculty,"isFaculty")
       // const cleanedUserId = isFaculty ? userid.slice(3) : userid;
@@ -207,14 +212,14 @@ const LoginScreen = () => {
       //   ip_address: "0.0.0.0",
       //   PASSWORD: password,
       // };
-      console.log(payload, "payload")
+
+
+      // console.log(payload, "payload")
 
       const response = isFaculty
         ? await AuthService.loginFaculty(payload)
         : await AuthService.loginStudent(payload);
-
       setLoginResponse(response?.data?.LoginDetail);
-
       const success =
         response?.data?.Result?.[0]?.Success === "1" ||
         response?.data?.LoginResponse?.[0]?.MSG_DET === "Login Success" ||
