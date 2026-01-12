@@ -1,3 +1,74 @@
+export default {
+  primary: '#004D40',
+  secondary: '#FFB300',
+  background: '#ffffffff',
+  backgroundlite: '#F5F5F5',
+  textPrimary: '#212121',
+  textSecondary: '#4CAF50',
+  white: '#ffffff',
+  whiteD: '#fcf1f1ff',
+  danger: '#D32F2F',
+  dangerD: '#ff2828ff',
+  dangerL: '#fdc8c8ff',
+  success: '#388E3C',
+  warning: '#FBC02D',
+  lite: '#3c939090',
+  // lite2: '#48A6A7',
+  lite2: '#1d6d6eff',
+  cardcolor:'#DEF5E5',
+  tableheader:'#86B0BD',
+  tablerow:'#ffffffff',
+  footercolor:'#030337',
+  bgcolor:'#4729A3',
+  header:'#1a04507a',
+};
+
+
+
+
+
+
+
+// // ### 🎨 **Theme 5 – Soft Pastels**
+// export default {
+//   primary: '#a29bfe',
+//   secondary: '#fd79a8',
+//   background: '#fceefc',
+//   textPrimary: '#2d3436',
+//   textSecondary: '#636e72',
+//   white: '#ffffff',
+//   danger: '#d63031',
+//   success: '#00b894',
+//   warning: '#ffeaa7',
+// };
+
+
+// // ### 🖤 **Theme 6 – Minimal & Modern**
+// export default {
+//   primary: '#000000',
+//   secondary: '#4a90e2',
+//   background: '#f9f9f9',
+//   textPrimary: '#212121',
+//   textSecondary: '#757575',
+//   white: '#ffffff',
+//   danger: '#f44336',
+//   success: '#4caf50',
+//   warning: '#ff9800',
+// };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // theme 1
 // export default {
 //   primary: '#006d33ff',  // Main brand color (Header/Footer Background)
@@ -60,56 +131,36 @@
 
 
 // // ### ☀️ **Theme 4 – Warm & Friendly**
-export default {
-  primary: '#004D40',
-  secondary: '#FFB300',
-  background: '#ffffffff',
-  backgroundlite: '#F5F5F5',
-  textPrimary: '#212121',
-  textSecondary: '#4CAF50',
-  white: '#ffffff',
-  whiteD: '#fcf1f1ff',
-  danger: '#D32F2F',
-  dangerD: '#ff2828ff',
-  dangerL: '#fdc8c8ff',
-  success: '#388E3C',
-  warning: '#FBC02D',
-  lite: '#3c939090',
-  // lite2: '#48A6A7',
-  lite2: '#1d6d6eff',
-  cardcolor:'#DEF5E5',
-  tableheader:'#86B0BD',
-  tablerow:'#ffffffff',
-  footercolor:'#030337',
-  bgcolor:'#1a0167ff',
-  header:'#1a04507a',
-};
 
-// // ### 🎨 **Theme 5 – Soft Pastels**
 // export default {
-//   primary: '#a29bfe',
-//   secondary: '#fd79a8',
-//   background: '#fceefc',
-//   textPrimary: '#2d3436',
-//   textSecondary: '#636e72',
-//   white: '#ffffff',
-//   danger: '#d63031',
-//   success: '#00b894',
-//   warning: '#ffeaa7',
-// };
-
-
-// // ### 🖤 **Theme 6 – Minimal & Modern**
-// export default {
-//   primary: '#000000',
-//   secondary: '#4a90e2',
-//   background: '#f9f9f9',
+//   primary: '#004D40',
+//   secondary: '#FFB300',
+//   background: '#ffffffff',
+//   backgroundlite: '#F5F5F5',
 //   textPrimary: '#212121',
-//   textSecondary: '#757575',
+//   textSecondary: '#4CAF50',
 //   white: '#ffffff',
-//   danger: '#f44336',
-//   success: '#4caf50',
-//   warning: '#ff9800',
+//   whiteD: '#fcf1f1ff',
+//   danger: '#D32F2F',
+//   dangerD: '#ff2828ff',
+//   dangerL: '#fdc8c8ff',
+//   success: '#388E3C',
+//   warning: '#FBC02D',
+//   lite: '#3c939090',
+//   // lite2: '#48A6A7',
+//   lite2: '#1d6d6eff',
+//   cardcolor:'#DEF5E5',
+//   tableheader:'#86B0BD',
+//   tablerow:'#ffffffff',
+//   footercolor:'#030337',
+//   bgcolor:'#1a0167ff',
+//   header:'#1a04507a',
 // };
+
+
+
+
+
+
 
 

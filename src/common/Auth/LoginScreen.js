@@ -1,32 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableWithoutFeedback,
-  Keyboard,
-  Alert,
-  ActivityIndicator,
-  Image,
-  StatusBar,
-  Dimensions,
-  ScrollView, // Added ScrollView
-} from "react-native";
+import {View,Text,TextInput,TouchableOpacity,StyleSheet,KeyboardAvoidingView,Platform,TouchableWithoutFeedback,Keyboard,Alert,
+  ActivityIndicator,Image,StatusBar,Dimensions,ScrollView, } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import * as Keychain from "react-native-keychain";
 import Svg, { Path, Circle } from "react-native-svg";
 import AuthService from "../../common/Services/AuthService";
 import colors from "../config/colors"; 
+import DeviceService from '../Services/DeviceService'
 
 const { width, height } = Dimensions.get("window");
 
 // --- MODERN SVG ICONS ---
-
 const UserIcon = ({ color = "#666" }) => (
   <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
     <Path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -69,8 +54,8 @@ const LoginScreen = () => {
   // ============================================
   // LOGIC SECTION
   // ============================================
-  const [userid, setuserid] = useState("MIS1033");
-  const [password, setPassword] = useState("Shree@164$");
+  const [userid, setuserid] = useState("");
+  const [password, setPassword] = useState("");
   // const [userid, setuserid] = useState("20202595");
   // const [password, setPassword] = useState("Nikki@21");
   // const [userid, setuserid] = useState("");
@@ -84,11 +69,27 @@ const LoginScreen = () => {
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [timer, setTimer] = useState(30);
   
+  const [DeviceIp, setEncryptedCaptcha] = useState('');
   // New State for Keyboard Visibility
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   const inputs = useRef([]);
   const navigation = useNavigation();
+
+
+// const fetchInfo = async () => {
+//       try {
+//         const data = await DeviceService.getNetworkInfo()
+//         console.log(data,"ip");
+//         // setEncryptedCaptcha(data);
+//       } catch (error) {
+//         console.error("Failed to fetch device info", error);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+
 
   useEffect(() => {
     const checkCredentialsAndBiometry = async () => {
@@ -102,6 +103,7 @@ const LoginScreen = () => {
       }
     };
     checkCredentialsAndBiometry();
+    // fetchInfo();
   }, []);
 
   // Keyboard Event Listeners
@@ -200,7 +202,6 @@ const LoginScreen = () => {
 
 
     // mguvv
-
       // const isFaculty = userid.toUpperCase().startsWith("MIS");
       // console.log(isFaculty,"isFaculty")
       // const cleanedUserId = isFaculty ? userid.slice(3) : userid;

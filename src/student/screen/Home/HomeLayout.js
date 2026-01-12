@@ -141,7 +141,7 @@ const HomeLayout = () => {
             <View style={styles.divider} />
             
             <View style={styles.degreeRow}>
-              <MaterialIcons name="school" size={16} color="#666" />
+              <FontAwesome6 name="school" size={16} color="#666" />
               <Text style={styles.degreeText} numberOfLines={1}>
                  {profileData?.Degree_Programme_Name || "Degree Programme"}
               </Text>
@@ -172,7 +172,7 @@ const HomeLayout = () => {
         </View>
 
         {/* --- SERVICES --- */}
-        <View style={[styles.sectionContainer, { paddingBottom: 40 }]}>
+        <View style={[styles.sectionContainer_serice, { paddingBottom: 40 }]}>
           <View style={styles.headerRow}>
              <View style={styles.titleWrapper}>
                <View style={[styles.verticalBar, { backgroundColor: '#FF8C00' }]} />
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
   
   // --- Decorative Background ---
   decorativeHeader: {
-    backgroundColor: colors.footercolor, // Your brand color
+    backgroundColor: colors.bgcolor, // Your brand color
     height: 180,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
@@ -320,6 +320,11 @@ const styles = StyleSheet.create({
     marginTop: 15,
     paddingHorizontal: 20,
   },
+  sectionContainer_serice: {
+    marginTop: 15,
+    paddingHorizontal: 20,
+     marginBottom: 38,
+  },
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -333,7 +338,7 @@ const styles = StyleSheet.create({
   verticalBar: {
     width: 4,
     height: 20,
-    backgroundColor: colors.footercolor,
+    backgroundColor: colors.bgcolor,
     borderRadius: 2,
     marginRight: 8,
   },
@@ -354,6 +359,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between', // Ensures even spacing
+    marginBottom:0
   },
   gridItemWrapper: {
     width: '23%', // Fits 4 items

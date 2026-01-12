@@ -1,22 +1,13 @@
 import 'react-native-get-random-values';
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Alert,
-  StyleSheet,
-  SafeAreaView,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native';
+import {View,Text,TextInput,TouchableOpacity,Alert,StyleSheet,SafeAreaView,KeyboardAvoidingView,Platform,} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CryptoJS from 'crypto-js';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { environment } from '../../../environments/environment.dev';
 import { useNavigation } from '@react-navigation/native';
+import {getNetworkInfo} from '../Services/DeviceService';
 
 const LoginPage = () => {
   const navigation = useNavigation();
@@ -25,14 +16,29 @@ const LoginPage = () => {
   const [pass, setPass] = useState('#UFP24');
   const [captchaInput, setCaptchaInput] = useState('');
   const [generatedCaptcha, setGeneratedCaptcha] = useState('');
-  const [encryptedCaptcha, setEncryptedCaptcha] = useState('');
+  const [DeviceIp, setEncryptedCaptcha] = useState('');
+  const [encryptedCaptcha, setDeviceIp] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [Loading, setLoading] = useState(false);
 
   const captchaKey = environment.CAPTCHA_SECRET_KEY;
   const passwordKey = environment.PASSWORD_SECRET_KEY;
   const cookiesKey = environment.cookiesKey;
 
   useEffect(() => {
+    const fetchInfo = async () => {
+      try {
+        const data = await getNetworkInfo()
+        console.log(data,"ip");
+        // setEncryptedCaptcha(data);
+      } catch (error) {
+        console.error("Failed to fetch device info", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchInfo();
     generateCaptcha();
   }, []);
 

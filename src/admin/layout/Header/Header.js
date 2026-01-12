@@ -110,7 +110,7 @@ export default function Header({ title, backgroundColor }) {
   return (
     <>
       {/* Status bar matches the header color for a seamless look */}
-      <StatusBar translucent={true} backgroundColor={colors.footercolor} barStyle="light-content" />
+      <StatusBar translucent={true} backgroundColor={colors.bgcolor} barStyle="light-content" />
       
       {/* Sidebar Component */}
       <AdminSidemenu sidebarX={slideAnim} />
@@ -125,7 +125,7 @@ export default function Header({ title, backgroundColor }) {
       )}
 
       {/* --- VIBRANT HEADER --- */}
-      <View style={[styles.headerContainer, { backgroundColor: colors.footercolor }]}>
+      <View style={[styles.headerContainer, { backgroundColor: colors.bgcolor }]}>
         
         {/* Decorative Glow (Adds Texture) */}
         <View style={styles.glowCircle} />
@@ -160,7 +160,7 @@ export default function Header({ title, backgroundColor }) {
                 <Image source={{ uri: profilephoto }} style={styles.headerAvatar} />
              ) : (
                 <View style={styles.placeholderAvatar}>
-                   <FontAwesome6 name="user" size={16} color={colors.footercolor} />
+                   <FontAwesome6 name="user" size={16} color={colors.bgcolor} />
                 </View>
              )}
           </TouchableOpacity>
@@ -215,7 +215,7 @@ export default function Header({ title, backgroundColor }) {
                 onPress={() => { toggleModal(); navigation.navigate('AdminProfile'); }}
               >
                 <View style={[styles.menuIconBox, { backgroundColor: '#F0F8FF' }]}>
-                  <FontAwesome6 name="user" size={18} color={colors.footercolor} />
+                  <FontAwesome6 name="user" size={18} color={colors.bgcolor} />
                 </View>
                 <View style={{flex: 1}}>
                     <Text style={styles.menuTitle}>My Profile</Text>
@@ -552,11 +552,11 @@ const styles = StyleSheet.create({
 //               alignItems: 'center',
 //               justifyContent: 'center',
 //             }}>
-//             <FontAwesome6 name="chevron-left" size={26} color={colors.footercolor} />
+//             <FontAwesome6 name="chevron-left" size={26} color={colors.bgcolor} />
 //           </TouchableOpacity>
 //         ) : (
 //           <TouchableOpacity onPress={toggleSidebar}>
-//             <EvilIcons name="navicon" size={30} color={colors.footercolor} />
+//             <EvilIcons name="navicon" size={30} color={colors.bgcolor} />
 //           </TouchableOpacity>
 //         )}
 
@@ -575,7 +575,7 @@ const styles = StyleSheet.create({
 //         <View style={styles.headerRight}>
 //           {/* Changed: Now toggles modal instead of navigating */}
 //           <TouchableOpacity onPress={toggleModal}>
-//             <FontAwesome6 name="user" size={24} color={colors.footercolor} />
+//             <FontAwesome6 name="user" size={24} color={colors.bgcolor} />
 //           </TouchableOpacity>
 
 //           {/* <View
@@ -654,14 +654,14 @@ const styles = StyleSheet.create({
 //     fontWeight: 'bold',
 //   },
 //   parentTitle: {
-//     color: colors.footercolor,
+//     color: colors.bgcolor,
 //     fontSize: 20,
 //     // backgroundColor: '#f0a3a307',
 //     borderRadius: 7,
 //     padding: 10,
 //   },
 //   childTitle: {
-//     color: colors.footercolor,
+//     color: colors.bgcolor,
 //     fontSize: 18,
 //   },
 //   headerRight: {

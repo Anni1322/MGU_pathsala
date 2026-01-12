@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   headerCard: {
-    backgroundColor: colors.footercolor,
+    backgroundColor: colors.bgcolor,
     paddingBottom: 40,
     paddingHorizontal: 20,
     borderBottomLeftRadius: 40,

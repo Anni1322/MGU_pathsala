@@ -1,36 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, FlatList, TouchableOpacity, ActivityIndicator, StyleSheet, Alert, Modal, Button, ScrollView, } from 'react-native';
+import { 
+  View, Text, TextInput, FlatList, TouchableOpacity, 
+  ActivityIndicator, StyleSheet, Alert, Modal, ScrollView, 
+  Dimensions, SafeAreaView, RefreshControl 
+} from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
-import requestAndroidPermission from '../../../common/Services/requestStoragePermission';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+
+// Services & Components
 import SessionService from '../../../common/Services/SessionService';
 import getApiList from '../../config/Api/ApiList';
 import Header from '../../layout/Header/Header2';
 import Footer from '../../layout/Footer/Footer';
 import { HttpService } from '../../../common/Services/HttpService';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { downloadFile } from "../../../common/Services/pdfService";
 import alertService from '../../../common/Services/alert/AlertService';
 import { API_BASE_URL } from '../../../common/config/BaseUrl';
-import LinearGradient from 'react-native-linear-gradient';
 import colors from '../../../common/config/colors';
 
+const { width } = Dimensions.get('window');
 
-
-const gradientColors = [
-  // ["#6a11cb", "#2575fc"],
-  // ["#ff9966", "#ff5e62"],
-  // ["#00c6ff", "#0072ff"],
-  // ["#f953c6", "#b91d73"],
-  ["#36d1dc", "#5b86e5"],
-  ["#fbc2eb", "#a6c1ee"],
-  // ["#7f00ff", "#e100ff"],
-  // ["#3a7bd5", "#00d2ff"],
-  ["#f1c40f", "#e67e22"],
-];
-
-
-const FeeReceipt = (index) => {
+const FeeReceipt = () => {
   const [receipts, setReceipts] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [searchText, setSearchText] = useState('');
@@ -39,478 +29,790 @@ const FeeReceipt = (index) => {
   const [sessionOptions, setSessionOptions] = useState([]);
   const [purposeOptions, setPurposeOptions] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false); // FIXED: Added missing state
   const [selectedReceipt, setSelectedReceipt] = useState(null);
-  const [footerHide, setfooterHide] = useState(false);
-  const colors = gradientColors[index % gradientColors.length];
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
 
-  const handleCardPress = item => {
-    setSelectedReceipt(item);
-  };
+  useEffect(() => {
+    fetchReceipts();
+  }, []);
 
-  const hidefooter = () => {
-    setfooterHide(true);
-  };
+  // Filter Logic
+  useEffect(() => {
+    let data = receipts;
+    if (searchText.trim() !== '') {
+      data = data.filter(item => 
+        item.Receipt_No.toLowerCase().includes(searchText.toLowerCase()) || 
+        item.Fee_Purpose_Name.toLowerCase().includes(searchText.toLowerCase())
+      );
+    }
+    if (selectedSession && selectedSession !== 'All') {
+      data = data.filter(item => item.Academic_Session_Name_E === selectedSession);
+    }
+    if (selectedPurpose && selectedPurpose !== 'All') {
+      data = data.filter(item => item.Fee_Purpose_Name === selectedPurpose);
+    }
+    setFiltered(data);
+  }, [searchText, selectedSession, selectedPurpose, receipts]);
 
-
-  const handleDownloadPDF = async receipt => {
+  const fetchReceipts = async () => {
     setLoading(true);
     try {
       const sessionData = await SessionService.getSession();
-      const payload = { STUDENT_ID: sessionData?.STUDENT_ID, Receipt_No: receipt?.Receipt_No, };
-      const apiList = getApiList();
-      const DownloadFeeReceiptAPI = apiList.DownloadFeeReceipt;
-      if (!DownloadFeeReceiptAPI)
-        throw new Error('Fees Receipt endpoint not found.');
-      const response = await HttpService.post(DownloadFeeReceiptAPI, payload);
-      const filePath = API_BASE_URL + '/' + response?.data?.Response[0]?.FilePath;
-      if (filePath) {
-        setLoading(true);
-        await downloadFile(filePath, `${receipt?.Receipt_No}Semester_Examfees.pdf`);
-        setLoading(false);
-      } else {
-        console.error('No file path returned from API.');
-        alertService.show({
-          title: 'Error',
-          message: 'No file available to download.',
-          type: 'warning',
-        });
-      }
-
-      return response?.data?.FeeReceiptList || [];
-    } catch (error) {
-      Alert.alert(
-        'Fees Receipt Fetch Failed',
-        error?.message || 'Something went wrong',
-      );
-      throw error;
-    }
-    setLoading(false);
-  };
-
-  const sortByDateDesc = (data = []) => {
-    return [...data].sort((a, b) => {
-      const parseDate = (dateStr) => {
-        if (!dateStr) return null;
-        const dateOnly = dateStr.split(" ")[0];
-        const [d, m, y] = dateOnly.split("-");
-        if (!d || !m || !y) return null;
-        const date = new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
-        return isNaN(date.getTime()) ? null : date;
+      const payload = {
+        LOGIN_TYPE: sessionData?.[0]?.LOGIN_TYPE,
+        STUDENT_ID: sessionData?.STUDENT_ID,
       };
-      const dateA = parseDate(a?.ReceiptDate);
-      const dateB = parseDate(b?.ReceiptDate);
-      if (dateA && dateB) {
-        return dateB - dateA;
-      }
-      if (!dateA && dateB) return 1;
-      if (dateA && !dateB) return -1;
-      return 0;
-    });
+      const response = await HttpService.post(getApiList().FeeReceiptList, payload);
+      
+      let list = Array.isArray(response?.data?.FeeReceiptList) ? response.data.FeeReceiptList : [];
+      
+      // Sort logic
+      list = list.sort((a, b) => new Date(b.ReceiptDate.split('-').reverse().join('-')) - new Date(a.ReceiptDate.split('-').reverse().join('-')));
+      
+      setReceipts(list);
+      setFiltered(list);
+
+      // Map Dropdown Options
+      setSessionOptions([
+        { label: 'All Sessions', value: 'All' },
+        ...[...new Set(list.map(i => i.Academic_Session_Name_E))].map(s => ({ label: s, value: s }))
+      ]);
+      setPurposeOptions([
+        { label: 'All Purposes', value: 'All' },
+        ...[...new Set(list.map(i => i.Fee_Purpose_Name))].map(p => ({ label: p, value: p }))
+      ]);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
   };
 
-  const getFeeReceipt = async payload => {
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchReceipts();
+  };
+
+  const handleDownloadPDF = async (receipt) => {
     setLoading(true);
     try {
-      const apiList = getApiList();
-      const FeesReceiptAPI = apiList.FeeReceiptList;
-      if (!FeesReceiptAPI) throw new Error('Fees Receipt endpoint not found.');
-
-      const response = await HttpService.post(FeesReceiptAPI, payload);
-
-      if (!response || response?.status !== 200) {
-        throw new Error('Failed to fetch fee receipt details.');
+      const sessionData = await SessionService.getSession();
+      const payload = { STUDENT_ID: sessionData?.STUDENT_ID, Receipt_No: receipt?.Receipt_No };
+      const response = await HttpService.post(getApiList().DownloadFeeReceipt, payload);
+      const filePath = API_BASE_URL + '/' + response?.data?.Response[0]?.FilePath;
+      if (filePath) {
+        await downloadFile(filePath, `Receipt_${receipt?.Receipt_No}.pdf`);
       }
-      let list = Array.isArray(response?.data?.FeeReceiptList)
-        ? response.data.FeeReceiptList
-        : [];
-
-      list = sortByDateDesc(list);
-
-      // Output the sorted dates in numbered list format
-      // console.log("Sorted Receipt Dates (Latest to Oldest):");
-      // list.forEach((item, index) => {
-      //   console.log(`${index + 1} ${item.ReceiptDate}`);
-      // });
-
-      return list;
-
     } catch (error) {
-      Alert.alert('Fees Receipt Fetch Failed', error?.message || 'Something went wrong');
-      throw error;
+      alertService.show({ title: 'Error', message: 'Download Failed', type: 'danger' });
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    const fetchReceipts = async () => {
-      setLoading(true);
-      try {
-        const sessionData = await SessionService.getSession();
-        const payload = {
-          LOGIN_TYPE: sessionData?.[0]?.LOGIN_TYPE,
-          STUDENT_ID: sessionData?.STUDENT_ID,
-        };
-
-        const fees = await getFeeReceipt(payload);
-        setReceipts(fees);
-        setFiltered(fees);
-        setSessionOptions([
-          { label: 'All', value: 'All' },
-          ...[...new Set(fees?.map(i => i.Academic_Session_Name_E))]?.map(s => ({
-            label: s,
-            value: s,
-          }))
-        ]);
-
-        setPurposeOptions([
-          { label: 'All', value: 'All' },
-          ...[...new Set(fees?.map(i => i.Fee_Purpose_Name))]?.map(p => ({
-            label: p,
-            value: p,
-          }))
-        ]);
-
-      } catch (error) {
-        console.error(error);
-      }
-      setLoading(false);
-    };
-
-    fetchReceipts();
-  }, []);
-
-  useEffect(() => {
-    let data = receipts;
-    if (searchText.trim() !== '') {
-      data = data.filter(
-        item =>
-          item.Receipt_No.includes(searchText) ||
-          item.MGUVVRefNo.includes(searchText),
-      );
-    }
-    if (selectedSession && selectedSession !== 'All') {
-      data = data.filter(
-        item => item.Academic_Session_Name_E === selectedSession,
-      );
-    }
-    if (selectedPurpose && selectedPurpose !== 'All') {
-      data = data.filter(item => item.Fee_Purpose_Name === selectedPurpose);
-    }
-    data = sortByDateDesc(data);
-    // console.log(data,"data")
-    setFiltered(data);
-  }, [searchText, selectedSession, selectedPurpose, receipts]);
-
-
   const renderReceipt = ({ item }) => (
-    <TouchableOpacity onPress={() => handleCardPress(item)} colors={colors} style={styles.card}>
-      <View style={styles.cardGrid}>
-        {/* Only show purpose, amount, and date as per requirements */}
-        <Text style={styles.headtittle}>{item.Fee_Purpose_Name}</Text>
-        <Text style={styles.gridItem}>Amount: ₹{item.GrandTotal}</Text>
-        <Text style={styles.gridItem}>{item.ReceiptDate}</Text>
-        {/* <Text style={styles.gridItem}>{item.Receipt_No}</Text> */}
-
-        {/* Download button remains */}
-        <TouchableOpacity
-          style={styles.downloadBtn}
-          onPress={() => handleDownloadPDF(item)}
-        >
-          <FontAwesome6
-            name="file-pdf"
-            size={20}
-            color="#ffffffff"
-            style={{ marginRight: 8 }}
-          />
-          {/* <Text style={styles.downloadText}>PDF</Text> */}
-        </TouchableOpacity>
+    <TouchableOpacity activeOpacity={0.8} onPress={() => setSelectedReceipt(item)} style={styles.card}>
+      <View style={styles.cardAccent} />
+      <View style={styles.cardBody}>
+        <View style={styles.cardHeaderRow}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.purposeText} numberOfLines={1}>{item.Fee_Purpose_Name}</Text>
+            <Text style={styles.receiptNoText}>Receipt ID : {item.Receipt_No}</Text>
+          </View>
+          <Text style={styles.amountText}>₹{item.GrandTotal}</Text>
+        </View>
+        
+        <View style={styles.cardFooterRow}>
+          <View style={styles.dateContainer}>
+            <FontAwesome6 name="calendar-check" size={12} color="#666" />
+            <Text style={styles.dateText}>{item.ReceiptDate}</Text>
+          </View>
+          <TouchableOpacity style={styles.actionBtn} onPress={() => handleDownloadPDF(item)}>
+            <FontAwesome6 name="file-pdf" size={16} color="#FFF" />
+          </TouchableOpacity>
+        </View>
       </View>
     </TouchableOpacity>
-
-
   );
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.container}>
-        <Header />
-        <Text style={styles.headerText}>Fees Recipt</Text>
-        {/* <TextInput
-          style={styles.search}
-          placeholder="Search by Receipt No or Ref No"
-          value={searchText}
-          onChangeText={setSearchText}
-          onPress={hidefooter}
-        /> */}
-        {/* <Dropdown
-          style={styles.dropdown}
-          containerStyle={styles.dropdownContainer}
-          placeholderStyle={styles.placeholderStyle}
-          selectedTextStyle={styles.selectedTextStyle}
-          data={sessionOptions}
-          labelField="label"
-          valueField="value"
-          placeholder="Select Session"
-          value={selectedSession}
-          onChange={item => setSelectedSession(item.value)}
-          maxHeight={300}
-        />
-        <Dropdown
-          style={styles.dropdown}
-          containerStyle={styles.dropdownContainer}
-          placeholderStyle={styles.placeholderStyle}
-          selectedTextStyle={styles.selectedTextStyle}
-          data={purposeOptions}
-          labelField="label"
-          valueField="value"
-          placeholder="Select Purpose"
-          value={selectedPurpose}
-          onChange={item => setSelectedPurpose(item.value)}
-          maxHeight={300}
-        /> */}
-
-        {loading ? (
-          <View
-            style={{
-              flex: 1, justifyContent: 'center', alignItems: 'center',
-              marginTop: 50,
-            }}>
-            <ActivityIndicator size="large" color="#2e7d32" />
-            <Text style={{ marginTop: 10 }}>Loading receipts...</Text>
-          </View>
-        ) : (
-          <FlatList
-            data={[...filtered]}
-            renderItem={renderReceipt}
-            keyExtractor={(item, index) => index.toString()}/>
-        )}
-
-        {/* Modal for showing details */}
-        {selectedReceipt && (
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={selectedReceipt !== null}
-            onRequestClose={() => setSelectedReceipt(null)}
+      <Header />
+      
+      {/* Search & Filter Section */}
+      <View style={styles.filterWrapper}>
+        <View style={styles.searchBox}>
+          <FontAwesome6 name="magnifying-glass" size={14} color="#999" />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search receipts..."
+            placeholderTextColor="#999"
+            value={searchText}
+            onChangeText={setSearchText}
+          />
+          <TouchableOpacity 
+            onPress={() => setIsFilterVisible(!isFilterVisible)}
+            style={[styles.filterIcon, isFilterVisible && { backgroundColor: colors.bgcolor }]}
           >
-            <View style={styles.modalOverlay}>
-              <View style={styles.modalContainer}>
-                <ScrollView>
-                  <Text style={styles.modalTitle}>🧾 Receipt Details</Text>
+            <FontAwesome6 name="sliders" size={14} color={isFilterVisible ? "#FFF" : "#666"} />
+          </TouchableOpacity>
+        </View>
 
-                  <View style={styles.modalItem}>
-                    <Text style={styles.modalLabel}>Receipt No:</Text>
-                    <Text style={styles.modalValue}>
-                      {selectedReceipt?.Receipt_No}
-                    </Text>
-                  </View>
-
-                  <View style={styles.modalItem}>
-                    <Text style={styles.modalLabel}>Date:</Text>
-                    <Text style={styles.modalValue}>
-                      {selectedReceipt?.ReceiptDate}
-                    </Text>
-                  </View>
-
-                  <View style={styles.modalItem}>
-                    <Text style={styles.modalLabel}>Amount:</Text>
-                    <Text style={styles.modalValue}>
-                      ₹{selectedReceipt?.GrandTotal}
-                    </Text>
-                  </View>
-
-                  <View style={styles.modalItem}>
-                    <Text style={styles.modalLabel}>Payment Mode:</Text>
-                    <Text style={styles.modalValue}>
-                      {selectedReceipt?.PaymentMode}
-                    </Text>
-                  </View>
-
-                  <View style={styles.modalItem}>
-                    <Text style={styles.modalLabel}>Purpose:</Text>
-                    <Text style={styles.modalValue}>
-                      {selectedReceipt?.Fee_Purpose_Name}
-                    </Text>
-                  </View>
-
-                  <View style={styles.modalItem}>
-                    <Text style={styles.modalLabel}>Course / Semester:</Text>
-                    <Text style={styles.modalValue}>
-                      {selectedReceipt?.Course_Year_Name} -{' '}
-                      {selectedReceipt?.Semester_Name}
-                    </Text>
-                  </View>
-
-                  <View style={styles.modalItem}>
-                    <Text style={styles.modalLabel}>Session:</Text>
-                    <Text style={styles.modalValue}>
-                      {selectedReceipt?.Academic_Session_Name_E}
-                    </Text>
-                  </View>
-                </ScrollView>
-
-                <TouchableOpacity
-                  style={styles.closeButton}
-                  onPress={() => setSelectedReceipt(null)}
-                >
-                  <Text style={styles.closeButtonText}>Close</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
+        {isFilterVisible && (
+          <View style={styles.dropdownContainer}>
+            <Dropdown
+              style={styles.dropdown}
+              placeholderStyle={styles.dropText}
+              selectedTextStyle={styles.dropText}
+              data={sessionOptions}
+              labelField="label"
+              valueField="value"
+              placeholder="Session"
+              value={selectedSession}
+              onChange={item => setSelectedSession(item.value)}
+            />
+            <Dropdown
+              style={styles.dropdown}
+              placeholderStyle={styles.dropText}
+              selectedTextStyle={styles.dropText}
+              data={purposeOptions}
+              labelField="label"
+              valueField="value"
+              placeholder="Purpose"
+              value={selectedPurpose}
+              onChange={item => setSelectedPurpose(item.value)}
+            />
+          </View>
         )}
       </View>
-      {!footerHide && (
-        <View>
-          <Footer />
+
+      {loading && !refreshing ? (
+        <View style={styles.centerLoader}>
+           <ActivityIndicator size="large" color={colors.bgcolor} />
+           <Text style={styles.loaderSub}>Fetching Receipts...</Text>
         </View>
+      ) : (
+        <FlatList
+          data={filtered}
+          renderItem={renderReceipt}
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={styles.listStyle}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.bgcolor} />
+          }
+          ListEmptyComponent={
+            <View style={styles.emptyBox}>
+               <FontAwesome6 name="receipt" size={50} color="#DDD" />
+               <Text style={styles.emptyText}>No receipts found.</Text>
+            </View>
+          }
+        />
       )}
+
+      {/* Details Modal */}
+      <Modal visible={!!selectedReceipt} transparent animationType="slide">
+        <View style={styles.modalBlur}>
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>Receipt Summary</Text>
+            <ScrollView style={{marginVertical: 15}}>
+              <DetailRow label="Receipt Number" value={selectedReceipt?.Receipt_No} />
+              <DetailRow label="Payment Date" value={selectedReceipt?.ReceiptDate} />
+              <DetailRow label="Session" value={selectedReceipt?.Academic_Session_Name_E} />
+              <DetailRow label="Fee Purpose" value={selectedReceipt?.Fee_Purpose_Name} />
+              <DetailRow label="Total Amount" value={`₹${selectedReceipt?.GrandTotal}`} isBold />
+              <DetailRow label="Payment Mode" value={selectedReceipt?.PaymentMode} />
+            </ScrollView>
+            <TouchableOpacity style={styles.closeBtn} onPress={() => setSelectedReceipt(null)}>
+              <Text style={styles.closeBtnText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      <Footer />
     </SafeAreaView>
   );
 };
 
+const DetailRow = ({ label, value, isBold }) => (
+  <View style={styles.detailRow}>
+    <Text style={styles.detailLabel}>{label}</Text>
+    <Text style={[styles.detailValue, isBold && {fontWeight: 'bold', color: '#000'}]}>{value || '—'}</Text>
+  </View>
+);
+
 const styles = StyleSheet.create({
-  modalOverlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    padding: 20,
-  },
+  container: { flex: 1, backgroundColor: '#F8F9FB' },
+  
+  // Search & Filter
+  filterWrapper: { backgroundColor: '#FFF', padding: 15, elevation: 3 },
+  searchBox: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#F1F3F6', borderRadius: 12, paddingHorizontal: 12, height: 45 },
+  searchInput: { flex: 1, marginLeft: 10, color: '#333', fontSize: 14 },
+  filterIcon: { padding: 8, borderRadius: 8, backgroundColor: '#FFF' },
+  dropdownContainer: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 },
+  dropdown: { width: '48%', backgroundColor: '#F1F3F6', borderRadius: 8, paddingHorizontal: 10, height: 38 },
+  dropText: { fontSize: 12, color: '#666' },
 
-  modalContainer: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 20,
-    width: '100%',
-    maxHeight: '80%',
-  },
+  // List & Cards
+  listStyle: { padding: 15, paddingBottom: 100 },
+  card: { backgroundColor: '#FFF', borderRadius: 16, marginBottom: 15, flexDirection: 'row', elevation: 2, shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 4 },
+  cardAccent: { width: 4, backgroundColor: colors.bgcolor, borderTopLeftRadius: 16, borderBottomLeftRadius: 16 },
+  cardBody: { flex: 1, padding: 15 },
+  cardHeaderRow: { flexDirection: 'row', justifyContent: 'space-between' },
+  purposeText: { fontSize: 15, fontWeight: '700', color: '#333' },
+  receiptNoText: { fontSize: 11, color: '#999', marginTop: 2 },
+  amountText: { fontSize: 18, fontWeight: '800', color: colors.danger },
+  cardFooterRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 15 },
+  dateContainer: { flexDirection: 'row', alignItems: 'center' },
+  dateText: { fontSize: 12, color: '#666', marginLeft: 6 },
+  actionBtn: { backgroundColor: colors.bgcolor, padding: 8, borderRadius: 10 },
 
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 15,
-    textAlign: 'center',
-    color: '#333',
-  },
+  // Modal
+  modalBlur: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', padding: 25 },
+  modalCard: { backgroundColor: '#FFF', borderRadius: 20, padding: 20, maxHeight: '80%' },
+  modalTitle: { fontSize: 18, fontWeight: 'bold', textAlign: 'center', borderBottomWidth: 1, borderBottomColor: '#EEE', paddingBottom: 10 },
+  detailRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8 },
+  detailLabel: { fontSize: 13, color: '#888' },
+  detailValue: { fontSize: 13, color: '#333', textAlign: 'right', flex: 1, marginLeft: 10 },
+  closeBtn: { backgroundColor: '#F1F3F6', padding: 12, borderRadius: 12, marginTop: 10 },
+  closeBtnText: { textAlign: 'center', fontWeight: 'bold', color: '#333' },
 
-  modalItem: {
-    marginBottom: 12,
-  },
-
-  modalLabel: {
-    fontSize: 14,
-    color: '#777',
-  },
-
-  modalValue: {
-    fontSize: 16,
-    color: '#222',
-    fontWeight: '500',
-  },
-
-  headerText: {
-    margin: 10,
-    padding: 10,
-    borderRadius: 30,
-    marginTop: 10,
-    fontSize: 18,
-    fontWeight: '600',
-    textAlign: 'center',
-    color: colors.background,
-    backgroundColor:colors.footercolor,
-  },
-
-  closeButton: {
-    marginTop: 20,
-    backgroundColor: '#CF524C',
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-
-  closeButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-
-  container: {
-    flex: 1,
-    backgroundColor: '#e2e3e5ff'
-  },
-  search: {
-    marginHorizontal: 15,
-    marginTop: 5,
-    marginBottom: 10,
-    padding: 5,
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#a5d6a7',
-  },
-
-  dropdown: {
-    marginHorizontal: 15,
-    marginBottom: 10,
-    height: 35,
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    paddingHorizontal: 5,
-    borderWidth: 1,
-    borderColor: '#a5d6a7',
-  },
-  dropdownContainer: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#a5d6a7',
-    marginTop: 4,
-    elevation: 5,
-  },
-  placeholderStyle: { fontSize: 14, color: '#999' },
-  selectedTextStyle: { fontSize: 14, color: '#1b5e20' },
-  card: {
-    backgroundColor: '#CBCBCB',
-    marginHorizontal: 10,
-    marginVertical: 4,
-    padding: 5,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    borderWidth: 2,
-    borderColor: '#fff'
-    // borderBottomWidth: 5,
-    // borderBottomColor: '#ff922b',
-  },
-  cardGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  headtittle: {
-    width: '50%',
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#950202ff',
-    marginBottom: 8,
-    borderBottomWidth: 2,
-    borderBottomColor: '#ffffffff',
-  },
-  gridItem: { width: '50%', fontSize: 14, color: '#333', marginBottom: 8 },
-  downloadBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.dangerD,
-    padding: 6,
-    borderRadius: 6,
-    borderWidth: 2,
-    borderColor: '#fff'
-
-  },
-  downloadText: { color: '#fff', fontWeight: 'bold' },
+  // Others
+  centerLoader: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  loaderSub: { marginTop: 10, color: '#666', fontSize: 14 },
+  emptyBox: { alignItems: 'center', marginTop: 100 },
+  emptyText: { marginTop: 10, color: '#BBB' }
 });
 
 export default FeeReceipt;
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import React, { useState, useEffect } from 'react';
+// import { View, Text, TextInput, FlatList, TouchableOpacity, ActivityIndicator, StyleSheet, Alert, Modal, Button, ScrollView, } from 'react-native';
+// import { Dropdown } from 'react-native-element-dropdown';
+// import requestAndroidPermission from '../../../common/Services/requestStoragePermission';
+// import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+// import SessionService from '../../../common/Services/SessionService';
+// import getApiList from '../../config/Api/ApiList';
+// import Header from '../../layout/Header/Header2';
+// import Footer from '../../layout/Footer/Footer';
+// import { HttpService } from '../../../common/Services/HttpService';
+// import { SafeAreaView } from 'react-native-safe-area-context';
+// import { downloadFile } from "../../../common/Services/pdfService";
+// import alertService from '../../../common/Services/alert/AlertService';
+// import { API_BASE_URL } from '../../../common/config/BaseUrl';
+// import LinearGradient from 'react-native-linear-gradient';
+// import colors from '../../../common/config/colors';
+
+
+
+// const gradientColors = [
+//   // ["#6a11cb", "#2575fc"],
+//   // ["#ff9966", "#ff5e62"],
+//   // ["#00c6ff", "#0072ff"],
+//   // ["#f953c6", "#b91d73"],
+//   ["#36d1dc", "#5b86e5"],
+//   ["#fbc2eb", "#a6c1ee"],
+//   // ["#7f00ff", "#e100ff"],
+//   // ["#3a7bd5", "#00d2ff"],
+//   ["#f1c40f", "#e67e22"],
+// ];
+
+
+// const FeeReceipt = (index) => {
+//   const [receipts, setReceipts] = useState([]);
+//   const [filtered, setFiltered] = useState([]);
+//   const [searchText, setSearchText] = useState('');
+//   const [selectedSession, setSelectedSession] = useState(null);
+//   const [selectedPurpose, setSelectedPurpose] = useState(null);
+//   const [sessionOptions, setSessionOptions] = useState([]);
+//   const [purposeOptions, setPurposeOptions] = useState([]);
+//   const [loading, setLoading] = useState(false);
+//   const [selectedReceipt, setSelectedReceipt] = useState(null);
+//   const [footerHide, setfooterHide] = useState(false);
+//   const colors = gradientColors[index % gradientColors.length];
+
+//   const handleCardPress = item => {
+//     setSelectedReceipt(item);
+//   };
+
+//   const hidefooter = () => {
+//     setfooterHide(true);
+//   };
+
+
+//   const handleDownloadPDF = async receipt => {
+//     setLoading(true);
+//     try {
+//       const sessionData = await SessionService.getSession();
+//       const payload = { STUDENT_ID: sessionData?.STUDENT_ID, Receipt_No: receipt?.Receipt_No, };
+//       const apiList = getApiList();
+//       const DownloadFeeReceiptAPI = apiList.DownloadFeeReceipt;
+//       if (!DownloadFeeReceiptAPI)
+//         throw new Error('Fees Receipt endpoint not found.');
+//       const response = await HttpService.post(DownloadFeeReceiptAPI, payload);
+//       const filePath = API_BASE_URL + '/' + response?.data?.Response[0]?.FilePath;
+//       if (filePath) {
+//         setLoading(true);
+//         await downloadFile(filePath, `${receipt?.Receipt_No}Semester_Examfees.pdf`);
+//         setLoading(false);
+//       } else {
+//         console.error('No file path returned from API.');
+//         alertService.show({
+//           title: 'Error',
+//           message: 'No file available to download.',
+//           type: 'warning',
+//         });
+//       }
+
+//       return response?.data?.FeeReceiptList || [];
+//     } catch (error) {
+//       Alert.alert(
+//         'Fees Receipt Fetch Failed',
+//         error?.message || 'Something went wrong',
+//       );
+//       throw error;
+//     }
+//     setLoading(false);
+//   };
+
+//   const sortByDateDesc = (data = []) => {
+//     return [...data].sort((a, b) => {
+//       const parseDate = (dateStr) => {
+//         if (!dateStr) return null;
+//         const dateOnly = dateStr.split(" ")[0];
+//         const [d, m, y] = dateOnly.split("-");
+//         if (!d || !m || !y) return null;
+//         const date = new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
+//         return isNaN(date.getTime()) ? null : date;
+//       };
+//       const dateA = parseDate(a?.ReceiptDate);
+//       const dateB = parseDate(b?.ReceiptDate);
+//       if (dateA && dateB) {
+//         return dateB - dateA;
+//       }
+//       if (!dateA && dateB) return 1;
+//       if (dateA && !dateB) return -1;
+//       return 0;
+//     });
+//   };
+
+//   const getFeeReceipt = async payload => {
+//     setLoading(true);
+//     try {
+//       const apiList = getApiList();
+//       const FeesReceiptAPI = apiList.FeeReceiptList;
+//       if (!FeesReceiptAPI) throw new Error('Fees Receipt endpoint not found.');
+
+//       const response = await HttpService.post(FeesReceiptAPI, payload);
+
+//       if (!response || response?.status !== 200) {
+//         throw new Error('Failed to fetch fee receipt details.');
+//       }
+//       let list = Array.isArray(response?.data?.FeeReceiptList)
+//         ? response.data.FeeReceiptList
+//         : [];
+
+//       list = sortByDateDesc(list);
+
+//       // Output the sorted dates in numbered list format
+//       // console.log("Sorted Receipt Dates (Latest to Oldest):");
+//       // list.forEach((item, index) => {
+//       //   console.log(`${index + 1} ${item.ReceiptDate}`);
+//       // });
+
+//       return list;
+
+//     } catch (error) {
+//       Alert.alert('Fees Receipt Fetch Failed', error?.message || 'Something went wrong');
+//       throw error;
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   useEffect(() => {
+//     const fetchReceipts = async () => {
+//       setLoading(true);
+//       try {
+//         const sessionData = await SessionService.getSession();
+//         const payload = {
+//           LOGIN_TYPE: sessionData?.[0]?.LOGIN_TYPE,
+//           STUDENT_ID: sessionData?.STUDENT_ID,
+//         };
+
+//         const fees = await getFeeReceipt(payload);
+//         setReceipts(fees);
+//         setFiltered(fees);
+//         setSessionOptions([
+//           { label: 'All', value: 'All' },
+//           ...[...new Set(fees?.map(i => i.Academic_Session_Name_E))]?.map(s => ({
+//             label: s,
+//             value: s,
+//           }))
+//         ]);
+
+//         setPurposeOptions([
+//           { label: 'All', value: 'All' },
+//           ...[...new Set(fees?.map(i => i.Fee_Purpose_Name))]?.map(p => ({
+//             label: p,
+//             value: p,
+//           }))
+//         ]);
+
+//       } catch (error) {
+//         console.error(error);
+//       }
+//       setLoading(false);
+//     };
+
+//     fetchReceipts();
+//   }, []);
+
+//   useEffect(() => {
+//     let data = receipts;
+//     if (searchText.trim() !== '') {
+//       data = data.filter(
+//         item =>
+//           item.Receipt_No.includes(searchText) ||
+//           item.MGUVVRefNo.includes(searchText),
+//       );
+//     }
+//     if (selectedSession && selectedSession !== 'All') {
+//       data = data.filter(
+//         item => item.Academic_Session_Name_E === selectedSession,
+//       );
+//     }
+//     if (selectedPurpose && selectedPurpose !== 'All') {
+//       data = data.filter(item => item.Fee_Purpose_Name === selectedPurpose);
+//     }
+//     data = sortByDateDesc(data);
+//     // console.log(data,"data")
+//     setFiltered(data);
+//   }, [searchText, selectedSession, selectedPurpose, receipts]);
+
+
+//   const renderReceipt = ({ item }) => (
+//     <TouchableOpacity onPress={() => handleCardPress(item)} colors={colors} style={styles.card}>
+//       <View style={styles.cardGrid}>
+//         {/* Only show purpose, amount, and date as per requirements */}
+//         <Text style={styles.headtittle}>{item.Fee_Purpose_Name}</Text>
+//         <Text style={styles.gridItem}>Amount: ₹{item.GrandTotal}</Text>
+//         <Text style={styles.gridItem}>{item.ReceiptDate}</Text>
+//         {/* <Text style={styles.gridItem}>{item.Receipt_No}</Text> */}
+
+//         {/* Download button remains */}
+//         <TouchableOpacity
+//           style={styles.downloadBtn}
+//           onPress={() => handleDownloadPDF(item)}
+//         >
+//           <FontAwesome6
+//             name="file-pdf"
+//             size={20}
+//             color="#ffffffff"
+//             style={{ marginRight: 8 }}
+//           />
+//           {/* <Text style={styles.downloadText}>PDF</Text> */}
+//         </TouchableOpacity>
+//       </View>
+//     </TouchableOpacity>
+
+
+//   );
+
+//   return (
+//     <SafeAreaView style={styles.container}>
+//       <View style={styles.container}>
+//         <Header />
+//         <Text style={styles.headerText}>Fees Recipt</Text>
+//         {/* <TextInput
+//           style={styles.search}
+//           placeholder="Search by Receipt No or Ref No"
+//           value={searchText}
+//           onChangeText={setSearchText}
+//           onPress={hidefooter}
+//         /> */}
+//         {/* <Dropdown
+//           style={styles.dropdown}
+//           containerStyle={styles.dropdownContainer}
+//           placeholderStyle={styles.placeholderStyle}
+//           selectedTextStyle={styles.selectedTextStyle}
+//           data={sessionOptions}
+//           labelField="label"
+//           valueField="value"
+//           placeholder="Select Session"
+//           value={selectedSession}
+//           onChange={item => setSelectedSession(item.value)}
+//           maxHeight={300}
+//         />
+//         <Dropdown
+//           style={styles.dropdown}
+//           containerStyle={styles.dropdownContainer}
+//           placeholderStyle={styles.placeholderStyle}
+//           selectedTextStyle={styles.selectedTextStyle}
+//           data={purposeOptions}
+//           labelField="label"
+//           valueField="value"
+//           placeholder="Select Purpose"
+//           value={selectedPurpose}
+//           onChange={item => setSelectedPurpose(item.value)}
+//           maxHeight={300}
+//         /> */}
+
+//         {loading ? (
+//           <View
+//             style={{
+//               flex: 1, justifyContent: 'center', alignItems: 'center',
+//               marginTop: 50,
+//             }}>
+//             <ActivityIndicator size="large" color="#2e7d32" />
+//             <Text style={{ marginTop: 10 }}>Loading receipts...</Text>
+//           </View>
+//         ) : (
+//           <FlatList
+//             data={[...filtered]}
+//             renderItem={renderReceipt}
+//             keyExtractor={(item, index) => index.toString()}/>
+//         )}
+
+//         {/* Modal for showing details */}
+//         {selectedReceipt && (
+//           <Modal
+//             animationType="slide"
+//             transparent={true}
+//             visible={selectedReceipt !== null}
+//             onRequestClose={() => setSelectedReceipt(null)}
+//           >
+//             <View style={styles.modalOverlay}>
+//               <View style={styles.modalContainer}>
+//                 <ScrollView>
+//                   <Text style={styles.modalTitle}>🧾 Receipt Details</Text>
+
+//                   <View style={styles.modalItem}>
+//                     <Text style={styles.modalLabel}>Receipt No:</Text>
+//                     <Text style={styles.modalValue}>
+//                       {selectedReceipt?.Receipt_No}
+//                     </Text>
+//                   </View>
+
+//                   <View style={styles.modalItem}>
+//                     <Text style={styles.modalLabel}>Date:</Text>
+//                     <Text style={styles.modalValue}>
+//                       {selectedReceipt?.ReceiptDate}
+//                     </Text>
+//                   </View>
+
+//                   <View style={styles.modalItem}>
+//                     <Text style={styles.modalLabel}>Amount:</Text>
+//                     <Text style={styles.modalValue}>
+//                       ₹{selectedReceipt?.GrandTotal}
+//                     </Text>
+//                   </View>
+
+//                   <View style={styles.modalItem}>
+//                     <Text style={styles.modalLabel}>Payment Mode:</Text>
+//                     <Text style={styles.modalValue}>
+//                       {selectedReceipt?.PaymentMode}
+//                     </Text>
+//                   </View>
+
+//                   <View style={styles.modalItem}>
+//                     <Text style={styles.modalLabel}>Purpose:</Text>
+//                     <Text style={styles.modalValue}>
+//                       {selectedReceipt?.Fee_Purpose_Name}
+//                     </Text>
+//                   </View>
+
+//                   <View style={styles.modalItem}>
+//                     <Text style={styles.modalLabel}>Course / Semester:</Text>
+//                     <Text style={styles.modalValue}>
+//                       {selectedReceipt?.Course_Year_Name} -{' '}
+//                       {selectedReceipt?.Semester_Name}
+//                     </Text>
+//                   </View>
+
+//                   <View style={styles.modalItem}>
+//                     <Text style={styles.modalLabel}>Session:</Text>
+//                     <Text style={styles.modalValue}>
+//                       {selectedReceipt?.Academic_Session_Name_E}
+//                     </Text>
+//                   </View>
+//                 </ScrollView>
+
+//                 <TouchableOpacity
+//                   style={styles.closeButton}
+//                   onPress={() => setSelectedReceipt(null)}
+//                 >
+//                   <Text style={styles.closeButtonText}>Close</Text>
+//                 </TouchableOpacity>
+//               </View>
+//             </View>
+//           </Modal>
+//         )}
+//       </View>
+//       {!footerHide && (
+//         <View>
+//           <Footer />
+//         </View>
+//       )}
+//     </SafeAreaView>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   modalOverlay: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+//     padding: 20,
+//   },
+
+//   modalContainer: {
+//     backgroundColor: '#fff',
+//     borderRadius: 12,
+//     padding: 20,
+//     width: '100%',
+//     maxHeight: '80%',
+//   },
+
+//   modalTitle: {
+//     fontSize: 20,
+//     fontWeight: 'bold',
+//     marginBottom: 15,
+//     textAlign: 'center',
+//     color: '#333',
+//   },
+
+//   modalItem: {
+//     marginBottom: 12,
+//   },
+
+//   modalLabel: {
+//     fontSize: 14,
+//     color: '#777',
+//   },
+
+//   modalValue: {
+//     fontSize: 16,
+//     color: '#222',
+//     fontWeight: '500',
+//   },
+
+//   headerText: {
+//     margin: 10,
+//     padding: 10,
+//     borderRadius: 30,
+//     marginTop: 10,
+//     fontSize: 18,
+//     fontWeight: '600',
+//     textAlign: 'center',
+//     color: colors.background,
+//     backgroundColor:colors.bgcolor,
+//   },
+
+//   closeButton: {
+//     marginTop: 20,
+//     backgroundColor: '#CF524C',
+//     paddingVertical: 12,
+//     borderRadius: 8,
+//     alignItems: 'center',
+//   },
+
+//   closeButtonText: {
+//     color: '#fff',
+//     fontSize: 16,
+//     fontWeight: '600',
+//   },
+
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#e2e3e5ff'
+//   },
+//   search: {
+//     marginHorizontal: 15,
+//     marginTop: 5,
+//     marginBottom: 10,
+//     padding: 5,
+//     backgroundColor: '#fff',
+//     borderRadius: 8,
+//     borderWidth: 1,
+//     borderColor: '#a5d6a7',
+//   },
+
+//   dropdown: {
+//     marginHorizontal: 15,
+//     marginBottom: 10,
+//     height: 35,
+//     backgroundColor: '#fff',
+//     borderRadius: 8,
+//     paddingHorizontal: 5,
+//     borderWidth: 1,
+//     borderColor: '#a5d6a7',
+//   },
+//   dropdownContainer: {
+//     backgroundColor: '#fff',
+//     borderRadius: 8,
+//     borderWidth: 1,
+//     borderColor: '#a5d6a7',
+//     marginTop: 4,
+//     elevation: 5,
+//   },
+//   placeholderStyle: { fontSize: 14, color: '#999' },
+//   selectedTextStyle: { fontSize: 14, color: '#1b5e20' },
+//   card: {
+//     backgroundColor: '#CBCBCB',
+//     marginHorizontal: 10,
+//     marginVertical: 4,
+//     padding: 5,
+//     borderRadius: 12,
+//     shadowColor: '#000',
+//     shadowOpacity: 0.1,
+//     shadowRadius: 4,
+//     borderWidth: 2,
+//     borderColor: '#fff'
+//     // borderBottomWidth: 5,
+//     // borderBottomColor: '#ff922b',
+//   },
+//   cardGrid: {
+//     flexDirection: 'row',
+//     flexWrap: 'wrap',
+//     justifyContent: 'space-between',
+//   },
+//   headtittle: {
+//     width: '50%',
+//     fontSize: 16,
+//     fontWeight: 'bold',
+//     color: '#950202ff',
+//     marginBottom: 8,
+//     borderBottomWidth: 2,
+//     borderBottomColor: '#ffffffff',
+//   },
+//   gridItem: { width: '50%', fontSize: 14, color: '#333', marginBottom: 8 },
+//   downloadBtn: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     backgroundColor: colors.dangerD,
+//     padding: 6,
+//     borderRadius: 6,
+//     borderWidth: 2,
+//     borderColor: '#fff'
+
+//   },
+//   downloadText: { color: '#fff', fontWeight: 'bold' },
+// });
+
+// export default FeeReceipt;

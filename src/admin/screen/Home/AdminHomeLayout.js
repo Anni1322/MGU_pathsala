@@ -401,13 +401,13 @@ const AdminHomeLayout = () => {
       style={styles.gridItemWrapper}
       onPress={() => navigation.navigate(item.screen, { data: item.data })}
       activeOpacity={0.8}>
-      <View style={[styles.iconCard, { shadowColor: item.color || colors.footercolor }]}>
+      <View style={[styles.iconCard, { shadowColor: item.color || colors.bgcolor }]}>
         {item.count > 0 && (
-          <View style={[styles.badgeCount, { backgroundColor: item.color || colors.footercolor }]}>
+          <View style={[styles.badgeCount, { backgroundColor: item.color || colors.bgcolor }]}>
             <Text style={styles.badgeCountText}>{item.count}</Text>
           </View>
         )}
-        <FontAwesome6 name={item.icon} size={28} color={item.color || colors.footercolor} />
+        <FontAwesome6 name={item.icon} size={28} color={item.color || colors.bgcolor} />
       </View>
       <Text style={styles.gridLabel} numberOfLines={2}>{item.name}</Text>
     </TouchableOpacity>
@@ -657,13 +657,13 @@ const AdminHomeLayout = () => {
 
    return (
       <View style={styles.container}>
-        <StatusBar backgroundColor={colors.footercolor} barStyle="light-content" />
+        <StatusBar backgroundColor={colors.bgcolor} barStyle="light-content" />
         <Header />
   
         <ScrollView 
           style={styles.content} 
           showsVerticalScrollIndicator={false}
-          refreshControl={<RefreshControl refreshing={loading} onRefresh={handleRefresh} colors={[colors.footercolor]} />}
+          refreshControl={<RefreshControl refreshing={loading} onRefresh={handleRefresh} colors={[colors.bgcolor]} />}
         >
           <View style={styles.decorativeHeader}>
             <View style={styles.decorativeCircle} />
@@ -676,7 +676,7 @@ const AdminHomeLayout = () => {
                   <Text style={styles.greetingText}>Welcome back,</Text>
                   <Text style={styles.nameText} numberOfLines={1}>{profileData?.Emp_Name || 'Faculty Member'}</Text>
                   <View style={styles.badgeContainer}>
-                    <Text style={styles.badgeText}>{profileData?.Designation_Name || "Faculty"}</Text>
+                    <Text style={styles.badgeText}>{profileData?.Designation_Name || ""}</Text>
                   </View>
                 </View>
                 <View style={styles.imageWrapper}>
@@ -688,7 +688,7 @@ const AdminHomeLayout = () => {
               </View>
               {/* <div style={styles.divider} /> */}
               <View style={styles.degreeRow}>
-                <MaterialIcons name="business" size={16} color="#666" />
+                <FontAwesome6 name="address" size={16} color="#666" />
                 <Text style={styles.degreeText} numberOfLines={1}>{profileData?.Organization_Unit_Name || 'Department'}</Text>
               </View>
             </View>
@@ -696,11 +696,11 @@ const AdminHomeLayout = () => {
   
           <View style={styles.selectorSection}>
             <TouchableOpacity style={styles.pillButton} onPress={() => setModalVisibleSession(true)}>
-              <FontAwesome6 name="calendar" size={14} color={colors.footercolor} />
+              <FontAwesome6 name="calendar" size={14} color={colors.bgcolor} />
               <Text style={styles.pillText}>{SessionValue}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.pillButton} onPress={() => setModalVisibleSemester(true)}>
-              <FontAwesome6 name="book" size={14} color={colors.footercolor} />
+              <FontAwesome6 name="book" size={14} color={colors.bgcolor} />
               <Text style={styles.pillText}>{SemesterValue}</Text>
             </TouchableOpacity>
           </View>
@@ -720,6 +720,8 @@ const AdminHomeLayout = () => {
               {updatedMenu.map(renderGridItem)}
             </View>
           </View>
+
+        <BirthdaySlider/>
         </ScrollView>
   
         {/* --- SESSION MODAL --- */}
@@ -766,7 +768,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F8F9FD' },
   content: { flex: 1 },
   decorativeHeader: {
-    backgroundColor: colors.footercolor, height: 180, borderBottomLeftRadius: 30, borderBottomRightRadius: 30,
+    backgroundColor: colors.bgcolor, height: 180, borderBottomLeftRadius: 30, borderBottomRightRadius: 30,
     position: 'absolute', top: 0, left: 0, right: 0,
   },
   decorativeCircle: {
@@ -782,7 +784,7 @@ const styles = StyleSheet.create({
   greetingText: { fontSize: 13, color: '#888', fontWeight: '500' },
   nameText: { fontSize: 20, fontWeight: '800', color: '#1a1a1a', marginVertical: 4 },
   badgeContainer: { backgroundColor: '#E3F2FD', paddingVertical: 4, paddingHorizontal: 10, borderRadius: 20, alignSelf: 'flex-start' },
-  badgeText: { color: colors.footercolor, fontWeight: '700', fontSize: 10 },
+  badgeText: { color: colors.bgcolor, fontWeight: '700', fontSize: 10 },
   imageWrapper: { padding: 3, backgroundColor: '#fff', borderRadius: 40, elevation: 5 },
   profileImage: { width: 60, height: 60, borderRadius: 30 },
   divider: { height: 1, backgroundColor: '#f0f0f0', marginVertical: 15 },
@@ -795,10 +797,10 @@ const styles = StyleSheet.create({
   },
   pillText: { fontSize: 12, fontWeight: '700', color: '#444', marginLeft: 5 },
   sliderWrapper: { marginVertical: 10 },
-  sectionContainer: { marginTop: 10, paddingHorizontal: 20, paddingBottom: 100 },
+  sectionContainer: { marginTop: 10, paddingHorizontal: 20, paddingBottom: 10 },
   headerRow: { marginBottom: 20 },
   titleWrapper: { flexDirection: 'row', alignItems: 'center' },
-  verticalBar: { width: 4, height: 20, backgroundColor: colors.footercolor, borderRadius: 2, marginRight: 8 },
+  verticalBar: { width: 4, height: 20, backgroundColor: colors.bgcolor, borderRadius: 2, marginRight: 8 },
   sectionTitle: { fontSize: 18, fontWeight: 'bold', color: '#222' },
   gridContainer: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start' },
   gridItemWrapper: { width: '25%', alignItems: 'center', marginBottom: 20 },
@@ -813,7 +815,7 @@ const styles = StyleSheet.create({
   // Modal Styles
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
   modalContent: { width: '80%', backgroundColor: 'white', borderRadius: 20, padding: 20, maxHeight: '60%' },
-  modalHeader: { fontSize: 18, fontWeight: 'bold', color: colors.footercolor, textAlign: 'center', marginBottom: 15 },
+  modalHeader: { fontSize: 18, fontWeight: 'bold', color: colors.bgcolor, textAlign: 'center', marginBottom: 15 },
   modalItem: { paddingVertical: 15, borderBottomWidth: 1, borderBottomColor: '#eee' },
   modalItemText: { fontSize: 16, textAlign: 'center', color: '#333' }
 });
@@ -1495,7 +1497,7 @@ export default AdminHomeLayout;
 //     alignItems: 'center',
 //     padding: 10,
 //     borderRadius: 10,
-//     backgroundColor: colors.footercolor
+//     backgroundColor: colors.bgcolor
 //   },
 //   modalTitle: {
 //     fontSize: 18,
@@ -1625,7 +1627,7 @@ export default AdminHomeLayout;
 //   userName: { fontWeight: 'bold', fontSize: 18, color: 'black' },
 //   userHandle: { color: 'gray', fontSize: 14 },
 //   sectionTitle: {
-//     color: colors.footercolor,
+//     color: colors.bgcolor,
 //     fontWeight: 'bold',
 //     fontSize: 16,
 //     marginBottom: 8,

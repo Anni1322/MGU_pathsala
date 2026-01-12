@@ -94,7 +94,7 @@ export default function Header({ title, backgroundColor }) {
   return (
     <>
       {/* Status bar matches the header color for a seamless look */}
-      <StatusBar backgroundColor={colors.footercolor} barStyle="light-content" />
+      <StatusBar backgroundColor={colors.bgcolor} barStyle="light-content" />
       
       {/* Sidebar Component */}
       <MenuScreen sidebarX={slideAnim} />
@@ -109,7 +109,7 @@ export default function Header({ title, backgroundColor }) {
       )}
 
       {/* --- VIBRANT HEADER --- */}
-      <View style={[styles.headerContainer, { backgroundColor: colors.footercolor }]}>
+      <View style={[styles.headerContainer, { backgroundColor: colors.bgcolor }]}>
         
         {/* Decorative Glow (Adds Texture) */}
         <View style={styles.glowCircle} />

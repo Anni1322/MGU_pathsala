@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -9,6 +10,7 @@ import {
   ScrollView,
   Dimensions,
   Linking,
+  StatusBar,
 } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -18,42 +20,35 @@ import AuthService from "../../../common/Services/AuthService";
 import alertService from "../../../common/Services/alert/AlertService";
 import SessionService from "../../../common/Services/SessionService";
 
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
-const SIDEBAR_WIDTH = SCREEN_WIDTH * 0.7;
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+const SIDEBAR_WIDTH = SCREEN_WIDTH * 0.75; // 75% for better reach
 
 const menuSections = [
   {
-    title: "MAIN MENU",
+    title: "Main Explorer",
     items: [
-      { id: 4, title: "Website", icon: "🌐", screen: "Website", link: "https://mguvv.ac.in/" },
-      { id: 5, title: "Tell your friends", icon: "🤹🏻‍♂️", screen: "ShareApp", link: "https://play.google.com/store/apps/details?id=mguvvmis.mguvv" },
-      { id: 7, title: "Like MOR GURUKUL ? Rate it!", icon: "⭐", screen: "RateUs", link: "https://play.google.com/store/apps/details?id=mguvvmis.mguvv" },
+      { id: 4, title: "Official Website", icon: "🌐", screen: "Website", link: "https://mguvv.ac.in/" },
+      { id: 5, title: "Refer to Friends", icon: "🎁", screen: "ShareApp", link: "https://play.google.com/store/apps/details?id=mguvvmis.mguvv" },
+      { id: 7, title: "Rate Our App", icon: "⭐", screen: "RateUs", link: "https://play.google.com/store/apps/details?id=mguvvmis.mguvv" },
     ]
   },
   {
-    title: "ABOUT",
+    title: "Discovery",
     items: [
-      { id: 12, title: "Team Member", icon: "👥", screen: "Maintenance" },
+      { id: 12, title: "Meet the Team", icon: "👥", screen: "Maintenance" },
+      { id: 15, title: "Privacy Policy", icon: "🛡️", screen: "Privacy Policy", link: 'https://mguvv.ac.in/' },
     ]
   },
   {
-    title: "ACCOUNT",
+    title: "System",
     items: [
-      { id: 14, title: "Logout", icon: "🚪", screen: "Logout", isLogout: true },
-    ]
-  },
-  {
-    title: "LEGAL",
-    items: [
-      { id: 15, title: "Privacy Policy", icon: "📃", screen: "Privacy Policy", link: 'https://mguvv.ac.in/' },
+      { id: 14, title: "Sign Out", icon: "🚀", screen: "Logout", isLogout: true },
     ]
   },
 ];
 
 export default function SidebarMenu({ sidebarX }) {
   const navigation = useNavigation();
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const [activeItem, setActiveItem] = useState(null);
   const [profileData, setProfileData] = useState(null);
 
   useEffect(() => {
@@ -70,125 +65,87 @@ export default function SidebarMenu({ sidebarX }) {
 
   const handleLogoutPress = () => {
     alertService.show({
-      title: "Logout",
-      message: "Are you sure you want to logout?",
+      title: "Sign Out",
+      message: "Are you ready to leave your session?",
       type: "warn",
-      buttonText: "Yes",
-      cancelText: "No",
+      buttonText: "Logout",
+      cancelText: "Stay",
       onPress: async () => {
         await AuthService.logout();
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "Auth" }],
-        });
+        navigation.reset({ index: 0, routes: [{ name: "Auth" }] });
       },
     });
   };
 
   const handleMenuItemPress = (item) => {
-    if (!item || !item.screen) return;
-    setActiveItem(item.title);
-
-    if (item.screen === 'Logout') {
-      handleLogoutPress();
-      return;
-    }
-
+    if (item.isLogout) return handleLogoutPress();
     if (item.link) {
-      if (item.title === 'Tell your friends') {
-        Share.open({
-          title: 'Share via',
-          message: `Check out this awesome app: ${item.link}`,
-          url: item.link,
-        }).catch((err) => console.log(err));
+      if (item.id === 5) {
+        Share.open({ message: `Level up your education with Mor Gurukul: ${item.link}` }).catch(() => {});
       } else {
-        Linking.openURL(item.link).catch((err) => console.error('Link Error', err));
+        Linking.openURL(item.link).catch(() => {});
       }
       return;
     }
-
     navigation.navigate(item.screen);
   };
 
   return (
     <Animated.View style={[styles.sidebar, { transform: [{ translateX: sidebarX }] }]}>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        
-        {/* Profile Header */}
-        <TouchableOpacity 
-          activeOpacity={0.8} 
-          style={styles.profileSectionWrapper}
-          onPress={() => navigation.navigate('Profile')} // Navigates to a profile screen
+      <StatusBar barStyle="dark-content" />
+      
+      {/* Dynamic Profile Header */}
+      <View style={styles.headerContainer}>
+        <LinearGradient
+          colors={['#0F172A', '#1E293B']}
+          style={styles.profileCard}
         >
-          <LinearGradient
-            colors={['#ffffff', '#e4efff', '#d4f1ff']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.profileSection}
-          >
-            <View style={styles.profileAvatarPlaceholder}>
-               <Text style={styles.avatarText}>
-                 {profileData?.Emp_Name?.charAt(0) || 'U'}
-               </Text>
-            </View>
-            <View style={styles.profileInfo}>
-              <Text style={styles.profileName} numberOfLines={1}>
-                {profileData?.Emp_Name || "User Name"}
+          <View style={styles.avatarGlow}>
+            <View style={styles.avatarCircle}>
+              <Text style={styles.avatarInitials}>
+                {profileData?.Emp_Name?.charAt(0) || 'S'}
               </Text>
-              <Text style={styles.profileSubtitle}>View Profile</Text>
             </View>
-            <Text style={styles.chevron}>›</Text>
-          </LinearGradient>
-        </TouchableOpacity>
+          </View>
+          <View style={styles.profileTextContainer}>
+            <Text style={styles.userName} numberOfLines={1}>
+              {profileData?.Emp_Name || "Student Name"}
+            </Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+              <Text style={styles.viewProfileLabel}>Edit Profile ›</Text>
+            </TouchableOpacity>
+          </View>
+        </LinearGradient>
+      </View>
 
-        {/* Menu Sections */}
-        {menuSections.map((section, sectionIndex) => (
-          <View key={sectionIndex} style={styles.section}>
-            {section.title ? <Text style={styles.sectionTitle}>{section.title}</Text> : null}
-
+      <ScrollView style={styles.scrollBody} showsVerticalScrollIndicator={false}>
+        {menuSections.map((section, idx) => (
+          <View key={idx} style={styles.sectionGroup}>
+            <Text style={styles.sectionHeading}>{section.title}</Text>
             {section.items.map((item) => (
               <TouchableOpacity
                 key={item.id}
-                style={[
-                  styles.menuItem,
-                  activeItem === item.title && styles.activeMenuItem,
-                  item.isLogout && styles.logoutItem
-                ]}
+                style={[styles.navItem, item.isLogout && styles.logoutNav]}
                 onPress={() => handleMenuItemPress(item)}
+                activeOpacity={0.7}
               >
-                <View style={styles.menuItemLeft}>
-                  <Text style={styles.itemIcon}>{item.icon}</Text>
-                  <Text style={[
-                    styles.menuItemText,
-                    item.isLogout && styles.logoutText
-                  ]}>
-                    {item.title}
-                  </Text>
-                  
-                  {item.title === "Online Degree" && (
-                    <View style={styles.newBadge}>
-                      <Text style={styles.newBadgeText}>New</Text>
-                    </View>
-                  )}
+                <View style={[styles.iconBox, item.isLogout && styles.logoutIconBox]}>
+                  <Text style={styles.icon}>{item.icon}</Text>
                 </View>
-
-                <View style={styles.menuItemRight}>
-                  {item.hasSwitch && (
-                    <Switch
-                      value={isDarkMode}
-                      onValueChange={setIsDarkMode}
-                      trackColor={{ false: "#cbd5e1", true: "#81b0ff" }}
-                    />
-                  )}
-                </View>
+                <Text style={[styles.navLabel, item.isLogout && styles.logoutLabel]}>
+                  {item.title}
+                </Text>
+                {item.id === 4 && (
+                  <View style={styles.liveBadge}><Text style={styles.liveText}>Live</Text></View>
+                )}
               </TouchableOpacity>
             ))}
           </View>
         ))}
       </ScrollView>
-      
-      <View style={styles.footer}>
-        <Text style={styles.versionText}>Version 1.0.4</Text>
+
+      <View style={styles.sidebarFooter}>
+        <Text style={styles.footerVersion}>MGUVV • v1.0.4 build 2026</Text>
       </View>
     </Animated.View>
   );
@@ -198,86 +155,435 @@ const styles = StyleSheet.create({
   sidebar: {
     position: "absolute",
     left: 0,
-    top: 0,
+    top: 10,
     bottom: 0,
     width: SIDEBAR_WIDTH,
-    backgroundColor: "#fff",
-    zIndex: 100,
-    elevation: 10,
+    backgroundColor: "#e8eaebff", // Clean Slate background
+    zIndex: 1000,
+    borderTopRightRadius: 30,
+    borderBottomRightRadius: 30,
+    elevation: 20,
     shadowColor: '#000',
-    shadowOffset: { width: 2, height: 0 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
+    shadowOpacity: 0.2,
+    shadowRadius: 15,
+   
   },
-  scrollView: { flex: 1 },
-  profileSectionWrapper: {
-    overflow: 'hidden',
+  headerContainer: {
+    padding: 20,
+    paddingTop: 50,
+    backgroundColor: '#FFF',
     borderBottomRightRadius: 30,
   },
-  profileSection: {
-    paddingTop: 60,
-    paddingBottom: 25,
-    paddingHorizontal: 20,
+  profileCard: {
     flexDirection: 'row',
     alignItems: 'center',
+    padding: 18,
+    borderRadius: 20,
+    elevation: 8,
+    shadowColor: '#334155',
   },
-  profileAvatarPlaceholder: {
+  avatarGlow: {
+    padding: 3,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderRadius: 18,
+  },
+  avatarCircle: {
     width: 50,
     height: 50,
     borderRadius: 15,
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#38BDF8',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  avatarInitials: {
+    color: '#FFF',
+    fontSize: 22,
+    fontWeight: '800',
+  },
+  profileTextContainer: {
+    marginLeft: 15,
+    flex: 1,
+  },
+  userName: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#F8FAFC',
+  },
+  viewProfileLabel: {
+    fontSize: 12,
+    color: '#38BDF8',
+    marginTop: 4,
+    fontWeight: '600',
+  },
+  scrollBody: {
+    flex: 1,
+    paddingHorizontal: 15,
+  },
+  sectionGroup: {
+    marginTop: 25,
+  },
+  sectionHeading: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: '#94A3B8',
+    paddingLeft: 10,
+    marginBottom: 10,
+    textTransform: 'uppercase',
+    letterSpacing: 2,
+  },
+  navItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 12,
+    backgroundColor: '#FFF',
+    borderRadius: 16,
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: '#F1F5F9',
+  },
+  iconBox: {
+    width: 36,
+    height: 36,
+    backgroundColor: '#F1F5F9',
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 15,
   },
-  avatarText: { color: '#fff', fontWeight: 'bold', fontSize: 20 },
-  profileInfo: { flex: 1 },
-  profileName: { fontSize: 18, fontWeight: '700', color: '#1e293b' },
-  profileSubtitle: { fontSize: 12, color: '#64748b', marginTop: 2 },
-  chevron: { fontSize: 24, color: '#94a3b8' },
-  section: { marginTop: 20 },
-  sectionTitle: {
-    fontSize: 11,
-    fontWeight: '800',
-    color: '#94a3b8',
-    paddingHorizontal: 20,
-    marginBottom: 10,
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-    flexWrap:'wrap'
+  icon: {
+    fontSize: 16,
   },
-  menuItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingVertical: 12,
-    paddingHorizontal: 15,
-    marginHorizontal: 10,
-    borderRadius: 12,
+  navLabel: {
+    fontSize: 15,
+    color: '#334155',
+    fontWeight: '600',
+    flex: 1,
   },
-  activeMenuItem: { backgroundColor: '#f1f5f9' },
-  menuItemLeft: { flexDirection: "row", alignItems: "center", flex: 1 },
-  itemIcon: { fontSize: 18, marginRight: 12, width: 25, textAlign: 'center' },
-  menuItemText: { fontSize: 15, color: '#334155', fontWeight: '600' },
-  menuItemRight: { flexDirection: 'row', alignItems: 'center' },
-  newBadge: {
-    backgroundColor: '#3b82f6',
-    paddingHorizontal: 6,
+  liveBadge: {
+    backgroundColor: '#10B981',
+    paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 6,
-    marginLeft: 8,
   },
-  newBadgeText: { color: '#fff', fontSize: 10, fontWeight: 'bold' },
-  logoutItem: { marginTop: 10, backgroundColor: '#fff1f2' },
-  logoutText: { color: '#e11d48' },
-  footer: {
-    padding: 20,
-    borderTopWidth: 1,
-    borderTopColor: '#f1f5f9',
+  liveText: {
+    color: '#FFF',
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
+  logoutNav: {
+    backgroundColor: '#FFF1F2',
+    borderColor: '#FFE4E6',
+    marginTop: 20,
+  },
+  logoutIconBox: {
+    backgroundColor: '#FFE4E6',
+  },
+  logoutLabel: {
+    color: '#E11D48',
+  },
+  sidebarFooter: {
+    padding: 25,
     alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: '#F1F5F9',
   },
-  versionText: { fontSize: 11, color: '#94a3b8', fontWeight: '600' },
+  footerVersion: {
+    fontSize: 10,
+    color: '#CBD5E1',
+    fontWeight: '700',
+    letterSpacing: 1,
+  },
 });
+
+
+
+
+
+
+
+
+
+
+// import React, { useState, useEffect } from "react";
+// import {
+//   View,
+//   Text,
+//   TouchableOpacity,
+//   StyleSheet,
+//   Animated,
+//   Switch,
+//   ScrollView,
+//   Dimensions,
+//   Linking,
+// } from "react-native";
+// import { useNavigation } from '@react-navigation/native';
+// import LinearGradient from 'react-native-linear-gradient';
+// import Share from 'react-native-share';
+
+// import AuthService from "../../../common/Services/AuthService";
+// import alertService from "../../../common/Services/alert/AlertService";
+// import SessionService from "../../../common/Services/SessionService";
+
+// const { width: SCREEN_WIDTH } = Dimensions.get("window");
+// const SIDEBAR_WIDTH = SCREEN_WIDTH * 0.7;
+
+// const menuSections = [
+//   {
+//     title: "MAIN MENU",
+//     items: [
+//       { id: 4, title: "Website", icon: "🌐", screen: "Website", link: "https://mguvv.ac.in/" },
+//       { id: 5, title: "Tell your friends", icon: "🤹🏻‍♂️", screen: "ShareApp", link: "https://play.google.com/store/apps/details?id=mguvvmis.mguvv" },
+//       { id: 7, title: "Like MOR GURUKUL ? Rate it!", icon: "⭐", screen: "RateUs", link: "https://play.google.com/store/apps/details?id=mguvvmis.mguvv" },
+//     ]
+//   },
+//   {
+//     title: "ABOUT",
+//     items: [
+//       { id: 12, title: "Team Member", icon: "👥", screen: "Maintenance" },
+//     ]
+//   },
+//   {
+//     title: "ACCOUNT",
+//     items: [
+//       { id: 14, title: "Logout", icon: "🚪", screen: "Logout", isLogout: true },
+//     ]
+//   },
+//   {
+//     title: "LEGAL",
+//     items: [
+//       { id: 15, title: "Privacy Policy", icon: "📃", screen: "Privacy Policy", link: 'https://mguvv.ac.in/' },
+//     ]
+//   },
+// ];
+
+// export default function SidebarMenu({ sidebarX }) {
+//   const navigation = useNavigation();
+//   const [isDarkMode, setIsDarkMode] = useState(false);
+//   const [activeItem, setActiveItem] = useState(null);
+//   const [profileData, setProfileData] = useState(null);
+
+//   useEffect(() => {
+//     let isMounted = true;
+//     const fetchSession = async () => {
+//       const sessionData = await SessionService.getSession();
+//       const data = sessionData?.LoginDetail[0];
+//       if (!data || !isMounted) return;
+//       setProfileData(data);
+//     };
+//     fetchSession();
+//     return () => { isMounted = false; };
+//   }, []);
+
+//   const handleLogoutPress = () => {
+//     alertService.show({
+//       title: "Logout",
+//       message: "Are you sure you want to logout?",
+//       type: "warn",
+//       buttonText: "Yes",
+//       cancelText: "No",
+//       onPress: async () => {
+//         await AuthService.logout();
+//         navigation.reset({
+//           index: 0,
+//           routes: [{ name: "Auth" }],
+//         });
+//       },
+//     });
+//   };
+
+//   const handleMenuItemPress = (item) => {
+//     if (!item || !item.screen) return;
+//     setActiveItem(item.title);
+
+//     if (item.screen === 'Logout') {
+//       handleLogoutPress();
+//       return;
+//     }
+
+//     if (item.link) {
+//       if (item.title === 'Tell your friends') {
+//         Share.open({
+//           title: 'Share via',
+//           message: `Check out this awesome app: ${item.link}`,
+//           url: item.link,
+//         }).catch((err) => console.log(err));
+//       } else {
+//         Linking.openURL(item.link).catch((err) => console.error('Link Error', err));
+//       }
+//       return;
+//     }
+
+//     navigation.navigate(item.screen);
+//   };
+
+//   return (
+//     <Animated.View style={[styles.sidebar, { transform: [{ translateX: sidebarX }] }]}>
+//       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        
+//         {/* Profile Header */}
+//         <TouchableOpacity 
+//           activeOpacity={0.8} 
+//           style={styles.profileSectionWrapper}
+//           onPress={() => navigation.navigate('Profile')} // Navigates to a profile screen
+//         >
+//           <LinearGradient
+//             colors={['#ffffff', '#e4efff', '#d4f1ff']}
+//             start={{ x: 0, y: 0 }}
+//             end={{ x: 1, y: 1 }}
+//             style={styles.profileSection}
+//           >
+//             <View style={styles.profileAvatarPlaceholder}>
+//                <Text style={styles.avatarText}>
+//                  {profileData?.Emp_Name?.charAt(0) || 'U'}
+//                </Text>
+//             </View>
+//             <View style={styles.profileInfo}>
+//               <Text style={styles.profileName} numberOfLines={1}>
+//                 {profileData?.Emp_Name || "User Name"}
+//               </Text>
+//               <Text style={styles.profileSubtitle}>View Profile</Text>
+//             </View>
+//             <Text style={styles.chevron}>›</Text>
+//           </LinearGradient>
+//         </TouchableOpacity>
+
+//         {/* Menu Sections */}
+//         {menuSections.map((section, sectionIndex) => (
+//           <View key={sectionIndex} style={styles.section}>
+//             {section.title ? <Text style={styles.sectionTitle}>{section.title}</Text> : null}
+
+//             {section.items.map((item) => (
+//               <TouchableOpacity
+//                 key={item.id}
+//                 style={[
+//                   styles.menuItem,
+//                   activeItem === item.title && styles.activeMenuItem,
+//                   item.isLogout && styles.logoutItem
+//                 ]}
+//                 onPress={() => handleMenuItemPress(item)}
+//               >
+//                 <View style={styles.menuItemLeft}>
+//                   <Text style={styles.itemIcon}>{item.icon}</Text>
+//                   <Text style={[
+//                     styles.menuItemText,
+//                     item.isLogout && styles.logoutText
+//                   ]}>
+//                     {item.title}
+//                   </Text>
+                  
+//                   {item.title === "Online Degree" && (
+//                     <View style={styles.newBadge}>
+//                       <Text style={styles.newBadgeText}>New</Text>
+//                     </View>
+//                   )}
+//                 </View>
+
+//                 <View style={styles.menuItemRight}>
+//                   {item.hasSwitch && (
+//                     <Switch
+//                       value={isDarkMode}
+//                       onValueChange={setIsDarkMode}
+//                       trackColor={{ false: "#cbd5e1", true: "#81b0ff" }}
+//                     />
+//                   )}
+//                 </View>
+//               </TouchableOpacity>
+//             ))}
+//           </View>
+//         ))}
+//       </ScrollView>
+      
+//       <View style={styles.footer}>
+//         <Text style={styles.versionText}>Version 1.0.4</Text>
+//       </View>
+//     </Animated.View>
+//   );
+// }
+
+// const styles = StyleSheet.create({
+//   sidebar: {
+//     position: "absolute",
+//     left: 0,
+//     top: 0,
+//     bottom: 0,
+//     width: SIDEBAR_WIDTH,
+//     backgroundColor: "#fff",
+//     zIndex: 100,
+//     elevation: 10,
+//     shadowColor: '#000',
+//     shadowOffset: { width: 2, height: 0 },
+//     shadowOpacity: 0.1,
+//     shadowRadius: 5,
+//   },
+//   scrollView: { flex: 1 },
+//   profileSectionWrapper: {
+//     overflow: 'hidden',
+//     borderBottomRightRadius: 30,
+//   },
+//   profileSection: {
+//     paddingTop: 60,
+//     paddingBottom: 25,
+//     paddingHorizontal: 20,
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//   },
+//   profileAvatarPlaceholder: {
+//     width: 50,
+//     height: 50,
+//     borderRadius: 15,
+//     backgroundColor: '#3b82f6',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     marginRight: 15,
+//   },
+//   avatarText: { color: '#fff', fontWeight: 'bold', fontSize: 20 },
+//   profileInfo: { flex: 1 },
+//   profileName: { fontSize: 18, fontWeight: '700', color: '#1e293b' },
+//   profileSubtitle: { fontSize: 12, color: '#64748b', marginTop: 2 },
+//   chevron: { fontSize: 24, color: '#94a3b8' },
+//   section: { marginTop: 20 },
+//   sectionTitle: {
+//     fontSize: 11,
+//     fontWeight: '800',
+//     color: '#94a3b8',
+//     paddingHorizontal: 20,
+//     marginBottom: 10,
+//     textTransform: 'uppercase',
+//     letterSpacing: 1,
+//     flexWrap:'wrap'
+//   },
+//   menuItem: {
+//     flexDirection: "row",
+//     alignItems: "center",
+//     justifyContent: "space-between",
+//     paddingVertical: 12,
+//     paddingHorizontal: 15,
+//     marginHorizontal: 10,
+//     borderRadius: 12,
+//   },
+//   activeMenuItem: { backgroundColor: '#f1f5f9' },
+//   menuItemLeft: { flexDirection: "row", alignItems: "center", flex: 1 },
+//   itemIcon: { fontSize: 18, marginRight: 12, width: 25, textAlign: 'center' },
+//   menuItemText: { fontSize: 15, color: '#334155', fontWeight: '600' },
+//   menuItemRight: { flexDirection: 'row', alignItems: 'center' },
+//   newBadge: {
+//     backgroundColor: '#3b82f6',
+//     paddingHorizontal: 6,
+//     paddingVertical: 2,
+//     borderRadius: 6,
+//     marginLeft: 8,
+//   },
+//   newBadgeText: { color: '#fff', fontSize: 10, fontWeight: 'bold' },
+//   logoutItem: { marginTop: 10, backgroundColor: '#fff1f2' },
+//   logoutText: { color: '#e11d48' },
+//   footer: {
+//     padding: 20,
+//     borderTopWidth: 1,
+//     borderTopColor: '#f1f5f9',
+//     alignItems: 'center',
+//   },
+//   versionText: { fontSize: 11, color: '#94a3b8', fontWeight: '600' },
+// });
 
 
 
