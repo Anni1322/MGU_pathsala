@@ -783,7 +783,7 @@ export default function UploadAssignments() {
           } finally {
             setLoading(false);
             setIsModalVisible(false);
-            navigation.navigate('StudyMaterials')
+            navigation.navigate('MyAssignment')
           }
         }
       },

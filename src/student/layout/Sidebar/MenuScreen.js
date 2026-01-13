@@ -43,7 +43,7 @@ export default function MenuScreen({ sidebarX, closeMenu }) {
     {
       title: "CONTENT",
       items: [
-        { id: 9, title: "Library", icon: "📖", screen: "Library", link: 'https://mguvv.ac.in/' },
+        { id: 9, title: "Library", icon: "📖", screen: "Library", link: 'https://mguvv.ac.in/angular/' },
       ]
     },
     {

@@ -21,10 +21,10 @@ const menuItems = [
     isHome: false,
   },
   {
-    key: 'assignment',
+    key: 'MyStudents',
     iconName: 'book',
-    label: 'Assignment',
-    routeName: 'Maintenance',
+    label: 'My Students',
+    routeName: 'MyStudents',
     isHome: false,
   },
   {
@@ -35,10 +35,10 @@ const menuItems = [
     isHome: true,
   },
   {
-    key: 'qrscanner',
-    iconName: 'camera',
-    label: 'QRScanner',
-    routeName: 'Maintenance',
+    key: 'MyCourses',
+    iconName:'users',
+    label: 'Student List',
+    routeName: 'MyCourses',
     isHome: false,
   },
   {
@@ -74,9 +74,9 @@ export default function FooterNav() {
         <Path
           d={`M0 60 Q${width / 2} 0 ${width} 60`}
           fill="none"
-          stroke="#ffffffff"
-          strokeWidth="8"
-          opacity={0.2} // Subtle white border on top of the curve
+          stroke="rgb(255, 255, 255)"
+          strokeWidth="10"
+          opacity={1.2} // Subtle white border on top of the curve
         />
       </Svg>
 
@@ -100,10 +100,10 @@ export default function FooterNav() {
               >
                 <View style={[
                   styles.homeBtnCircle, 
-                  { backgroundColor: colors.dangerD || colors.primary },
+                  { backgroundColor: colors.backgroundlite || colors.primary },
                   isActive && { borderColor: ACTIVE_COLOR, borderWidth: 5 } 
                 ]}>
-                  <FontAwesome6 name={item.iconName} size={30} color="#FFFFFF" />
+                  <FontAwesome6 name={item.iconName} size={30} color="#4c60d1" />
                 </View>
               </TouchableOpacity>
             );

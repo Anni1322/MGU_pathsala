@@ -89,7 +89,9 @@ const MyCourses = ({ route }) => {
         Degree_Programme_Type_Id: courseObj.Degree_Programme_Type_Id,
         Subject_Id: '',
       };
+      console.log(payload,"payload");
       const response = await HttpService.get(getApiList().getCourseWiseStudentList, payload);
+      console.log(response,"response");
       setStudents(response?.data.StudentList || []);
     } catch (error) {
       console.error("fetchStudents failed");
@@ -97,6 +99,8 @@ const MyCourses = ({ route }) => {
       setStudentLoading(false);
     }
   }, [empId, courses]);
+
+  
 
   // --- 3. Initial Load ---
   useEffect(() => {
@@ -199,17 +203,22 @@ const MyCourses = ({ route }) => {
         {/* Course Cards Scroll */}
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.courseScroll}>
           {courses.map((course, index) => (
+            <View>
+               <Text style={styles.filterBtnText}> Course List</Text>
             <TouchableOpacity 
-              key={course.course_id} 
-              onPress={() => setSelectedCourseId(course.course_id)}
-              style={[styles.courseCard, selectedCourseId === course.course_id && styles.activeCard]}
-            >
+                key={course.course_id} 
+                onPress={() => setSelectedCourseId(course.course_id)}
+                style={[styles.courseCard, selectedCourseId === course.course_id && styles.activeCard]}
+              >
+             
               <View style={[styles.courseIcon, { backgroundColor: badgeColors[index % badgeColors.length] + '20' }]}>
                  <FontAwesome6 name="book" size={16} color={badgeColors[index % badgeColors.length]} />
               </View>
               <Text style={styles.courseCode}>{course.Course_code}</Text>
               <Text style={styles.studentCount}>{course.TotalStudents} Students</Text>
             </TouchableOpacity>
+            </View>
+   
           ))}
         </ScrollView>
 
@@ -286,7 +295,7 @@ const MyCourses = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f8fafc' },
+  container: { flex: 1, backgroundColor: '#f8fafc', paddingTop: -39, },
   filterRow: { flexDirection: 'row', padding: 20, justifyContent: 'space-between' },
   filterBtn: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', padding: 12, borderRadius: 12, width: '48%', borderWidth: 1, borderColor: '#e2e8f0', elevation: 1 },
   filterBtnText: { flex: 1, color: '#1e293b', fontWeight: 'bold' },

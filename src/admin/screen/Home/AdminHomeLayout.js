@@ -142,7 +142,7 @@ const AdminHomeLayout = () => {
           const updatedSession = {
             ...currentSession,
             SelectedSemester: selectedSemester,
-            SelectedSession: selectedSession,
+            SelectedSession: selectedSession || 1,
           };
           await SessionService.saveSession(updatedSession);
           await loadData(selectedSession, selectedSemester, EmpId);
@@ -154,9 +154,6 @@ const AdminHomeLayout = () => {
       getCurrentAcademicSession();
     }
   }, [selectedSemester, selectedSession, EmpId, loadData]);
-
-  
-
 
   
   const fetchInitialDataAndSetup = useCallback(async () => {
@@ -173,12 +170,12 @@ const AdminHomeLayout = () => {
       setOfficeList(sessionData?.LoginDetail)
 
       // const sessionFromStorage = sessionData?.SelectedSession ;
-      const sessionFromStorage = sessionData?.SelectedSession || STATIC_SESSION_DATA[0].session_id;
+      const sessionFromStorage = sessionData?.SelectedSession || STATIC_SESSION_DATA[1].session_id;
       const semesterFromStorage = sessionData?.SelectedSemester || STATIC_SEMESTERS[0].semester_id;
       setSelectedSession(sessionFromStorage);
       setSelectedSemester(semesterFromStorage);
       // setSessionValue(sessionData?.SelectedSession)
-      setSessionValue(STATIC_SESSION_DATA[0].label)
+      setSessionValue(STATIC_SESSION_DATA[1].label)
       setSemesterValue(STATIC_SEMESTERS[0].label)
 
       if (initialEmpId) {
@@ -265,14 +262,6 @@ const AdminHomeLayout = () => {
       const response = await HttpService.get(CourseWiseDashCountApi, payload);
       if (response?.status === 200) {
         setMyCourse(response.data);
-
-        // setMyAssignment({
-        //   Semester_Id: semester,
-        //   Academic_session: session,
-        //   Emp_Id: empId,
-        //   data: response.data
-        // });
-
       }
     } catch (error) {
       console.error("fetchMyCourses failed:", error);
@@ -342,24 +331,6 @@ const AdminHomeLayout = () => {
   // onOfficeSelect = async (office) => {
   //   console.log(office, "office list")
   //   closeModal();
-
-
-  //   //  try {
-  //   //       const currentSession = await SessionService.getSession();
-  //   //       if (!currentSession) return;
-  //   //       const updatedSession = {
-  //   //         ...currentSession,
-  //   //         SelectedSemester: selectedSemester,
-  //   //         SelectedSession: selectedSession,
-  //   //       };
-  //   //       await SessionService.saveSession(updatedSession);
-  //   //       await loadData(selectedSession, selectedSemester, EmpId);
-
-  //   //     } catch (error) {
-  //   //       console.error("Failed to update session:", error);
-  //   //     }
-
-  // }
 
 
   const updatedMenu = useMemo(() =>
@@ -523,138 +494,6 @@ const AdminHomeLayout = () => {
 
   // ^ -----------------------------------model end
 
-  // return (
-  //   <View style={styles.container}>
-  //     <Header />
-  //     {/* <UpdateChecker /> */}
-  //     <ScrollView
-  //       style={styles.content}
-  //       refreshControl={
-  //         <RefreshControl
-  //           refreshing={loading}
-  //           onRefresh={handleRefresh}
-  //           colors={["#007AFF"]}
-  //           tintColor="#007AFF"
-  //           title="Refreshing..."
-  //         />}
-  //     >
-
-  //       <View style={styles.userInfo}>
-  //         <View style={{ flex: 1 }}>
-  //           <Text style={styles.userName}>{profileData?.Emp_Name || 'Guest'} 👋</Text>
-  //           <Text style={styles.userHandle}>{profileData?.Organization_Unit_Name || ''}</Text>
-  //         </View>
-
-  //         {/* <View style={styles.changeOfficeContainer}>
-  //           <TouchableOpacity
-  //             style={styles.changeOfficeButton}
-  //             onPress={openModal}
-  //             accessibilityLabel="Change Office Button">
-  //             <Text style={styles.changeOfficeButtonText}>Office's</Text>
-  //             <Text style={styles.changeOfficeButtonText}>Change Office</Text>
-  //           </TouchableOpacity>
-  //         </View> */}
-
-  //       </View>
-  //       <View style={styles.topcard}>
-  //         <Slider />
-  //       </View>
-
-
-  //       <View style={styles.topcard1}>
-  //         {/* Dropdown Selectors */}
-  //         <View style={styles.selectorContainer}>
-  //           <Text style={styles.sectionTitle}>Faculty Dashboard</Text>
-
-  //           <View style={styles.selectorContainercard}>
-  //             <TouchableOpacity
-  //               style={styles.ModelButton}
-  //               onPress={openModalSession}
-  //               accessibilityLabel="Select a Session">
-  //               <Text style={styles.ModelText}> {SessionValue || 'Session'}</Text>
-  //             </TouchableOpacity>
-
-  //             <TouchableOpacity
-  //               style={styles.ModelButton}
-  //               onPress={openModalSemester}
-  //               accessibilityLabel="Select a Semester">
-  //               <Text style={styles.ModelText}>{SemesterValue || 'Semester'}</Text>
-  //             </TouchableOpacity>
-  //           </View>
-  //         </View>
-
-  //         {/* Grid Menu */}
-  //         <ScrollView horizontal={false} showsVerticalScrollIndicator={false} contentContainerStyle={styles.eCornerContainer}>
-  //           <View style={styles.gridContainer}>
-  //             {updatedMenu?.map(item => (
-  //               <TouchableOpacity
-  //                 key={item.id}
-  //                 style={styles.gridItem}
-  //                 onPress={() => navigation.navigate(item.screen, { data: item.data })}>
-  //                 <View style={{ alignItems: 'center' }}>
-  //                   <View style={[styles.iconRectangle, { backgroundColor: item.color }]}>
-  //                     <Text style={styles.cont}>{item.count}</Text>
-  //                     <FontAwesome6 name={item.icon} size={28} color={item.iconColor || 'white'} />
-  //                   </View>
-  //                   <Text style={styles.iconLabel}>{item.name}</Text>
-  //                 </View>
-  //               </TouchableOpacity>
-  //             ))}
-  //           </View>
-  //         </ScrollView>
-
-
-  //         {/* <Text style={styles.sectionTitle}>🎂 Today's Birthday</Text>
-  //       <BirthdaySlider /> */}
-  //       </View>
-
-
-  //       {/* <View style={styles.topcard2}>
-  //       <Text style={styles.sectionTitle}>Notification's</Text>
-  //               <BirthdaySlider />  
-  //       </View> */}
-
-  //       {/*  officelist*/}
-  //       <TouchableWithoutFeedback onPress={closeModal}>
-  //         <Modal
-  //           animationType="slide"
-  //           transparent={true}
-  //           visible={isModalVisible}
-
-  //           onRequestClose={closeModal}>
-  //           <OfficeListModalContent closeModal={closeModal} />
-  //         </Modal>
-  //       </TouchableWithoutFeedback>
-  //       {/*  session*/}
-  //       <Modal
-  //         animationType="slide"
-  //         transparent={true}
-  //         visible={isModalVisibleSession}
-  //         onRequestClose={closeModalSession}>
-  //         <TouchableWithoutFeedback onPress={closeModalSession}>
-  //           <View style={{ flex: 1, }}>
-  //             <SessionListModalContent closeModalSession={closeModalSession} />
-  //           </View>
-  //         </TouchableWithoutFeedback>
-  //       </Modal>
-  //       {/*  Semester*/}
-  //       <Modal
-  //         animationType="slide"
-  //         transparent={true}
-  //         visible={isModalVisibleSemester}
-  //         onRequestClose={closeModalSemester}>
-  //         <TouchableWithoutFeedback onPress={closeModalSemester}>
-  //           <View style={{ flex: 1, }}>
-  //             <SemesterListModalContent closeModalSemester={closeModalSemester} />
-  //           </View>
-  //         </TouchableWithoutFeedback>
-  //       </Modal>
-  //     </ScrollView>
-  //     <Footer />
-  //   </View>
-  // );
-
-
    return (
       <View style={styles.container}>
         <StatusBar backgroundColor={colors.bgcolor} barStyle="light-content" />
@@ -688,7 +527,7 @@ const AdminHomeLayout = () => {
               </View>
               {/* <div style={styles.divider} /> */}
               <View style={styles.degreeRow}>
-                <FontAwesome6 name="address" size={16} color="#666" />
+                <FontAwesome6 name="school" size={16} color="#3028ac" />
                 <Text style={styles.degreeText} numberOfLines={1}>{profileData?.Organization_Unit_Name || 'Department'}</Text>
               </View>
             </View>
@@ -821,6 +660,7 @@ const styles = StyleSheet.create({
 });
 
 export default AdminHomeLayout;
+
 
 
 

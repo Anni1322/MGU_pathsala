@@ -32,8 +32,8 @@ const { width } = Dimensions.get("window");
 const CARD_WIDTH = (width - 40) / 2;
 
 const gradientColors = [
-  ["#4158D0", "#C850C0"], // Modern Purple
-  ["#00DBDE", "#FC00FF"], // Cyber Blue
+  ["#4158D0", "#ca9bc7"], // Modern Purple
+  ["#00DBDE", "#3282a1"], // Cyber Blue
   ["#8EC5FC", "#E0C3FC"], // Soft Lavendar
   ["#FBAB7E", "#F7CE68"], // Warm Gold
 ];

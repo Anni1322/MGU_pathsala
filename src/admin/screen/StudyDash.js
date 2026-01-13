@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, StatusBar, TextInput, TouchableOpacity, ScrollView, Alert, Modal, Image } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, StatusBar, TextInput, TouchableOpacity, ScrollView, Alert, Modal, Image, Dimensions } from 'react-native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { pick, types } from '@react-native-documents/picker';
 import SessionService from "../../common/Services/SessionService";
@@ -12,7 +12,7 @@ import colors from '../../common/config/colors';
 import RNFS from 'react-native-fs';
 import { CheckBox } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
-
+import Header from '../layout/Header/Header';
 
 
 
@@ -41,12 +41,12 @@ const Colors = {
   primaryBlue: '#3498db',
   lightPurple: '#f0e6ff',
   darkPurple: '#6a0dad',
-  redOrange: '#e74c3c',
+  redOrange: '#0e3280',
   lightBeige: '#f9f5e6',
   inputBorder: '#ccc',
   successGreen: '#5cb85c',
   cardBackground: 'white',
-  darkText: '#333',
+  darkText: '#4775d8',
   lightText: 'white',
   fileStatus: '#2ecc71',
   modalHeaderBg: '#d35400',
@@ -200,7 +200,7 @@ export default function UploadStudyMaterialScreen() {
         setSelectedValues({});
         setTitle("");
         setSelectedFile(null);
-        navigation.navigate('StudyMaterials')
+        navigation.replace('StudyMaterials')
       } else {
         Alert.alert("Submission Failed", result?.Message || "The server returned an unexpected response.");
       }
@@ -366,7 +366,7 @@ export default function UploadStudyMaterialScreen() {
           } finally {
             setLoading(false);
             setIsModalVisible(false);
-            navigation.navigate('StudyMaterials')
+            navigation.replace('StudyMaterials')
           }
         }
       },
@@ -686,13 +686,7 @@ export default function UploadStudyMaterialScreen() {
 
   return (
     <View style={styles.safeArea}>
-      <StatusBar barStyle="light-content" backgroundColor={Colors.primaryBlue} />
-
-      <View style={styles.header}>
-        <FontAwesome6 name="upload" size={24} color={Colors.lightText} />
-        <Text style={styles.headerTitle}>Upload Study Material</Text>
-        <View style={{ width: 24 }} />
-      </View>
+      <Header title="Upload Study Material"/>
 
       <ScrollView style={styles.contentContainer}>
         <View style={styles.cardSection}>
@@ -835,7 +829,7 @@ export default function UploadStudyMaterialScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.lightBeige,
+    backgroundColor: "rgb(230, 230, 230)",
   },
   header: {
     flexDirection: 'row',
@@ -941,7 +935,7 @@ const styles = StyleSheet.create({
   selectFileButton: {
     backgroundColor: Colors.redOrange,
     padding: 15,
-    borderRadius: 55,
+    borderRadius: 15,
     marginVertical: 20,
     alignItems: 'center',
     justifyContent: 'center',
@@ -949,8 +943,6 @@ const styles = StyleSheet.create({
   buttoncard: {
     flexDirection: 'row',
     justifyContent: 'space-around'
-
-
   },
   selectFileButtonText: {
     color: Colors.lightText,
@@ -960,9 +952,9 @@ const styles = StyleSheet.create({
 
   // --- Submit Button Styles ---
   submitButton: {
-    backgroundColor: Colors.primaryBlue,
+    backgroundColor: Colors.darkText,
     padding: 15,
-    borderRadius: 55,
+    borderRadius: 15,
     marginVertical: 20,
     alignItems: 'center',
     justifyContent: 'center',

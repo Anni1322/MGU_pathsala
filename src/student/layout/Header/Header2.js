@@ -231,8 +231,9 @@ export default function Header({ title, backgroundColor }) {
 const styles = StyleSheet.create({
   // --- Vibrant Header Styles ---
   headerContainer: {
+    marginTop:40,
     // paddingTop: Platform.OS === 'android' ? 18: 0, 
-     paddingTop: Platform.OS === 'android' ? 25: 0, 
+    //  paddingTop: Platform.OS === 'android' ? 35: 0, 
     paddingBottom: 10,
     overflow: 'hidden', // Ensures the glow circle stays inside
     elevation: 10,

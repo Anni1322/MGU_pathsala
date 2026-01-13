@@ -1,0 +1,51 @@
+Req ID,Requirement Description,Module,Source Component,Test Type
+FR-01,User shall be able to log in,Common,LoginScreen.js,"UT,UAT"
+FR-02,User shall be able to sign up,Common,SignUpScreen.js,"UT,UAT"
+FR-03,System shall support biometric login,Common,FingerLoginScreen.js,"IT,UAT"
+FR-04,System shall manage user sessions,Common,SessionService.js,IT
+FR-05,System shall redirect users based on role,Common,AppNavigation.js,IT
+FR-06,System shall display splash screen,Common,SplashScreen.js,UT
+FR-07,System shall check for app updates,Common,UpdateChecker.js,IT
+FR-08,System shall support maintenance mode,Common,Maintenance.js,IT
+FR-09,Admin shall view dashboard,Admin,HomePage.js,UAT
+FR-10,Admin shall view finance dashboard,Admin,FinanceDashboard.js,UAT
+FR-11,Admin shall manage profile,Admin,AdminProfile.js,"UT,UAT"
+FR-12,Admin shall manage courses,Admin,MyCourses.js,UAT
+FR-13,Admin shall manage study materials,Admin,StudyMaterials.js,UAT
+FR-14,Admin shall manage video lectures,Admin,MyVideoLecture.js,UAT
+FR-15,Admin shall manage assignments,Admin,MyAssignment.js,UAT
+FR-16,Admin shall view assignment dashboard,Admin,MyAssignmentDesh.js,UAT
+FR-17,Admin shall manage doubt sessions,Admin,AdminDoubtSession.js,UAT
+FR-18,Admin shall manage examinations,Admin,AdminExamination.js,UAT
+FR-19,System shall scan QR for exams,Admin,QRScanner.js,IT
+FR-20,System shall validate handwriting,Admin,HandwritingDetector.js,IT
+FR-21,System shall monitor exams,Admin,ExaminationScreen.js,UAT
+FR-22,Admin shall view student list,Admin,MyStudents.js,UAT
+FR-23,Admin shall track student progress,Admin,StudyDash.js,UAT
+FR-24,Admin shall manage grievances,Admin,EGrievances.js,UAT
+FR-25,Admin shall send notices,Admin,SendNotice.js,UAT
+FR-26,Student shall view dashboard ,Student,StudentDashboard.js,UAT
+FR-27,Student shall manage profile,Student,ProfileScreen.js,"UT,UAT"
+FR-28,Student shall manage settings,Student,SettingsScreen.js,UT
+FR-29,Student shall view assignments,Student,Assignment.js,UAT
+FR-30,Student shall view assignment details,Student,AssignmentDetails.js,UAT
+FR-31,Student shall view syllabus,Student,SyllabusScreen.js,UAT
+FR-32,Student shall view video lectures,Student,VideoLecture.js,UAT
+FR-33,Student shall access study materials,Student,StudyScreen.js,UAT
+FR-34,Student shall join doubt sessions,Student,DoubtSession.js,UAT
+FR-35,Student shall view exam details,Student,Examination.js,UAT
+FR-36,Student shall download admit card,Student,AdmitCard.js,UAT
+FR-37,Student shall view results,Student,Result.js,UAT
+FR-38,Student shall download transcript,Student,Transcript.js,UAT
+FR-39,Student shall download fee receipt,Student,FeeReceipt.js,UAT
+FR-40,Student shall access SRC and PDC services,Student,"SRC.js / PDC.js",UAT
+FR-41,Student shall receive notifications,Student,NotificationScreen.js,UAT
+FR-42,Student shall submit complaints,Student,ComplaintScreen.js,UAT
+FR-43,Student shall submit online grievances,Student,Online.Complaint.js,UAT
+FR-44,Student shall upload support files,Student,FilePickerScreen.js,IT
+FR-45,Student shall access help desk,Student,HelpDesk.js,UAT
+FR-46,Employee shall view dashboard,Employee,EmployeeDashboard.js,UAT
+FR-47,System shall display alerts,Common,AlertService.js,IT
+FR-48,System shall display loaders,Common,Loading.js,UT
+FR-49,System shall support PDF viewing,Common,pdfService.js,IT
+FR-50,System shall handle API requests,Common,ApiService.js,IT

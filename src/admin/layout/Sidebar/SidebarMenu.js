@@ -27,7 +27,7 @@ const menuSections = [
   {
     title: "Main Explorer",
     items: [
-      { id: 4, title: "Official Website", icon: "🌐", screen: "Website", link: "https://mguvv.ac.in/" },
+      { id: 4, title: "Official Website", icon: "🌐", screen: "Website", link: "https://mguvv.ac.in/angular/" },
       { id: 5, title: "Refer to Friends", icon: "🎁", screen: "ShareApp", link: "https://play.google.com/store/apps/details?id=mguvvmis.mguvv" },
       { id: 7, title: "Rate Our App", icon: "⭐", screen: "RateUs", link: "https://play.google.com/store/apps/details?id=mguvvmis.mguvv" },
     ]
@@ -36,7 +36,7 @@ const menuSections = [
     title: "Discovery",
     items: [
       { id: 12, title: "Meet the Team", icon: "👥", screen: "Maintenance" },
-      { id: 15, title: "Privacy Policy", icon: "🛡️", screen: "Privacy Policy", link: 'https://mguvv.ac.in/' },
+      { id: 15, title: "Privacy Policy", icon: "🛡️", screen: "Privacy Policy", link: 'https://mguvv.ac.in/angular/' },
     ]
   },
   {

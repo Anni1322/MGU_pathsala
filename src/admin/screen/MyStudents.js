@@ -153,9 +153,9 @@ const MyStudents = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header title='My Students' />
+   
       <LinearGradient colors={['#F8FAFC', '#F1F5F9']} style={styles.flex1}>
-
+   <Header title='My Students' />
         {/* Modern Filter Selectors */}
         <View style={styles.selectorRow}>
           <TouchableOpacity style={styles.modernSelector} onPress={() => setSessionModalVisible(true)}>
@@ -290,7 +290,7 @@ const SelectionModal = ({ visible, onClose, title, data, labelKey, valueKey, onS
 
 const styles = StyleSheet.create({
   flex1: { flex: 1 },
-  container: { flex: 1, backgroundColor: '#fff' },
+  container: { flex: 1, backgroundColor: '#fff', paddingTop: -39, },
   selectorRow: { flexDirection: 'row', padding: 15, justifyContent: 'space-between', backgroundColor: '#fff' },
   modernSelector: {
     width: '48%', backgroundColor: '#f8fafc', padding: 12, borderRadius: 12,

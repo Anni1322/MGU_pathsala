@@ -7,13 +7,14 @@ import SplashScreen from "../SplashScreen/SplashScreen";
 import LoginScreen from "../Auth/LoginScreen";
 import SignUpScreen from "../Auth/SignUpScreen";
 import AuthLoadingScreen from "../Services/AuthLoadingScreen";
+import WebsiteScreen from "../WebsiteScreen";
 
 
 // Student Screens
 // import StudentDashboard from "../screen/student/StudentDashboard";
 import HomeLayout from "../../student/screen/Home/HomeLayout";
 import ComplaintScreen from '../../student/screen/Support/ComplaintScreen';
-import ViewAllScreen from '../../student/screen/Home/All';
+ 
 import MenuScreen from "../../student/layout/Sidebar/MenuScreen";
 import FilePickerScreen from '../../student/screen/Support/FilePickerScreen';
 
@@ -72,7 +73,8 @@ const RootStack = createNativeStackNavigator();
 
 // Auth Navigator
 const AuthNavigator = () => (
-  <AuthStack.Navigator screenOptions={{ headerShown: false }} initialRouteName="AuthLoading">
+  <AuthStack.Navigator screenOptions={{ headerShown: false }} initialRouteName="WebsiteScreen">
+    <AuthStack.Screen name="WebsiteScreen" component={WebsiteScreen} />
     <AuthStack.Screen name="AuthLoading" component={AuthLoadingScreen} />
     <AuthStack.Screen name="Splash" component={SplashScreen} />
     <AuthStack.Screen name="Login" component={LoginScreen} />
@@ -103,7 +105,7 @@ const StudentNavigator = () => (
     <StudentStack.Screen name="Profile" component={ProfileScreen} />
     <StudentStack.Screen name="Settings" component={SettingsScreen} />
     <StudentStack.Screen name="ComplaintScreen" component={ComplaintScreen} />
-    <StudentStack.Screen name="ViewAllScreen" component={ViewAllScreen} />
+ 
 
   </StudentStack.Navigator>
 );

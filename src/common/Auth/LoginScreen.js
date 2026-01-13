@@ -191,28 +191,28 @@ const LoginScreen = () => {
       setLoading(true);
 
 
-      //        // igkvlog
-    const isFaculty = userid.toUpperCase().startsWith("MIS");
-    const payload = {
-      [isFaculty ? "FACULTY_ID" : "STUDENT_ID"]: userid,
-      user_id: userid,
-      ip_address: "0.0.0.0",
-      PASSWORD: password,
-    };
+     // // igkvlog
+    // const isFaculty = userid.toUpperCase().startsWith("MIS");
+    // const payload = {
+    //   [isFaculty ? "FACULTY_ID" : "STUDENT_ID"]: userid,
+    //   user_id: userid,
+    //   ip_address: "0.0.0.0",
+    //   PASSWORD: password,
+    // };
 
 
     // mguvv
-      // const isFaculty = userid.toUpperCase().startsWith("MIS");
-      // console.log(isFaculty,"isFaculty")
-      // const cleanedUserId = isFaculty ? userid.slice(3) : userid;
-      // console.log(cleanedUserId, 'id'); 
-
-      // const payload = {
-      //   [isFaculty ? "FACULTY_ID" : "STUDENT_ID"]: isFaculty ? cleanedUserId : userid,
-      //   user_id: isFaculty ? cleanedUserId : userid,
-      //   ip_address: "0.0.0.0",
-      //   PASSWORD: password,
-      // };
+      const isFaculty = userid.toUpperCase().startsWith("MIS");
+      console.log(isFaculty,"isFaculty")
+      const cleanedUserId = isFaculty ? userid.slice(3) : userid;
+      console.log(cleanedUserId, 'id'); 
+ 
+      const payload = {
+        [isFaculty ? "FACULTY_ID" : "STUDENT_ID"]: isFaculty ? cleanedUserId : userid,
+        user_id: isFaculty ? cleanedUserId : userid,
+        ip_address: "0.0.0.0",
+        PASSWORD: password,
+      };
 
 
       // console.log(payload, "payload")
@@ -225,6 +225,8 @@ const LoginScreen = () => {
         response?.data?.Result?.[0]?.Success === "1" ||
         response?.data?.LoginResponse?.[0]?.MSG_DET === "Login Success" ||
         response?.data?.LoginDetail;
+
+        
 
       if (success) {
         const credentials = await Keychain.getGenericPassword({

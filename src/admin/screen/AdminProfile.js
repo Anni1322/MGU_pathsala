@@ -8,11 +8,13 @@ import {
   Image,
   TouchableOpacity,
   StatusBar,
+  Linking,
+  Alert,
+  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
-// Your existing imports
 import Header from "../layout/Header/Header";
 import Footer from "../layout/Footer/Footer";
 import SessionService from "../../common/Services/SessionService";
@@ -22,7 +24,6 @@ const AdminProfile = () => {
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Define internal colors for the helper component
   const themeColors = {
     primary: "#32208d",
     textPrimary: "#1F2937",
@@ -47,6 +48,48 @@ const AdminProfile = () => {
     fetchSession();
   }, []);
 
+  // --- Action Handlers ---
+
+  const handleCall = (number) => {
+    if (!number) return Alert.alert("Error", "Phone number not available");
+    // Standard tel: link
+    Linking.openURL(`tel:${number}`);
+  };
+
+  const handleSMS = (number) => {
+    if (!number) return Alert.alert("Error", "Phone number not available");
+    // Standard sms: link
+    Linking.openURL(`sms:${number}`);
+  };
+
+  const handleWhatsApp = async (number) => {
+    if (!number) return Alert.alert("Error", "Phone number not available");
+
+    // Format: Remove all non-digits for WhatsApp deep linking
+    const cleanNumber = number.replace(/\D/g, "");
+    
+    // Use the universal wa.me link as it is more reliable across platforms
+    const url = `https://wa.me/${cleanNumber}`;
+
+    try {
+      const supported = await Linking.canOpenURL(url);
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        Alert.alert("Error", "WhatsApp is not installed on this device");
+      }
+    } catch (err) {
+      Alert.alert("Error", "An unexpected error occurred");
+    }
+  };
+
+  const handleEmail = (email) => {
+    if (!email) return Alert.alert("Error", "Email not available");
+    Linking.openURL(`mailto:${email}`);
+  };
+
+  // --- Helper Components ---
+
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
@@ -64,7 +107,6 @@ const AdminProfile = () => {
     );
   }
 
-  // Updated InfoRow with flex constraints to prevent text overflow
   const InfoRow = ({ icon, label, value, showArrow = false }) => (
     <View style={styles.infoRowContainer}>
       <View style={styles.infoRowLeft}>
@@ -90,7 +132,6 @@ const AdminProfile = () => {
       <Header />
 
       <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
-        {/* Profile Header Card */}
         <View style={styles.headerCard}>
           <View style={styles.avatarWrapper}>
             <Image
@@ -104,16 +145,43 @@ const AdminProfile = () => {
 
             {/* Quick Action Buttons */}
             <View style={styles.actionRow}>
-              <TouchableOpacity style={styles.actionCircle}><FontAwesome6 name="envelope" size={16} color="#FFF" /></TouchableOpacity>
-              <TouchableOpacity style={styles.actionCircle}><FontAwesome6 name="phone" size={16} color="#FFF" /></TouchableOpacity>
+              {/* Message/SMS */}
+              <TouchableOpacity 
+                style={styles.actionCircle} 
+                onPress={() => handleSMS(profileData.Contact_No_1)}
+              >
+                <FontAwesome6 name="comment-dots" size={16} color="#FFF" />
+              </TouchableOpacity>
+
+              {/* Phone Call */}
+              <TouchableOpacity 
+                style={styles.actionCircle} 
+                onPress={() => handleCall(profileData.Contact_No_1)}
+              >
+                <FontAwesome6 name="phone" size={16} color="#FFF" />
+              </TouchableOpacity>
+
               <View style={styles.actionDivider} />
-              <TouchableOpacity style={styles.actionCircle}><FontAwesome6 name="comment-dots" size={16} color="#FFF" /></TouchableOpacity>
-              <TouchableOpacity style={styles.actionCircle}><FontAwesome6 name="star" size={16} color="#FFF" /></TouchableOpacity>
+
+              {/* WhatsApp */}
+              <TouchableOpacity 
+                style={styles.actionCircle} 
+                onPress={() => handleWhatsApp(profileData.Contact_No_1)}
+              >
+                <FontAwesome6 name="whatsapp" size={18} color="#FFF" />
+              </TouchableOpacity>
+
+              {/* Email */}
+              <TouchableOpacity 
+                style={styles.actionCircle} 
+                onPress={() => handleEmail(profileData.Email_Id)}
+              >
+                <FontAwesome6 name="envelope" size={16} color="#FFF" />
+              </TouchableOpacity>
             </View>
           </View>
         </View>
 
-        {/* Details Content */}
         <View style={styles.detailsContent}>
           <Text style={styles.sectionTitle}>Basic Detail</Text>
           <InfoRow icon="id-card" label="MIS ID" value={profileData.Emp_Id} />
@@ -132,7 +200,6 @@ const AdminProfile = () => {
           <InfoRow icon="sitemap" label="Head Office" value={profileData.Head_Office_Name} showArrow />
           <InfoRow icon="map-pin" label="Current Posting" value={profileData.Office_Name} showArrow />
 
-          {/* Bottom Padding for Footer */}
           <View style={{ height: 100 }} />
         </View>
       </ScrollView>
@@ -146,6 +213,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F9FAFB",
+    marginTop: Platform.OS === 'ios' ? 0 : -39,
   },
   loaderContainer: {
     flex: 1,
@@ -153,7 +221,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   headerCard: {
-    backgroundColor: colors.bgcolor,
+    backgroundColor: colors.bgcolor || "#32208d",
     paddingBottom: 40,
     paddingHorizontal: 20,
     borderBottomLeftRadius: 40,
@@ -223,15 +291,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 20,
-    width: '100%', // Ensure it takes full width
+    width: '100%',
   },
   infoRowLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    flex: 1, // Crucial: allows this section to grow/shrink
+    flex: 1,
   },
   textContainer: {
-    flex: 1, // Crucial: forces text to stay within available space
+    flex: 1,
     paddingRight: 10,
   },
   iconCircle: {
@@ -252,7 +320,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: '#1F2937',
-    flexWrap: 'wrap', // Allows wrapping
+    flexWrap: 'wrap',
   },
   arrowContainer: {
     marginLeft: 10,
@@ -266,9 +334,6 @@ const styles = StyleSheet.create({
 });
 
 export default AdminProfile;
-
-
-
 
 
 

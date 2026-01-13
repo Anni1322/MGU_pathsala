@@ -115,10 +115,19 @@ export const facultyMenu = [
 
 
 
-
-
+  {
+    id: 8,
+    name: 'My Profile',
+    iconLib: 'FontAwesome6',
+    icon: 'user',
+    screen: 'AdminProfile',
+    color: '#002C6A',
+    iconColor: '#FF8B13',
+    data: '',
+  },
 
   {
+
     id: 1,
     name: 'My Courses',
     iconLib: 'FontAwesome6',
@@ -166,7 +175,7 @@ export const facultyMenu = [
     name: 'Video Lecture',
     iconLib: 'FontAwesome6',
     icon: 'video',
-    screen: 'MyVideoLecture',
+    screen: 'Maintenance',
     color: '#93BFC7',
     iconColor: '#ECF4E8',
     data: ''
@@ -189,16 +198,7 @@ export const facultyMenu = [
     color: '#E67E22',
     data: ''
   },
-  {
-    id: 8,
-    name: 'My Profile',
-    iconLib: 'FontAwesome6',
-    icon: 'user',
-    screen: 'AdminProfile',
-    color: '#002C6A',
-    iconColor: '#FF8B13',
-    data: '',
-  },
+
 
   //   {
   //   id: 9,
