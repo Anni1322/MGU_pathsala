@@ -8,6 +8,7 @@ import LoginScreen from "../Auth/LoginScreen";
 import SignUpScreen from "../Auth/SignUpScreen";
 import AuthLoadingScreen from "../Services/AuthLoadingScreen";
 import Main from "../Main";
+import TeamMembers from "../TeamMembers";
 import WebsiteScreen from "../WebsiteScreen";
 
 
@@ -74,8 +75,7 @@ const RootStack = createNativeStackNavigator();
 
 // Auth Navigator
 const AuthNavigator = () => (
-  <AuthStack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Main">
-    <AuthStack.Screen name="Main" component={Main} />
+  <AuthStack.Navigator screenOptions={{ headerShown: false }} initialRouteName="AuthLoading">
     <AuthStack.Screen name="AuthLoading" component={AuthLoadingScreen} />
     <AuthStack.Screen name="Splash" component={SplashScreen} />
     <AuthStack.Screen name="Login" component={LoginScreen} />
@@ -146,6 +146,7 @@ const AppNavigator = () => {
         <RootStack.Screen name="Splash" component={SplashScreen} />
         <RootStack.Screen name="Admin" component={AdminNavigator} />
         <RootStack.Screen name="Main" component={Main} />
+        <RootStack.Screen name="TeamMembers" component={TeamMembers} />
         <RootStack.Screen name="WebsiteScreen" component={WebsiteScreen} />
         <RootStack.Screen name="Maintenance" component={Maintenance} />
         <RootStack.Screen name="Notification" component={NotificationScreen} />
