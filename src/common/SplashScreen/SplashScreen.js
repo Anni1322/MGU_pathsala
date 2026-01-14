@@ -342,6 +342,8 @@ export default function OnboardingScreen({ navigation }) {
 
       {/* Bottom Logos and Footer */}
       {/* <Animated.View style={[styles.bottomContainer, { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}> */}
+
+      
       <View style={[styles.bottomContainer,]}>
         <View style={styles.logoRow}>
           <Image
@@ -357,6 +359,8 @@ export default function OnboardingScreen({ navigation }) {
         </View>
         <Text style={styles.footerText}>महात्मा गांधी बागवानी एवं वानिकी विश्वविद्यालय</Text>
       </View>
+
+
       {/* </Animated.View>  */}
     </SafeAreaView>
   );
