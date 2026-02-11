@@ -94,7 +94,8 @@ const StudyMaterialsDetails = ({ navigation, route }) => {
         } catch (error) {
             setHasError(true);
             setStudyMaterials([]);
-            Alert.alert('Load Failed ⚠️', error.message || 'Could not fetch study materials details.');
+            // Alert.alert('Load Failed ⚠️', error.message || 'Could not fetch study materials details.');
+            Alert.alert('Load Failed ⚠️', error.message || 'Please Contact your faculty or MIS Team.');
             console.error('Study Materials Details fetch error:', error);
             // setStudyMaterials(dummyMaterials);
         } finally {
@@ -166,7 +167,8 @@ const StudyMaterialsDetails = ({ navigation, route }) => {
                 <Text style={styles.headerTitle}>📚 Study Materials</Text>
                 {hasError ? (
                     <View style={[styles.centerContent, styles.errorContainer]}>
-                        <Text style={styles.errorText}>Failed to load data. Please check your connection.</Text>
+                        <Text style={styles.errorText}>Please Contact your faculty.</Text>
+                        {/* <Text style={styles.errorText}>Failed to load data. Please check your connection.</Text> */}
                         <TouchableOpacity style={styles.retryButton} onPress={fetchStudyMaterialsDetails}>
                             <Text style={styles.buttonText}>Tap to Retry</Text>
                         </TouchableOpacity>

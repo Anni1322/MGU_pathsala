@@ -1,4 +1,4 @@
-// igkv
+
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, ActivityIndicator, Linking, StatusBar, } from 'react-native';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
@@ -28,6 +28,7 @@ export default function JobListingScreen() {
         // const sessionData = await SessionService.getSession();
         const apiList = getApiList();
         const response = await HttpService.get(apiList.GetNotificationList);
+        console.log(response,"response");
         if (response?.status !== 200) {
           throw new Error('Failed to fetch profile data');
         }
@@ -81,11 +82,14 @@ export default function JobListingScreen() {
                   }} style={styles.logo}/>
 
                 {/* Open PDF button */}
-                <TouchableOpacity
+                   <FontAwesome6 name="file-pdf" size={22} color="#02085e" />
+
+                {/*<TouchableOpacity
                   style={styles.handIconContainer}
                   onPress={() => openPDF(item.File_Path)}>
-                  <FontAwesome6 name="file-pdf" size={22} color="#d9534f" />
-                </TouchableOpacity>
+                  <FontAwesome6 name="file-pdf" size={22} color="#02085e" />
+                </TouchableOpacity> */}
+
                 <Text style={styles.date}>{item.news_date}</Text>
               </View>
 
@@ -114,7 +118,7 @@ export default function JobListingScreen() {
               </Text>
 
               {/* Bottom Row */}
-              <View style={styles.bottomRow}>
+              {/* <View style={styles.bottomRow}>
 
                 {item.File_Path ? (
                   <TouchableOpacity
@@ -124,7 +128,7 @@ export default function JobListingScreen() {
                     <Text style={styles.seeMoreText}>View PDF</Text>
                   </TouchableOpacity>
                 ) : null}
-              </View>
+              </View> */}
             </View>
           ))}
         </ScrollView>

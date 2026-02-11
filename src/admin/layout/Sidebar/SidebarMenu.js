@@ -38,7 +38,7 @@ const menuSections = [
     items: [
       // { id: 12, title: "Meet the Team", icon: "👥", screen: "TeamMembers" },
       { id: 12, title: "Meet the Team", icon: "👥", screen: "Maintenance" },
-      { id: 15, title: "Privacy Policy", icon: "🛡️", screen: "Privacy Policy", link: 'https://mguvv.ac.in/angular/' },
+      { id: 15, title: "Privacy Policy", icon: "🛡️", screen: "PrivacyPolicy" },
     ]
   },
   {
@@ -113,8 +113,8 @@ export default function SidebarMenu({ sidebarX }) {
             <Text style={styles.userName} numberOfLines={1}>
               {profileData?.Emp_Name || "Student Name"}
             </Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-              <Text style={styles.viewProfileLabel}>Edit Profile ›</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('AdminProfile')}>
+              <Text style={styles.viewProfileLabel}>Profile ›</Text>
             </TouchableOpacity>
           </View>
         </LinearGradient>
@@ -147,7 +147,7 @@ export default function SidebarMenu({ sidebarX }) {
       </ScrollView>
 
       <View style={styles.sidebarFooter}>
-        <Text style={styles.footerVersion}>MGUVV • v1.0.4 build 2026</Text>
+        <Text style={styles.footerVersion}>MGUVV • v1.0.3 build 2026</Text>
       </View>
     </Animated.View>
   );

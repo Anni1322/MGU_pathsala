@@ -91,20 +91,58 @@ const LoginScreen = () => {
 
 
 
-  useEffect(() => {
-    const checkCredentialsAndBiometry = async () => {
-      try {
-        const credentials = await Keychain.getGenericPassword();
-        if (credentials) setHasSavedCredentials(true);
-        const type = await Keychain.getSupportedBiometryType();
-        setBiometryType(type);
-      } catch (error) {
-         // Error handling
-      }
-    };
-    checkCredentialsAndBiometry();
-    // fetchInfo();
-  }, []);
+  // useEffect(() => {
+  //   const checkCredentialsAndBiometry = async () => {
+  //     try {
+  //       const credentials = await Keychain.getGenericPassword();
+  //       if (credentials) {
+  //       const userData = JSON.parse(credentials?.password);
+  //       if(userData?.LoginDetail){
+  //       // console.log(userData?.LoginDetail, "Parsed Data");
+  //       return navigation.replace("Admin");
+  //       }
+  //       return navigation.replace("Student");
+  //     }
+  //     if (credentials) setHasSavedCredentials(true);
+  //       const type = await Keychain.getSupportedBiometryType();
+  //       // setBiometryType(type);
+  //       // return navigation.replace("Admin");
+  //     } catch (error) {
+  //        // Error handling
+  //     }
+  //   };
+  //   checkCredentialsAndBiometry();
+  //   // fetchInfo();
+  // }, []);
+
+
+
+
+// useEffect(() => {
+//   const checkCredentialsAndBiometry = async () => {
+//     try {
+//       const credentials = await Keychain.getGenericPassword();
+//       if (!credentials) {
+//         const type = await Keychain.getSupportedBiometryType();
+//         // setBiometryType(type); 
+//         return; 
+//       }
+//       const userData = JSON.parse(credentials.password || '{}');
+//       setHasSavedCredentials(true);
+//       const targetRoute = userData?.LoginDetail ? "Admin" : "Student";
+//       navigation.replace(targetRoute);
+
+//     } catch (error) {
+//       console.error("Auth Initialization Error:", error);
+//       navigation.replace("Login");
+//     }
+//   };
+
+//   checkCredentialsAndBiometry();
+// }, [navigation]);  
+
+
+
 
   // Keyboard Event Listeners
   useEffect(() => {
@@ -217,7 +255,7 @@ const LoginScreen = () => {
 
       // console.log(payload, "payload")
 
-      const response = isFaculty
+      const response = isFaculty 
         ? await AuthService.loginFaculty(payload)
         : await AuthService.loginStudent(payload);
       setLoginResponse(response?.data?.LoginDetail);

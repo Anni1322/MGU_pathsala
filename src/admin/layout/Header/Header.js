@@ -100,6 +100,8 @@ export default function Header({ title, backgroundColor }) {
       console.log(data)
     };
 
+    console.log(profileData?.emp_address,"profileData?.emp_address");
+
     fetchSession();
     return () => {
       setIsMounted(false);
@@ -203,8 +205,9 @@ export default function Header({ title, backgroundColor }) {
               
               <View style={styles.idBadge}>
                  <Text style={styles.idText}>
-               <Text style={styles.profileEmail}>{profileData?.emp_address || 'No mail address found'}</Text>
+               <Text style={styles.profileEmail}> {profileData?.Email_Id || 'No mail address found'}</Text>
                  </Text>
+                  <Text style={styles.profileEmail}> {profileData?.Office_Name || 'No mail address found'}</Text>
               </View>
             </View>
 
@@ -398,6 +401,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 20,
+     alignItems: 'center',
   },
   idText: {
     fontSize: 13,

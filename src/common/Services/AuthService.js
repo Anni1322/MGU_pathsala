@@ -228,8 +228,8 @@ const AuthService = {
       const apiList = getApiList();
       const loginApi = apiList?.login;
       const response = await HttpService.post(loginApi, payload);
-      console.log("loginStudent response", response.data);
-      console.log("authservice response", response?.data.LoginResponse);
+      // console.log("loginStudent response", response.data);
+      // console.log("authservice response", response?.data.LoginResponse);
 
       if (response?.data?.LoginResponse?.[0]?.MSG_DET === "Login Success") {
         let userData = {
@@ -329,6 +329,7 @@ const AuthService = {
   logout: async () => {
     await Keychain.resetGenericPassword();
     await AsyncStorage.removeItem('userProfile');
+    // clearSession()
   },
 
   getToken: async () => {

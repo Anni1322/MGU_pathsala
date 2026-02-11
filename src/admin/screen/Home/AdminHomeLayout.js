@@ -53,15 +53,15 @@ const STATIC_SESSION_DATA = [
   { session_id: 24, label: '2024-25' },
   { session_id: 23, label: '2023-24' },
   { session_id: 22, label: '2022-23' },
-  { session_id: 21, label: '2021-22' },
-  { session_id: 20, label: '2020-21' },
-  { session_id: 19, label: '2019-20' },
-  { session_id: 18, label: '2018-19' },
-  { session_id: 17, label: '2017-18' },
-  { session_id: 16, label: '2016-17' },
-  { session_id: 15, label: '2015-16' },
-  { session_id: 14, label: '2014-15' },
-  { session_id: 13, label: '2013-14' }
+  // { session_id: 21, label: '2021-22' },
+  // { session_id: 20, label: '2020-21' },
+  // { session_id: 19, label: '2019-20' },
+  // { session_id: 18, label: '2018-19' },
+  // { session_id: 17, label: '2017-18' },
+  // { session_id: 16, label: '2016-17' },
+  // { session_id: 15, label: '2015-16' },
+  // { session_id: 14, label: '2014-15' },
+  // { session_id: 13, label: '2013-14' }
 ];
 
 // const STATIC_SEMESTERS = [
@@ -162,6 +162,7 @@ const AdminHomeLayout = () => {
     try {
       const sessionData = await SessionService.getSession();
       const profile = sessionData?.LoginDetail?.[0];
+      console.log(profile,"profile for dean");
       const initialEmpId = profile?.Emp_Id;
 
       setEmpId(initialEmpId);
@@ -528,7 +529,7 @@ const AdminHomeLayout = () => {
               {/* <div style={styles.divider} /> */}
               <View style={styles.degreeRow}>
                 <FontAwesome6 name="school" size={16} color="#3028ac" />
-                <Text style={styles.degreeText} numberOfLines={1}>{profileData?.Organization_Unit_Name || 'Department'}</Text>
+                <Text style={styles.degreeText} numberOfLines={1}>{profileData?.Office_Name || 'Department'}</Text>
               </View>
             </View>
           </View>

@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     studentReportCard: {
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: colors.dangerD,
+        backgroundColor: colors.bgcolordark,
         borderRadius: 10 ,
         justifyContent: "center",
         paddingVertical: 14,

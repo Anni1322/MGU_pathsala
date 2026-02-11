@@ -5,6 +5,7 @@ import FooterNav from '../../layout/Footer/Footer';
 import SessionService from '../../../common/Services/SessionService';
 import getApiList from '../../config/Api/ApiList';
 import { HttpService } from '../../../common/Services/HttpService';
+import colors from '../../../common/config/colors';
 
 const StudyMaterialItem = React.memo(({ item, navigation, expanded, onToggle, chapters, isLoadingChapters, onChapterPress }) => {
     const buttonText = expanded ? 'Hide Chapters' : 'View Materials';
@@ -56,7 +57,6 @@ const StudyMaterialItem = React.memo(({ item, navigation, expanded, onToggle, ch
 });
 
 const StudyScreen = ({ navigation }) => {
-    // Combine related states into a single object to reduce setState calls and improve performance
     const [state, setState] = useState({
         studyMaterials: [],
         isLoading: true,
@@ -68,14 +68,14 @@ const StudyScreen = ({ navigation }) => {
         selectedChapter: null,
         employeeData: [],
         isLoadingEmployees: false,
-        courseIdForCollege: null,  // Renamed for clarity
+        courseIdForCollege: null,   
     });
 
-    // Use useMemo to derive computed values without recalculating on every render
+   
     const materialCount = useMemo(() => state.studyMaterials.length, [state.studyMaterials]);
     const hasMaterials = useMemo(() => materialCount > 0, [materialCount]);
 
-    // Dummy data (unchanged)
+
     const dummyChapters = [
     ];
     const dummyMyCollegeEmployees = [
@@ -98,6 +98,7 @@ const StudyScreen = ({ navigation }) => {
                 throw new Error('API endpoint GetCourseListForStudyMaterial not found.');
             }
             const response = await HttpService.post(apiEndpoint, payload);
+            console.log(response,"responsehhhhh");
             const materials = response?.data?.StudyMaterialList || [];
             setState(prev => ({
                 ...prev,
@@ -150,7 +151,7 @@ const StudyScreen = ({ navigation }) => {
         setState(prev => ({
             ...prev,
             isLoadingEmployees: true,
-            loadingChapters: { ...prev.loadingChapters, [courseId]: true },  // Assuming this is tied to course
+            loadingChapters: { ...prev.loadingChapters, [courseId]: true },   
         }));
         try {
             const sessionData = await SessionService.getSession();
@@ -188,7 +189,7 @@ const StudyScreen = ({ navigation }) => {
                 return {
                     ...prev,
                     expandedItems: { ...prev.expandedItems, [courseId]: true },
-                    courseIdForCollege: courseId,  // Set here for modal use
+                    courseIdForCollege: courseId,  
                 };
             }
             return {
@@ -208,7 +209,6 @@ const StudyScreen = ({ navigation }) => {
 
     const handleCollegeSelect = useCallback((collegeType) => {
         if (collegeType === "other") {
-            // Handle other college logic if needed, else just return
             return;
         }
         if (state.selectedChapter && state.courseIdForCollege) {
@@ -248,7 +248,7 @@ const StudyScreen = ({ navigation }) => {
             {/* </View> */}
             {state.hasError ? (
                 <View style={[styles.centerContent, styles.errorContainer]}>
-                    <Text style={styles.errorText}>Failed to load data. Please check your connection.</Text>
+                    <Text style={styles.errorText}>Please Contact your faculty or MIS Team..</Text>
                     <TouchableOpacity style={styles.retryButton} onPress={fetchStudyMaterials}>
                         <Text style={styles.buttonText}>Tap to Retry</Text>
                     </TouchableOpacity>
@@ -358,7 +358,7 @@ export default StudyScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#CCE5CF', 
+        backgroundColor: '#ddebde', 
         padding: 0,
     },
     centerContent: {
@@ -373,7 +373,7 @@ const styles = StyleSheet.create({
         color: '#666',
     },
     errorContainer: {
-        backgroundColor: '#fdd',
+        backgroundColor: 'rgb(240, 238, 238)',
         borderRadius: 10,
     },
     errorText: {
@@ -389,13 +389,13 @@ const styles = StyleSheet.create({
         borderRadius: 5,
     },
     headerTitle: {
-        fontSize: 24,
+        fontSize: 18,
         fontWeight: 'bold',
         color: '#ffffffff', 
         marginTop: 10,
         margin:5,
         // marginLeft: 10,
-        backgroundColor: '#EDA35A', 
+        backgroundColor: colors.bgcolordark, 
         borderRadius:15,
         padding:8,
         // justifyContent:'center',
@@ -458,7 +458,7 @@ const styles = StyleSheet.create({
         color: '#3f3204ff',
     },
     viewButton: {
-        backgroundColor: '#ED3F27',  
+        backgroundColor: colors.bgcolordark,  
         paddingVertical: 8,
         paddingHorizontal: 15,
         borderRadius: 15,
@@ -527,12 +527,12 @@ const styles = StyleSheet.create({
     modalTitle: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: '#F4991A',
+        color: '#0503a3',
         marginBottom: 15,
         textAlign: 'center',
     },
     collegeButton: {
-        backgroundColor: '#F4991A',
+        backgroundColor: colors.bgcolorlite,
         paddingVertical: 10,
         paddingHorizontal: 20,
         borderRadius: 15,
@@ -571,7 +571,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
     },
     closeButton: {
-        backgroundColor: '#d9534f',
+        backgroundColor: '#1c0e66',
         paddingVertical: 10,
         paddingHorizontal: 20,
         borderRadius: 5,

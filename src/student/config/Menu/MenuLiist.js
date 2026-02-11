@@ -174,14 +174,26 @@ export const studentMenu = [
     screen: 'FeeReceipt',
     color: getColorForMenuItem('FeeReceipt'),
   },
-  {
-    id: 8,
-    name: 'Notification',
-    iconLib: 'EvilIcons',
-    icon: 'bell',
-    screen: 'Notification',
-    color: getColorForMenuItem('Notification'),
-  },
+
+
+  // {
+  //   id: 8,
+  //   name: 'Notification',
+  //   iconLib: 'EvilIcons',
+  //   icon: 'bell',
+  //   screen: 'Notification',
+  //   color: getColorForMenuItem('Notification'),
+  // },
+
+  //   {
+  //   id: 8,
+  //   name: 'SRC',
+  //   iconLib: 'FontAwesome6',
+  //   icon: 'users',
+  //   screen: 'SRC',
+  // },
+
+
   {
     id: 2,
     name: 'Registraion Card',

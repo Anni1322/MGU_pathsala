@@ -20,6 +20,8 @@ export default {
   tablerow:'#ffffffff',
   footercolor:'#030337',
   bgcolor:'#4729A3',
+  bgcolordark:'#200080',
+  bgcolorlite:'#1f0963',
   header:'#1a04507a',
 };
 

@@ -1,20 +1,24 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, ActivityIndicator, FlatList, SafeAreaView, Dimensions } from 'react-native';
+import { 
+  View, Text, StyleSheet, TouchableOpacity, Alert, 
+  ActivityIndicator, FlatList, SafeAreaView, Dimensions, 
+  Platform, StatusBar 
+} from 'react-native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+import { useNavigation } from '@react-navigation/native';
 
 import Header from '../layout/Header/Header';
 import FooterNav from '../layout/Footer/Footer';
 import SessionService from "../../common/Services/SessionService";
 import getAdminApiList from '../config/Api/adminApiList';
 import { HttpService } from "../../common/Services/HttpService";
-import { useNavigation } from '@react-navigation/native';
 import { downloadFile } from "../../common/Services/pdfService";
 import alertService from '../../common/Services/alert/AlertService';
 import { API_BASE_URL } from '../../common/config/BaseUrl';
+import colors from '../../common/config/colors';
 
 const { width } = Dimensions.get('window');
-const CARD_WIDTH = width * 0.92;
-
+const scale = (size) => (width / 375) * size;
 
 const StudyMaterials = () => {
   const navigation = useNavigation();
@@ -24,35 +28,35 @@ const StudyMaterials = () => {
   const [loading, setLoading] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState('All');
 
-  useEffect(() => {
-    if (courseslist.length > 0) {
-      const initialLikes = {};
-      const initialComments = {};
-      courseslist?.forEach(item => {
-        const itemId = item.Study_Material_ID.toString();
-        initialLikes[itemId] = parseInt(item.mlike) || 0;
-        initialComments[itemId] = parseInt(item.comments) || 0;
-      });
-      setLikes(initialLikes);
-      setComments(initialComments);
+  const getStudyMaterial = useCallback(async () => {
+    try {
+      setLoading(true);
+      const getStudyMaterialListApi = getAdminApiList().getStudyMaterialList;
+      const sessionData = await SessionService.getSession();
+      const profile = sessionData?.LoginDetail?.[0];
+      const payload = { 
+        emp_id: profile.Emp_Id, 
+        course_id: profile.Emp_Id, 
+        start_row_count: '', 
+        limit_row_count: '' 
+      };
+   
+      const response = await HttpService.post(getStudyMaterialListApi, payload);
+      // console.log(response,"response for study");
+      setCourseslist(response?.data.StudyMaterialList || []);
+    } catch (error) {
+      Alert.alert("Error", "Failed to load materials");
+    } finally {
+      setLoading(false);
     }
-  }, [courseslist]);
+  }, []);
 
-  const handleLike = useCallback((itemId) => {
-    const updatedLikes = { ...likes, [itemId]: (likes[itemId] || 0) + 1 };
-    setLikes(updatedLikes);
-  }, [likes]);
-
-  const handleComment = useCallback((itemId) => {
-    const updatedComments = { ...comments, [itemId]: (comments[itemId] || 0) + 1 };
-    setComments(updatedComments);
-  }, [comments]);
+  useEffect(() => { getStudyMaterial(); }, [getStudyMaterial]);
 
   const handleDownloadPDF = async (studyMaterialFile) => {
     setLoading(true);
     try {
       const filePath = API_BASE_URL + '/' + studyMaterialFile;
-      console.log(filePath, "filePath");
       if (filePath) {
         await downloadFile(filePath, `${studyMaterialFile.split('/').pop()}`);
       } else {
@@ -65,82 +69,60 @@ const StudyMaterials = () => {
     }
   };
 
-  const GettudyMaterial = useCallback(async () => {
-    try {
-      setLoading(true);
-      const getStudyMaterialListApi = getAdminApiList().getStudyMaterialList;
-      const sessionData = await SessionService.getSession();
-      const profile = sessionData?.LoginDetail?.[0];
-      const payload = { emp_id: profile.Emp_Id, course_id: profile.Emp_Id, start_row_count: '', limit_row_count: '' };
-   
-      const response = await HttpService.post(getStudyMaterialListApi, payload);
-         console.log(response,"response");
-      setCourseslist(response?.data.StudyMaterialList || []);
-    } catch (error) {
-      Alert.alert("Error", "Failed to load materials");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => { GettudyMaterial(); }, [GettudyMaterial]);
-
   const filteredList = courseslist.filter(item => {
     if (selectedFilter === 'All') return true;
     return item.File_Type_Name === selectedFilter;
   });
 
   const renderItem = ({ item }) => {
-    const itemId = item.Study_Material_ID.toString();
     const isPDF = item.File_Type_Name === 'PDF';
+    const itemId = item.Study_Material_ID.toString();
 
     return (
       <View style={styles.card}>
-        <View style={styles.cardContent}>
-          {/* SVG Style Icon Container */}
-          <View style={[styles.iconBox, { backgroundColor: isPDF ? '#FFEBEE' : '#E3F2FD' }]}>
+        <View style={styles.cardMain}>
+          <View style={[styles.iconContainer, { backgroundColor: isPDF ? '#FFF1F0' : '#E6F4FF' }]}>
             <FontAwesome6 
               name={isPDF ? "file-pdf" : "file-word"} 
-              size={28} 
-              color={isPDF ? "#D32F2F" : "#1976D2"} 
+              size={scale(24)} 
+              color={isPDF ? "#E53935" : "#1890FF"} 
             />
           </View>
 
-          <View style={styles.textContainer}>
-            <Text style={styles.courseCode}>{item.Course_Code}</Text>
-            <Text style={styles.titleText} numberOfLines={1}>
+          <View style={styles.infoContainer}>
+            <Text style={styles.courseTag}>{item.Course_Code}</Text>
+            <Text style={styles.materialTitle} numberOfLines={2}>
               {item.Study_Material_Title || "Learning Resource"}
             </Text>
-            
-            <View style={styles.badgeRow}>
-              <View style={styles.badge}>
-                <Text style={styles.badgeText}>{item.Content_Language || 'English'}</Text>
+            <View style={styles.metaRow}>
+              <View style={styles.langBadge}>
+                <Text style={styles.langText}>{item.Content_Language || 'English'}</Text>
               </View>
-              <Text style={styles.dateText}>{item.Created_Date || 'Recently'}</Text>
+              <Text style={styles.creationDate}>{item.Created_Date || 'Recently'}</Text>
             </View>
           </View>
 
           <TouchableOpacity 
-            style={styles.downloadCircle} 
+            style={styles.downloadBtn} 
             onPress={() => handleDownloadPDF(item.Study_Material_File)}
           >
-            <FontAwesome6 name="arrow-down" size={16} color="#FFF" />
+            <FontAwesome6 name="cloud-arrow-down" size={18} color="#FFF" />
           </TouchableOpacity>
         </View>
 
         <View style={styles.cardFooter}>
-          <TouchableOpacity style={styles.actionTab} onPress={() => handleLike(itemId)}>
-            <FontAwesome6 name="heart" solid={likes[itemId] > 0} size={16} color={likes[itemId] > 0 ? "#E91E63" : "#9E9E9E"} />
-            <Text style={styles.actionCount}>{likes[itemId] || 0}</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.actionTab} onPress={() => handleComment(itemId)}>
-            <FontAwesome6 name="message" size={15} color="#9E9E9E" />
-            <Text style={styles.actionCount}>{comments[itemId] || 0}</Text>
-          </TouchableOpacity>
-
-          <View style={styles.flexEnd}>
-             <Text style={styles.fileTypeTag}>{item.File_Type_Name}</Text>
+          <View style={styles.footerStats}>
+            <TouchableOpacity style={styles.statItem}>
+              <FontAwesome6 name="heart" size={14} color="#90A4AE" />
+              <Text style={styles.statText}>{item.mlike || 0}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.statItem}>
+              <FontAwesome6 name="comment-dots" size={14} color="#90A4AE" />
+              <Text style={styles.statText}>{item.comments || 0}</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.typeTag}>
+            <Text style={styles.typeTabText}>{item.File_Type_Name}</Text>
           </View>
         </View>
       </View>
@@ -148,40 +130,52 @@ const StudyMaterials = () => {
   };
 
   return (
-    <SafeAreaView style={styles.body}>
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="dark-content" backgroundColor="#F8F9FE" />
       <Header />
-      <View style={styles.mainContainer}>
-        <View style={styles.topHeader}>
-          <Text style={styles.screenTitle}>Study Materials</Text>
-          <View style={styles.chipScroll}>
-            {['All', 'PDF', 'MS Word'].map((cat) => (
-              <TouchableOpacity 
-                key={cat} 
-                onPress={() => setSelectedFilter(cat)}
-                style={[styles.chip, selectedFilter === cat && styles.activeChip]}
-              >
-                <Text style={[styles.chipText, selectedFilter === cat && styles.activeChipText]}>{cat}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
+      
+      <View style={styles.headerSection}>
+        <View style={styles.titleRow}>
+          <Text style={styles.mainTitle}>Study Materials</Text>
+          <TouchableOpacity 
+            style={styles.miniFab} 
+            onPress={() => navigation.navigate('StudyDash')}
+          >
+            <FontAwesome6 name="plus" size={14} color="#FFF" />
+            <Text style={styles.miniFabText}>Upload</Text>
+          </TouchableOpacity>
         </View>
 
+        <View style={styles.filterContainer}>
+          {['All', 'PDF', 'MS Word'].map((cat) => (
+            <TouchableOpacity 
+              key={cat} 
+              onPress={() => setSelectedFilter(cat)}
+              style={[styles.filterChip, selectedFilter === cat && styles.activeFilterChip]}
+            >
+              <Text style={[styles.filterText, selectedFilter === cat && styles.activeFilterText]}>
+                {cat}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+
+      <View style={styles.container}>
         {loading ? (
-          <ActivityIndicator size="large" color="#673AB7" style={{ marginTop: 50 }} />
+          <View style={styles.loaderContainer}>
+            <ActivityIndicator size="large" color="#1A237E" />
+            <Text style={styles.loadingText}>Fetching Resources...</Text>
+          </View>
         ) : (
           <FlatList
             data={filteredList}
-            keyExtractor={(item) => item.Study_Material_ID.toString()}
             renderItem={renderItem}
-            contentContainerStyle={styles.listPadding}
+            keyExtractor={(item) => item.Study_Material_ID.toString()}
+            contentContainerStyle={styles.listContent}
             showsVerticalScrollIndicator={false}
           />
         )}
-
-        <TouchableOpacity style={styles.fab} onPress={() => navigation.navigate('StudyDash')}>
-          <FontAwesome6 name="plus" size={20} color="#FFF" />
-          <Text style={styles.fabText}>Upload</Text>
-        </TouchableOpacity>
       </View>
       <FooterNav />
     </SafeAreaView>
@@ -191,75 +185,409 @@ const StudyMaterials = () => {
 export default StudyMaterials;
 
 const styles = StyleSheet.create({
-  body: { flex: 1, backgroundColor: '#e3e5e7' },
-  mainContainer: { flex: 1, paddingHorizontal: 16 },
-  topHeader: { marginTop: 20, marginBottom: 10 },
-  screenTitle: { fontSize: 26, fontWeight: '800', color: '#1A237E', marginBottom: 15 },
-  chipScroll: { flexDirection: 'row', gap: 10 },
-  chip: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, backgroundColor: '#FFF', borderWeight: 1, borderColor: '#E0E0E0' },
-  activeChip: { backgroundColor: '#1A237E' },
-  chipText: { color: '#757575', fontWeight: '600' },
-  activeChipText: { color: '#FFF' },
-  listPadding: { paddingBottom: 100, paddingTop: 10 },
+  safeArea: { flex: 1, backgroundColor: '#F8F9FE' },
+  container: { flex: 1 },
   
-  // Card Styles
+  headerSection: {
+    paddingHorizontal: 16,
+    paddingTop: 15,
+    paddingBottom: 10,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  mainTitle: {
+    fontSize: scale(24),
+    fontWeight: '800',
+    color: '#1A237E',
+  },
+  miniFab: {
+    backgroundColor: '#1A237E',
+    flexDirection: 'row',
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 20,
+    alignItems: 'center',
+    elevation: 4,
+  },
+  miniFabText: { color: '#FFF', fontWeight: 'bold', marginLeft: 6, fontSize: 12 },
+
+  filterContainer: { flexDirection: 'row', gap: 10 },
+  filterChip: {
+    paddingHorizontal: 18,
+    paddingVertical: 8,
+    borderRadius: 25,
+    backgroundColor: '#FFF',
+    borderWidth: 1,
+    borderColor: '#E3E8EF',
+  },
+  activeFilterChip: { backgroundColor: '#1A237E', borderColor: '#1A237E' },
+  filterText: { color: '#64748B', fontWeight: '600', fontSize: 13 },
+  activeFilterText: { color: '#FFF' },
+
+  listContent: { paddingHorizontal: 16, paddingBottom: 100, paddingTop: 5 },
+
+  // Card Design
   card: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#FFF',
     borderRadius: 20,
     marginBottom: 16,
     padding: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    elevation: 3,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#1A237E',
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.08,
+        shadowRadius: 12,
+      },
+      android: { elevation: 3 },
+    }),
   },
-
-
-  
-
-  cardContent: { flexDirection: 'row', alignItems: 'center' },
-  iconBox: { width: 56, height: 56, borderRadius: 16, justifyContent: 'center', alignItems: 'center' },
-  textContainer: { flex: 1, marginLeft: 16 },
-  courseCode: { fontSize: 11, fontWeight: 'bold', color: '#1A237E', textTransform: 'uppercase', letterSpacing: 1 },
-  titleText: { fontSize: 16, fontWeight: '700', color: '#333', marginVertical: 2 },
-  badgeRow: { flexDirection: 'row', alignItems: 'center', marginTop: 4 },
-  badge: { backgroundColor: '#F5F5F5', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6 },
-  badgeText: { fontSize: 10, color: '#616161', fontWeight: 'bold' },
-  dateText: { fontSize: 11, color: '#BDBDBD', marginLeft: 10 },
-  downloadCircle: { width: 36, height: 36, borderRadius: 18, backgroundColor: '#1A237E', justifyContent: 'center', alignItems: 'center' },
-  
-  cardFooter: { 
-    flexDirection: 'row', 
-    marginTop: 15, 
-    paddingTop: 12, 
-    borderTopWidth: 1, 
-    borderTopColor: '#F5F5F5', 
-    alignItems: 'center' 
-  },
-  actionTab: { flexDirection: 'row', alignItems: 'center', marginRight: 20 },
-  actionCount: { marginLeft: 6, fontSize: 13, color: '#757575', fontWeight: '600' },
-  flexEnd: { flex: 1, alignItems: 'flex-end' },
-  fileTypeTag: { fontSize: 10, fontWeight: 'bold', color: '#9E9E9E' },
-
-  fab: {
-    position: 'absolute',
-    // bottom: 25,
-    top:20,
-    right: 20,
-    backgroundColor: '#1A237E',
-    flexDirection: 'row',
+  cardMain: { flexDirection: 'row', alignItems: 'center' },
+  iconContainer: {
+    width: scale(52),
+    height: scale(52),
+    borderRadius: 15,
+    justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 30,
-    elevation: 5,
-    shadowColor: '#1A237E',
-    shadowOpacity: 0.4,
-    shadowRadius: 10,
   },
-  fabText: { color: '#FFF', fontWeight: 'bold', marginLeft: 8 }
+  infoContainer: { flex: 1, marginLeft: 16 },
+  courseTag: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    color: '#3949AB',
+    backgroundColor: '#E8EAF6',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    alignSelf: 'flex-start',
+    marginBottom: 4,
+  },
+  materialTitle: { fontSize: scale(15), fontWeight: '700', color: '#1E293B' },
+  metaRow: { flexDirection: 'row', alignItems: 'center', marginTop: 6 },
+  langBadge: { backgroundColor: '#F1F5F9', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6 },
+  langText: { fontSize: 10, color: '#475569', fontWeight: '700' },
+  creationDate: { fontSize: 11, color: '#94A3B8', marginLeft: 10 },
+  
+  downloadBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#1A237E',
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 2,
+  },
+
+  cardFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 15,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#F1F5F9',
+  },
+  footerStats: { flexDirection: 'row', gap: 15 },
+  statItem: { flexDirection: 'row', alignItems: 'center', gap: 5 },
+  statText: { fontSize: 12, color: '#64748B', fontWeight: '600' },
+  typeTag: { backgroundColor: '#F8FAFC', paddingHorizontal: 10, paddingVertical: 3, borderRadius: 8 },
+  typeTabText: { fontSize: 9, fontWeight: '800', color: '#94A3B8', textTransform: 'uppercase' },
+
+  loaderContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 50 },
+  loadingText: { marginTop: 15, color: '#64748B', fontSize: 14, fontWeight: '600' }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import React, { useEffect, useState, useCallback } from 'react';
+// import { View, Text, StyleSheet, TouchableOpacity, Alert, ActivityIndicator, FlatList, SafeAreaView, Dimensions } from 'react-native';
+// import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+
+// import Header from '../layout/Header/Header';
+// import FooterNav from '../layout/Footer/Footer';
+// import SessionService from "../../common/Services/SessionService";
+// import getAdminApiList from '../config/Api/adminApiList';
+// import { HttpService } from "../../common/Services/HttpService";
+// import { useNavigation } from '@react-navigation/native';
+// import { downloadFile } from "../../common/Services/pdfService";
+// import alertService from '../../common/Services/alert/AlertService';
+// import { API_BASE_URL } from '../../common/config/BaseUrl';
+// import colors from '../../common/config/colors';
+
+
+// const { width } = Dimensions.get('window');
+// const CARD_WIDTH = width * 0.92;
+
+
+// const StudyMaterials = () => {
+//   const navigation = useNavigation();
+//   const [courseslist, setCourseslist] = useState([]);
+//   const [likes, setLikes] = useState({});
+//   const [comments, setComments] = useState({});
+//   const [loading, setLoading] = useState(false);
+//   const [selectedFilter, setSelectedFilter] = useState('All');
+
+//   useEffect(() => {
+//     if (courseslist.length > 0) {
+//       const initialLikes = {};
+//       const initialComments = {};
+//       courseslist?.forEach(item => {
+//         const itemId = item.Study_Material_ID.toString();
+//         initialLikes[itemId] = parseInt(item.mlike) || 0;
+//         initialComments[itemId] = parseInt(item.comments) || 0;
+//       });
+//       setLikes(initialLikes);
+//       setComments(initialComments);
+//     }
+//   }, [courseslist]);
+
+//   const handleLike = useCallback((itemId) => {
+//     const updatedLikes = { ...likes, [itemId]: (likes[itemId] || 0) + 1 };
+//     setLikes(updatedLikes);
+//   }, [likes]);
+
+//   const handleComment = useCallback((itemId) => {
+//     const updatedComments = { ...comments, [itemId]: (comments[itemId] || 0) + 1 };
+//     setComments(updatedComments);
+//   }, [comments]);
+
+//   const handleDownloadPDF = async (studyMaterialFile) => {
+//     setLoading(true);
+//     try {
+//       const filePath = API_BASE_URL + '/' + studyMaterialFile;
+//       console.log(filePath, "filePath");
+//       if (filePath) {
+//         await downloadFile(filePath, `${studyMaterialFile.split('/').pop()}`);
+//       } else {
+//         alertService.show({ title: 'Error', message: 'No file available.', type: 'warning' });
+//       }
+//     } catch (error) {
+//       Alert.alert('Download Failed', error?.message || 'Something went wrong');
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const GettudyMaterial = useCallback(async () => {
+//     try {
+//       setLoading(true);
+//       const getStudyMaterialListApi = getAdminApiList().getStudyMaterialList;
+//       const sessionData = await SessionService.getSession();
+//       const profile = sessionData?.LoginDetail?.[0];
+//       const payload = { emp_id: profile.Emp_Id, course_id: profile.Emp_Id, start_row_count: '', limit_row_count: '' };
+   
+//       const response = await HttpService.post(getStudyMaterialListApi, payload);
+//          console.log(response,"response");
+//       setCourseslist(response?.data.StudyMaterialList || []);
+//     } catch (error) {
+//       Alert.alert("Error", "Failed to load materials");
+//     } finally {
+//       setLoading(false);
+//     }
+//   }, []);
+
+//   useEffect(() => { GettudyMaterial(); }, [GettudyMaterial]);
+
+//   const filteredList = courseslist.filter(item => {
+//     if (selectedFilter === 'All') return true;
+//     return item.File_Type_Name === selectedFilter;
+//   });
+
+//   const renderItem = ({ item }) => {
+//     const itemId = item.Study_Material_ID.toString();
+//     const isPDF = item.File_Type_Name === 'PDF';
+
+//     return (
+//       <View style={styles.card}>
+//         <View style={styles.cardContent}>
+//           {/* SVG Style Icon Container */}
+//           <View style={[styles.iconBox, { backgroundColor: isPDF ? '#FFEBEE' : '#E3F2FD' }]}>
+//             <FontAwesome6 
+//               name={isPDF ? "file-pdf" : "file-word"} 
+//               size={28} 
+//               color={isPDF ? "#D32F2F" : "#1976D2"} 
+//             />
+//           </View>
+
+//           <View style={styles.textContainer}>
+//             <Text style={styles.courseCode}>{item.Course_Code}</Text>
+//             <Text style={styles.titleText} numberOfLines={1}>
+//               {item.Study_Material_Title || "Learning Resource"}
+//             </Text>
+            
+//             <View style={styles.badgeRow}>
+//               <View style={styles.badge}>
+//                 <Text style={styles.badgeText}>{item.Content_Language || 'English'}</Text>
+//               </View>
+//               <Text style={styles.dateText}>{item.Created_Date || 'Recently'}</Text>
+//             </View>
+//           </View>
+
+//           <TouchableOpacity 
+//             style={styles.downloadCircle} 
+//             onPress={() => handleDownloadPDF(item.Study_Material_File)}
+//           >
+//             <FontAwesome6 name="arrow-down" size={16} color="#FFF" />
+//           </TouchableOpacity>
+//         </View>
+
+//         <View style={styles.cardFooter}>
+//           <TouchableOpacity style={styles.actionTab} onPress={() => handleLike(itemId)}>
+//             <FontAwesome6 name="heart" solid={likes[itemId] > 0} size={16} color={likes[itemId] > 0 ? "#E91E63" : "#9E9E9E"} />
+//             <Text style={styles.actionCount}>{likes[itemId] || 0}</Text>
+//           </TouchableOpacity>
+
+//           <TouchableOpacity style={styles.actionTab} onPress={() => handleComment(itemId)}>
+//             <FontAwesome6 name="message" size={15} color="#9E9E9E" />
+//             <Text style={styles.actionCount}>{comments[itemId] || 0}</Text>
+//           </TouchableOpacity>
+
+//           <View style={styles.flexEnd}>
+//              <Text style={styles.fileTypeTag}>{item.File_Type_Name}</Text>
+//           </View>
+//         </View>
+//       </View>
+//     );
+//   };
+
+//   return (
+//     <SafeAreaView style={styles.body}>
+//       <Header />
+//       <View style={styles.mainContainer}>
+//         <View style={styles.topHeader}>
+//           <Text style={styles.screenTitle}>Study Materials</Text>
+//           <View style={styles.chipScroll}>
+//             {['All', 'PDF', 'MS Word'].map((cat) => (
+//               <TouchableOpacity 
+//                 key={cat} 
+//                 onPress={() => setSelectedFilter(cat)}
+//                 style={[styles.chip, selectedFilter === cat && styles.activeChip]}
+//               >
+//                 <Text style={[styles.chipText, selectedFilter === cat && styles.activeChipText]}>{cat}</Text>
+//               </TouchableOpacity>
+//             ))}
+//           </View>
+//         </View>
+
+//         {loading ? (
+//           <ActivityIndicator size="large" color="#673AB7" style={{ marginTop: 50 }} />
+//         ) : (
+//           <FlatList
+//             data={filteredList}
+//             keyExtractor={(item) => item.Study_Material_ID.toString()}
+//             renderItem={renderItem}
+//             contentContainerStyle={styles.listPadding}
+//             showsVerticalScrollIndicator={false}
+//           />
+//         )}
+
+//         <TouchableOpacity style={styles.fab} onPress={() => navigation.navigate('StudyDash')}>
+//           <FontAwesome6 name="plus" size={20} color="#FFF" />
+//           <Text style={styles.fabText}>Upload</Text>
+//         </TouchableOpacity>
+//       </View>
+//       <FooterNav />
+//     </SafeAreaView>
+//   );
+// };
+
+// export default StudyMaterials;
+
+// const styles = StyleSheet.create({
+//   body: { flex: 1, backgroundColor: '#e3e5e7' },
+//   mainContainer: { flex: 1, paddingHorizontal: 16 },
+//   topHeader: { marginTop: 20, marginBottom: 10 },
+//   screenTitle: { fontSize: 26, fontWeight: '800', color: '#1A237E', marginBottom: 15 },
+//   chipScroll: { flexDirection: 'row', gap: 10 },
+//   chip: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, backgroundColor: '#FFF', borderWeight: 1, borderColor: '#E0E0E0' },
+//   activeChip: { backgroundColor: '#1A237E' },
+//   chipText: { color: '#757575', fontWeight: '600' },
+//   activeChipText: { color: '#FFF' },
+//   listPadding: { paddingBottom: 100, paddingTop: 10 },
+  
+//   // Card Styles
+//   card: {
+//     backgroundColor: '#ffffff',
+//     borderRadius: 20,
+//     marginBottom: 16,
+//     padding: 16,
+//     shadowColor: '#000',
+//     shadowOffset: { width: 0, height: 4 },
+//     shadowOpacity: 0.05,
+//     shadowRadius: 10,
+//     elevation: 3,
+//   },
+
+
+  
+
+//   cardContent: { flexDirection: 'row', alignItems: 'center' },
+//   iconBox: { width: 56, height: 56, borderRadius: 16, justifyContent: 'center', alignItems: 'center' },
+//   textContainer: { flex: 1, marginLeft: 16 },
+//   courseCode: { fontSize: 11, fontWeight: 'bold', color: '#1A237E', textTransform: 'uppercase', letterSpacing: 1 },
+//   titleText: { fontSize: 16, fontWeight: '700', color: '#333', marginVertical: 2 },
+//   badgeRow: { flexDirection: 'row', alignItems: 'center', marginTop: 4 },
+//   badge: { backgroundColor: '#F5F5F5', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6 },
+//   badgeText: { fontSize: 10, color: '#616161', fontWeight: 'bold' },
+//   dateText: { fontSize: 11, color: '#BDBDBD', marginLeft: 10 },
+//   downloadCircle: { width: 36, height: 36, borderRadius: 18, backgroundColor: '#1A237E', justifyContent: 'center', alignItems: 'center' },
+  
+//   cardFooter: { 
+//     flexDirection: 'row', 
+//     marginTop: 15, 
+//     paddingTop: 12, 
+//     borderTopWidth: 1, 
+//     borderTopColor: '#F5F5F5', 
+//     alignItems: 'center' 
+//   },
+//   actionTab: { flexDirection: 'row', alignItems: 'center', marginRight: 20 },
+//   actionCount: { marginLeft: 6, fontSize: 13, color: '#757575', fontWeight: '600' },
+//   flexEnd: { flex: 1, alignItems: 'flex-end' },
+//   fileTypeTag: { fontSize: 10, fontWeight: 'bold', color: '#9E9E9E' },
+
+//   fab: {
+//     position: 'absolute',
+//     // bottom: 25,
+//     top:20,
+//     right: 20,
+//     backgroundColor: colors.bgcolor,
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     paddingHorizontal: 20,
+//     paddingVertical: 12,
+//     borderRadius: 30,
+//     elevation: 5,
+//     shadowColor: '#1A237E',
+//     shadowOpacity: 0.4,
+//     shadowRadius: 10,
+//   },
+//   fabText: { color: '#FFF', fontWeight: 'bold', marginLeft: 8 }
+// });
+
+
+
+
+
 
 
 

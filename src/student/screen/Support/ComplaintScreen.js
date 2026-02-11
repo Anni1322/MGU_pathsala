@@ -68,7 +68,7 @@ export default function ComplaintScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Logic remains exactly the same as your request
+
   useEffect(() => {
     fetchData();
     GetMyComplainList(false);
@@ -96,6 +96,7 @@ export default function ComplaintScreen() {
     try {
       const sessionData = await SessionService.getSession();
       const response = await HttpService.post(getApiList().GetMyComplainList, { STUDENT_ID: sessionData?.STUDENT_ID });
+      console.log(response,"response");
       setComplaintStatusData(response?.data?.ComplainListResponse?.ComplainList || []);
     } finally { if (showLoading) setIsLoading(false); }
   };
@@ -139,7 +140,9 @@ export default function ComplaintScreen() {
       formData.append("PROBLEM_COPY", s64);
       formData.append("ORDER_COPY", o64);
 
+      console.log(formData,"formData");
       const response = await HttpService.post(getApiList().SaveComplain, formData);
+      console.log(response,"response");
       if (response?.data?.Response[0]?.Complain_ID !== '0') {
         Alert.alert("Success", "Complaint Submitted.");
         setActiveTab("complaint_status");
