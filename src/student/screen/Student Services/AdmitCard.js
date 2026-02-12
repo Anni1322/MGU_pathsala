@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
 
   // Title Styles
   titleContainer: { paddingHorizontal: 20, marginTop: 20, marginBottom: 10 },
-  mainTitle: { fontSize: 24, fontWeight: "800", color: "#1A1A1A" },
+  mainTitle: { fontSize: 20, fontWeight: "800", color: "#1A1A1A" },
   subTitle: { fontSize: 12, color: '#999', marginTop: 2, fontWeight: '500' },
 
   // List Styles

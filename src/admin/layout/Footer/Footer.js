@@ -14,7 +14,7 @@ const BG_COLOR = colors.bgcolor || '#3D365C'; // Fallback to your primary admin 
 
 const menuItems = [
   {
-    key: 'profile',
+    key: 'Profile',
     iconName: 'user',
     label: 'My Profile',
     routeName: 'AdminProfile',
@@ -37,12 +37,12 @@ const menuItems = [
   {
     key: 'MyCourses',
     iconName:'users',
-    label: 'Student List',
+    label: 'My Courses',
     routeName: 'MyCourses',
     isHome: false,
   },
   {
-    key: 'examination',
+    key: 'Study Material',
     iconName: 'pen-to-square',
     label: 'Examination',
     routeName: 'Maintenance',
@@ -76,7 +76,7 @@ export default function FooterNav() {
           fill="none"
           stroke="rgb(255, 255, 255)"
           strokeWidth="10"
-          opacity={1.2} // Subtle white border on top of the curve
+          opacity={1.2}  
         />
       </Svg>
 
@@ -88,7 +88,7 @@ export default function FooterNav() {
           // Use .replace for Home to reset stack, .navigate for others
           const navAction = isHome ? 
             () => navigation.replace(item.routeName) : 
-            () => navigation.navigate(item.routeName);
+            () => navigation.replace(item.routeName);
 
           if (isHome) {
             return (

@@ -145,7 +145,7 @@ export const facultyMenu = [
     iconLib: 'FontAwesome6',
     icon: 'users',
     screen: 'MyStudents',
-    color: '#A2AADB',
+    color: '#4e568f',
     iconColor: '#d13b00ff',
     count: '',
     data: 'MyStudent',
@@ -156,7 +156,7 @@ export const facultyMenu = [
     iconLib: 'FontAwesome6',
     icon: 'book-open',
     screen: 'StudyMaterials',
-    color: '#96A78D',
+    color: '#668157',
     data: 'StudyMaterials',
   },
   {
@@ -176,7 +176,7 @@ export const facultyMenu = [
     iconLib: 'FontAwesome6',
     icon: 'video',
     screen: 'Maintenance',
-    color: '#93BFC7',
+    color: '#5a8d96',
     iconColor: '#ECF4E8',
     data: ''
   },

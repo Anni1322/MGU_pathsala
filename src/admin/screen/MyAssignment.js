@@ -133,6 +133,8 @@ const AssignmentDashboard = () => {
         );
     };
 
+    
+
     return (
         <View style={styles.body}>
             <StatusBar barStyle="dark-content" backgroundColor="#F8F9FA" />
@@ -143,11 +145,11 @@ const AssignmentDashboard = () => {
                 {/* Visual Banner */}
                 <View style={styles.heroSection}>
                     <View>
-                        <Text style={styles.heroTitle}>My Classroom</Text>
+                        <Text style={styles.heroTitle}>Assignment's</Text>
                         <Text style={styles.heroSub}>Track your teaching progress</Text>
                     </View>
                     <View style={styles.heroIconCircle}>
-                        <FontAwesome6 name="chart-line" size={24} color={colors.primary} />
+                        <FontAwesome6 name="chart-line" size={14} color={colors.primary} />
                     </View>
                 </View>
 
@@ -184,8 +186,8 @@ const AssignmentDashboard = () => {
             <TouchableOpacity 
                 style={styles.fabContainer} 
                 activeOpacity={0.8}
-                onPress={() => navigation.navigate('MyAssignmentDesh')}
-            >
+                onPress={() => navigation.navigate('MyAssignmentDesh')}>
+                    
                 <View style={styles.fabGradient}>
                     <FontAwesome6 name="plus" size={20} color="#FFF" />
                     <Text style={styles.fabText}>Create</Text>
@@ -213,7 +215,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#E9ECEF',
     },
-    heroTitle: { fontSize: 24, fontWeight: '800', color: '#1A1C1E' },
+    heroTitle: { fontSize: 20, fontWeight: '800', color: '#1A1C1E' },
     heroSub: { fontSize: 14, color: '#6C757D', marginTop: 4 },
     heroIconCircle: { backgroundColor: '#F0F3FF', padding: 15, borderRadius: 20 },
 
@@ -279,12 +281,12 @@ const styles = StyleSheet.create({
         right: 20,
         borderRadius: 30,
         elevation: 10,
-        shadowColor: colors.primary,
+        shadowColor: colors.bgcolordark,
         shadowOpacity: 0.4,
         shadowRadius: 10,
     },
     fabGradient: {
-        backgroundColor: colors.primary,
+        backgroundColor: colors.bgcolordark,
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 20,

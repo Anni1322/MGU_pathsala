@@ -546,11 +546,11 @@ export const downloadFileOther = async (transcriptUrl, fileIdentifier = 1, navig
       toFile: localFile,
     }).promise;
 
-    if (downloadResult.statusCode === 200) {
+    if (downloadResult?.statusCode === 200) {
       Alert.alert("Download Successful", `Saved as ${fileName} in mguvv folder.`);
       await openPDF(localFile);  // Pass the file path (localFile)
     } else {
-      throw new Error(`Failed with status code: ${downloadResult.statusCode}`);
+      throw new Error(`Failed with status code: ${downloadResult?.statusCode}`);
     }
   } catch (error) {
     console.error("Download failed:", error);

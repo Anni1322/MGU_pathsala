@@ -29,7 +29,7 @@ const FeeReceipt = () => {
   const [sessionOptions, setSessionOptions] = useState([]);
   const [purposeOptions, setPurposeOptions] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [refreshing, setRefreshing] = useState(false); // FIXED: Added missing state
+  const [refreshing, setRefreshing] = useState(false);  
   const [selectedReceipt, setSelectedReceipt] = useState(null);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
 
@@ -52,6 +52,7 @@ const FeeReceipt = () => {
     if (selectedPurpose && selectedPurpose !== 'All') {
       data = data.filter(item => item.Fee_Purpose_Name === selectedPurpose);
     }
+    console.log(data,"data");
     setFiltered(data);
   }, [searchText, selectedSession, selectedPurpose, receipts]);
 
@@ -96,20 +97,29 @@ const FeeReceipt = () => {
   };
 
   const handleDownloadPDF = async (receipt) => {
+    console.log(receipt,"receipt");
     setLoading(true);
     try {
-      const sessionData = await SessionService.getSession();
+      const sessionData = await SessionService?.getSession();
       const payload = { STUDENT_ID: sessionData?.STUDENT_ID, Receipt_No: receipt?.Receipt_No };
-      const response = await HttpService.post(getApiList().DownloadFeeReceipt, payload);
-      const filePath = API_BASE_URL + '/' + response?.data?.Response[0]?.FilePath;
-      if (filePath) {
-        await downloadFile(filePath, `Receipt_${receipt?.Receipt_No}.pdf`);
+      const response = await HttpService.post(getApiList()?.DownloadFeeReceipt, payload);
+      console.log(response,"response");
+      const responseData = response?.data?.Response?.[0] || {};
+      const { FilePath, Success } = responseData;
+      if (Success === "1" && FilePath && FilePath.trim() !== "") {
+        const fullPath = `${API_BASE_URL}/${FilePath}`;
+        await downloadFile(fullPath, `Receipt_${receipt?.Receipt_No}.pdf`);
+      } else {
+        console.log("File not available");
+        alertService.show({ title: 'Not Found', message: 'File not available', type: 'danger' });
       }
     } catch (error) {
       alertService.show({ title: 'Error', message: 'Download Failed', type: 'danger' });
     } finally {
       setLoading(false);
     }
+
+
   };
 
   const renderReceipt = ({ item }) => (
@@ -141,6 +151,11 @@ const FeeReceipt = () => {
     <SafeAreaView style={styles.container}>
       <Header />
       
+      <View style={styles.titleContainer}>
+           <Text style={styles.mainTitle}>Fees Receipt</Text>
+     
+        </View>
+
       {/* Search & Filter Section */}
       <View style={styles.filterWrapper}>
         <View style={styles.searchBox}>
@@ -283,7 +298,14 @@ const styles = StyleSheet.create({
   centerLoader: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   loaderSub: { marginTop: 10, color: '#666', fontSize: 14 },
   emptyBox: { alignItems: 'center', marginTop: 100 },
-  emptyText: { marginTop: 10, color: '#BBB' }
+  emptyText: { marginTop: 10, color: '#BBB' },
+
+
+    // Title Styles
+  titleContainer: { paddingHorizontal: 20, marginTop: 20, marginBottom: 10 },
+  mainTitle: { fontSize: 20, fontWeight: "800", color: "#1A1A1A" },
+  subTitle: { fontSize: 12, color: '#999', marginTop: 2, fontWeight: '500' },
+
 });
 
 export default FeeReceipt;
