@@ -7,53 +7,29 @@ import colors from '../../../common/config/colors';
 
 const { width } = Dimensions.get('window');
 
-// Define colors here for easy adjustment
-const ACTIVE_COLOR = '#ffa600f1'; // Yellow/Gold for active state
+ 
+const ACTIVE_COLOR = '#ffa600f1'; 
 const INACTIVE_COLOR = '#FFFFFF';
-const BG_COLOR = colors.bgcolor || '#3D365C'; // Fallback to your primary admin theme color
+const BG_COLOR = colors.bgcolor || '#3D365C';  
 
 const menuItems = [
   {
-    key: 'Profile',
-    iconName: 'user',
-    label: 'My Profile',
-    routeName: 'AdminProfile',
-    isHome: false,
+    key: 'Profile', iconName: 'user', label: 'My Profile', routeName: 'AdminProfile', isHome: false,
   },
   {
-    key: 'MyStudents',
-    iconName: 'book',
-    label: 'My Students',
-    routeName: 'MyStudents',
-    isHome: false,
+    key: 'MyStudents', iconName: 'user-graduate', label: 'My Students', routeName: 'MyStudents', isHome: false,
   },
   {
-    key: 'home',
-    iconName: 'house',
-    label: '',
-    routeName: 'AdminHomeLayout',
-    isHome: true,
-  },
+    key: 'home', iconName: 'house', label: '', routeName: 'AdminHomeLayout', isHome: true, },
   {
-    key: 'MyCourses',
-    iconName:'users',
-    label: 'My Courses',
-    routeName: 'MyCourses',
-    isHome: false,
-  },
+    key: 'MyCourses', iconName:'book-open', label: 'My Courses', routeName: 'MyCourses', isHome: false,},
   {
-    key: 'Study Material',
-    iconName: 'pen-to-square',
-    label: 'Examination',
-    routeName: 'Maintenance',
-    isHome: false,
+    key: 'StudyMaterial', iconName: 'file-lines',label: 'Study Material', routeName: 'StudyMaterials',isHome: false,
   },
 ];
 
 export default function FooterNav() {
   const navigation = useNavigation();
-
-  // Get the current route name from the navigation state to handle active highlights
   const currentRouteName = useNavigationState((state) => 
     state?.routes[state.index]?.name
   );
@@ -61,31 +37,15 @@ export default function FooterNav() {
   return (
     <View style={styles.container}>
       {/* Modern Curved SVG Background */}
-      <Svg
-        height="110"
-        width={width}
-        viewBox={`0 0 ${width} 110`}
-        style={styles.svgBackground}
-      >
-        <Path
-          d={`M0 60 Q${width / 2} 0 ${width} 60 L${width} 110 L0 110 Z`}
-          fill={BG_COLOR}
-        />
-        <Path
-          d={`M0 60 Q${width / 2} 0 ${width} 60`}
-          fill="none"
-          stroke="rgb(255, 255, 255)"
-          strokeWidth="10"
-          opacity={1.2}  
-        />
+      <Svg height="110" width={width} viewBox={`0 0 ${width} 110`} style={styles.svgBackground}>
+        <Path d={`M0 60 Q${width / 2} 0 ${width} 60 L${width} 110 L0 110 Z`}  fill={BG_COLOR}/>
+        <Path d={`M0 60 Q${width / 2} 0 ${width} 60`}fill="none" stroke="rgb(255, 255, 255)" strokeWidth="10" opacity={1.2} />
       </Svg>
 
       <View style={styles.contentWrapper}>
         {menuItems.map((item) => {
           const isHome = item.isHome;
           const isActive = currentRouteName === item.routeName;
-          
-          // Use .replace for Home to reset stack, .navigate for others
           const navAction = isHome ? 
             () => navigation.replace(item.routeName) : 
             () => navigation.replace(item.routeName);
@@ -96,14 +56,14 @@ export default function FooterNav() {
                 key={item.key} 
                 style={styles.homeBtnContainer} 
                 onPress={navAction} 
-                activeOpacity={0.9}
-              >
+                activeOpacity={0.9}>
+
                 <View style={[
                   styles.homeBtnCircle, 
-                  { backgroundColor: colors.backgroundlite || colors.primary },
+                  { backgroundColor: colors.bgcolor || colors.primary },
                   isActive && { borderColor: ACTIVE_COLOR, borderWidth: 5 } 
                 ]}>
-                  <FontAwesome6 name={item.iconName} size={30} color="#4c60d1" />
+                  <FontAwesome6 name={item.iconName} size={30} color="#ffffff" />
                 </View>
               </TouchableOpacity>
             );
@@ -157,7 +117,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   navText: {
-    fontSize: 10, // Slightly smaller for Admin labels (more text)
+    fontSize: 10,  
     marginTop: 4,
     fontWeight: '600',
   },
@@ -168,8 +128,8 @@ const styles = StyleSheet.create({
     marginBottom: 35,
   },
   homeBtnCircle: {
-    width: 70,
-    height: 70,
+    width: 65,
+    height: 65,
     borderRadius: 35,
     justifyContent: 'center',
     alignItems: 'center',

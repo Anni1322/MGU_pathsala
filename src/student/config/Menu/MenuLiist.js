@@ -1,137 +1,3 @@
-export const pathshalaMenu = [
-  {
-    id: 1,
-    name: 'Study Material',
-    icon: 'book',
-    screen: 'Study',
-    color: '#70b0f1', // Lighter blue
-  },
-  {
-    id: 2,
-    name: 'Assignment',
-    icon: 'file-pen',
-    screen: 'Assignment',
-    color: '#8cd9a2', // Lighter green
-  },
-  {
-    id: 3,
-    name: 'Doubt Session',
-    icon: 'comments',
-    screen: 'DoubtSession',
-    color: '#ffb84d', // Lighter orange
-  },
-  {
-    id: 4,
-    name: 'Video Lecture',
-    icon: 'video',
-    screen: 'Examination',
-    color: '#b76bcc', // Lighter purple
-  },
-  {
-    id: 5,
-    name: 'Examination',
-    icon: 'clipboard-check',
-    screen: 'Examination',
-    color: '#f66c6b', // Lighter red
-  },
-];
-
-
-
-
-
-// export const studentMenu = [
-//   {
-//     id: 1,
-//     name: 'Notification',
-//     iconLib: 'EvilIcons',
-//     icon: 'bell',
-//     screen: 'Notification',
-//     color: '#dc143c',
-//   },
-//   {
-//     id: 2,
-//     name: 'Syllabus',
-//     iconLib: 'FontAwesome6',
-//     icon: 'book-open',
-//     screen: 'Syllabus',
-//     color: '#9932cc',
-//   },
-//   {
-//     id: 3,
-//     name: 'Registration Card',
-//     iconLib: 'FontAwesome6',
-//     icon: 'id-card',
-//     screen: 'RegistrationCard',
-//   },
-//   {
-//     id: 4,
-//     name: 'Admit Card',
-//     iconLib: 'FontAwesome6',
-//     icon: 'ticket',
-//     screen: 'AdmitCard',
-//   },
-//   {
-//     id: 5,
-//     name: 'SRC',
-//     iconLib: 'FontAwesome6',
-//     icon: 'users',
-//     screen: 'SRC',
-//   },
-//   {
-//     id: 6,
-//     name: 'PDC',
-//     iconLib: 'FontAwesome6',
-//     icon: 'graduation-cap',
-//     screen: 'PDC',
-//   },
-//   {
-//     id: 7,
-//     name: 'Transcript',
-//     iconLib: 'FontAwesome6',
-//     icon: 'file-alt',
-//     screen: 'Menu',
-//   },
-//   {
-//     id: 8,
-//     name: 'Profile',
-//     iconLib: 'FontAwesome6',
-//     icon: 'user',
-//     screen: 'Profile',
-//   },
-//   {
-//     id: 9,
-//     name: 'FeeReceipt',
-//     iconLib: 'FontAwesome6',
-//     icon: 'user',
-//     screen: 'FeeReceipt',
-//   },
-
-//   // {
-//   //   id: 8,
-//   //   name: 'Profile',
-//   //   iconLib: 'FontAwesome6',
-//   //   icon: 'user',
-//   //   screen: 'Profile',
-//   // },
-//   // {
-//   //   id: 8,
-//   //   name: 'Profile',
-//   //   iconLib: 'FontAwesome6',
-//   //   icon: 'user',
-//   //   screen: 'Profile',
-//   // },
-//   // {
-//   //   id: 8,
-//   //   name: 'Profile',
-//   //   iconLib: 'FontAwesome6',
-//   //   icon: 'user',
-//   //   screen: 'Profile',
-//   // },
-// ];
-
-
-
 
 const getColorForMenuItem = (name) => {
   const colors = {
@@ -148,8 +14,10 @@ const getColorForMenuItem = (name) => {
   return colors[name] || '#ffffff';   
 };
 
-export const studentMenu = [
-  {
+
+export const pathshalaMenu = [
+
+    {
     id: 1,
     name: 'Profile',
     iconLib: 'FontAwesome6',
@@ -157,6 +25,14 @@ export const studentMenu = [
     screen: 'Profile',
     color: getColorForMenuItem('Profile'),
     data: ''
+  },
+  {
+    id: 2,
+    name: 'Registraion Card',
+    iconLib: 'FontAwesome6',
+    icon: 'users',
+    screen: 'RegistraionCardList',
+    color: getColorForMenuItem('Registraion Card'),
   },
   {
     id: 3,
@@ -168,56 +44,104 @@ export const studentMenu = [
   },
   {
     id: 4,
-    name: 'FeeReceipt',
+    name: 'Fee Receipt',
     iconLib: 'FontAwesome6',
     icon: 'file-invoice-dollar',
     screen: 'FeeReceipt',
-    color: getColorForMenuItem('FeeReceipt'),
+    color: getColorForMenuItem('FeeReceipt'),    
   },
+  
+
 
 
   // {
-  //   id: 8,
-  //   name: 'Notification',
-  //   iconLib: 'EvilIcons',
-  //   icon: 'bell',
-  //   screen: 'Notification',
-  //   color: getColorForMenuItem('Notification'),
+  //   id: 3,
+  //   name: 'Doubt Session',
+  //   icon: 'comments',
+  //   screen: 'DoubtSession',
+  //   color: '#ffb84d',  
+  // },
+  // {
+  //   id: 4,
+  //   name: 'Video Lecture',
+  //   icon: 'video',
+  //   screen: 'Examination',
+  //   color: '#b76bcc',  
+  // },
+  // {
+  //   id: 5,
+  //   name: 'Examination',
+  //   icon: 'clipboard-check',
+  //   screen: 'Examination',
+  //   color: '#f66c6b',  
+  // },
+
+
+];
+
+
+
+
+export const studentMenu = [
+  // {
+  //   id: 1,
+  //   name: 'Profile',
+  //   iconLib: 'FontAwesome6',
+  //   icon: 'user',
+  //   screen: 'Profile',
+  //   color: getColorForMenuItem('Profile'),
+  //   data: ''
+  // },
+  // {
+  //   id: 3,
+  //   name: 'Admit Card',
+  //   iconLib: 'FontAwesome6',
+  //   icon: 'ticket',
+  //   screen: 'AdmitCard',
+  //   color: getColorForMenuItem('Admit Card'),
+  // },
+  // {
+  //   id: 4,
+  //   name: 'FeeReceipt',
+  //   iconLib: 'FontAwesome6',
+  //   icon: 'file-invoice-dollar',
+  //   screen: 'FeeReceipt',
+  //   color: getColorForMenuItem('FeeReceipt'),
+  // },
+
+  
+  // {
+  //   id: 6,
+  //   name: 'Assignment',
+  //   icon: 'file-pen',
+  //   screen: 'Assignment',
+  //   color: '#8cd9a2',  
   // },
 
   //   {
-  //   id: 8,
-  //   name: 'SRC',
+  //   id: 7,
+  //   name: 'Registraion Card',
   //   iconLib: 'FontAwesome6',
   //   icon: 'users',
-  //   screen: 'SRC',
+  //   screen: 'RegistraionCardList',
+  //   color: getColorForMenuItem('Registraion Card'),
   // },
-
-
-  {
-    id: 2,
-    name: 'Registraion Card',
-    iconLib: 'FontAwesome6',
-    icon: 'users',
-    screen: 'RegistraionCardList',
-    color: getColorForMenuItem('Registraion Card'),
-  },
-  {
-    id: 7,
-    name: 'Transcript',
-    iconLib: 'FontAwesome6',
-    icon: 'file-alt',
-    screen: 'Transcript',
-    color: getColorForMenuItem('Transcript'),
-  },
-  {
-    id: 6,
-    name: 'Syllabus',
-    iconLib: 'FontAwesome6',
-    icon: 'book-open',
-    screen: 'Syllabus',
-    color: getColorForMenuItem('Syllabus'),
-  },
+  // {
+  //   id: 8,
+  //   name: 'Transcript',
+  //   iconLib: 'FontAwesome6',
+  //   icon: 'file-alt',
+  //   screen: 'Transcript',
+  //   color: getColorForMenuItem('Transcript'),
+  // },
+  // {
+  //   id: 9,
+  //   name: 'Syllabus',
+  //   iconLib: 'FontAwesome6',
+  //   icon: 'book-open',
+  //   screen: 'Syllabus',
+  //   color: getColorForMenuItem('Syllabus'),
+  // },
   {
     id: 10,
     name: 'Complaint',
@@ -226,4 +150,14 @@ export const studentMenu = [
     screen: 'ComplaintScreen',
     color: getColorForMenuItem('Complaint'),
   },
+  {
+    id: 10,
+    name: 'SRC',
+    iconLib: 'FontAwesome6',
+    icon: 'graduation-cap',
+    screen: 'SRC',
+    color: getColorForMenuItem('Complaint'),
+  },
+
+   
 ];

@@ -14,7 +14,8 @@ import MenuScreen from "../Sidebar/MenuScreen";
 import SessionService from "../../../common/Services/SessionService";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
-const SIDEBAR_WIDTH = SCREEN_WIDTH * 0.75;
+const { width, height } = Dimensions.get('window');
+const SIDEBAR_WIDTH = SCREEN_WIDTH * 0.79;
 
 export default function Header({ title, backgroundColor }) {
   const navigation = useNavigation();
@@ -156,13 +157,12 @@ export default function Header({ title, backgroundColor }) {
         visible={isModalVisible}
         animationType="slide"
         transparent={true}
-        onRequestClose={toggleModal}
-      >
+        onRequestClose={toggleModal}>
+
         <TouchableOpacity
           style={styles.modalOverlay}
           activeOpacity={1}
-          onPress={toggleModal}
-        >
+          onPress={toggleModal}>
           <View style={styles.modalContent}>
             {/* Drag Handle */}
             <View style={styles.dragHandle} />
@@ -230,17 +230,33 @@ export default function Header({ title, backgroundColor }) {
 
 const styles = StyleSheet.create({
   // --- Vibrant Header Styles ---
-  headerContainer: {
-    marginTop:40,
-    // paddingTop: Platform.OS === 'android' ? 18: 0, 
-    //  paddingTop: Platform.OS === 'android' ? 35: 0, 
-    paddingBottom: 10,
-    overflow: 'hidden', // Ensures the glow circle stays inside
-    elevation: 10,
-    shadowColor: "#000",
+  // headerContainer: {
+  //   // marginTop:40,
+  //   // paddingTop: Platform.OS === 'android' ? 18: 0, 
+  //   // paddingTop: Platform.OS === 'android' ? 35: 0, 
+  //   paddingBottom: 10,
+  //   overflow: 'hidden',  
+  //   elevation: 10,
+  //   shadowColor: "#000",
+  //   shadowOffset: { width: 0, height: 5 },
+  //   shadowOpacity: 0.25,
+  //   shadowRadius: 10,
+  //   zIndex: 10,
+  // },
+
+    headerContainer: {
+    width: '100%',
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    marginTop:6,
+    paddingBottom: height * 0.03,
+    // borderBottomLeftRadius: width * 0.08,
+    // borderBottomRightRadius: width * 0.08,
+    backgroundColor: '#fff',
+    elevation: 8, 
+    shadowColor: '#000',  
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.25,
-    shadowRadius: 10,
+    shadowRadius: 6,
     zIndex: 10,
   },
  
@@ -249,7 +265,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    height: 60,
+    height: 30,
   },
   
   // "Glass" Buttons (Semi-transparent white)

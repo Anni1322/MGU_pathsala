@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert, TextInput, Dimensions, Modal } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert, TextInput, Dimensions, Modal, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -13,6 +13,7 @@ import { HttpService } from '../../common/Services/HttpService';
 import MyModal from '../layout/MyModal';
 import CustomSpinner from '../../common/Services/alert/CustomSpinner';
 import colors from '../../common/config/colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width } = Dimensions.get('window');
 const badgeColors = ['#6366f1', '#a855f7', '#ec4899', '#f97316'];
@@ -39,6 +40,7 @@ const MyCourses = ({ route }) => {
   const [empId, setEmpId] = useState(null);
   
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [studentLoading, setStudentLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [sessionModalVisible, setSessionModalVisible] = useState(false);
@@ -89,9 +91,7 @@ const MyCourses = ({ route }) => {
         Degree_Programme_Type_Id: courseObj.Degree_Programme_Type_Id,
         Subject_Id: '',
       };
-      console.log(payload,"payload");
       const response = await HttpService.get(getApiList().getCourseWiseStudentList, payload);
-      console.log(response,"response");
       setStudents(response?.data.StudentList || []);
     } catch (error) {
       console.error("fetchStudents failed");
@@ -100,27 +100,41 @@ const MyCourses = ({ route }) => {
     }
   }, [empId, courses]);
 
-  
+  // --- 3. Rendering / Refresh Logic ---
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    if (empId && sessionParams) {
+        await fetchMyCourses(empId, sessionParams.SelectedSession, sessionParams.SelectedSemester);
+        if (selectedCourseId) {
+            await fetchStudents(selectedCourseId, sessionParams);
+        }
+    }
+    setRefreshing(false);
+  }, [empId, sessionParams, selectedCourseId, fetchMyCourses, fetchStudents]);
 
-  // --- 3. Initial Load ---
+
+  // --- 4. Initial Load ---
   useEffect(() => {
-    console.log(route.params,"route.params")
     const init = async () => {
       const sessionData = await SessionService.getSession();
+      console.log("--------------------");
+      const currentSession =  await AsyncStorage.getItem('currentSession')
+      console.log("--------------------");
+      console.log(currentSession,"currentSession");
       const profile = sessionData?.LoginDetail?.[0];
       const initialEmpId = profile?.Emp_Id;
-      
-      // Defaulting to first index of your new static data format
       const initialSession = route.params?.session || sessionData?.SelectedSession || STATIC_SESSION_DATA[0].session_id;
       const initialSem = route.params?.semester || sessionData?.SelectedSemester || STATIC_SEMESTERS[0].semester_id;
-
       setEmpId(initialEmpId);
       setSessionParams({ SelectedSession: initialSession, SelectedSemester: initialSem });
-      
       await fetchMyCourses(initialEmpId, initialSession, initialSem);
       setLoading(false);
     };
+
+
     init();
+
+
   }, [fetchMyCourses]);
 
   // Sync Student list when Course or Filters change
@@ -130,7 +144,7 @@ const MyCourses = ({ route }) => {
     }
   }, [selectedCourseId, sessionParams, fetchStudents]);
 
-  // --- 4. Persistent Selection Handlers ---
+  // --- 5. Persistent Selection Handlers ---
   const handleUpdateFilter = async (newSession, newSem) => {
     try {
       setStudentLoading(true);
@@ -177,17 +191,23 @@ const MyCourses = ({ route }) => {
     return students.filter(s => (s.Name || '').toLowerCase().includes(searchTerm.toLowerCase()));
   }, [students, searchTerm]);
 
+
+  
   return (
     <SafeAreaView style={styles.container}>
       <Header title='My Courses' />
       
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} colors={[colors.primary]} />
+        }
+      >
         {/* Filter Selection Row */}
         <View style={styles.filterRow}>
           <TouchableOpacity style={styles.filterBtn} onPress={() => setSessionModalVisible(true)}>
-            {/* <Text style={styles.filterBtnText}>{sessionParams?.SelectedSession}</Text> */}
             <Text style={styles.filterBtnText}>
-              {STATIC_SESSION_DATA.find(s => s.session_id === sessionParams?.SelectedSession)?.SESSION}
+              {STATIC_SESSION_DATA?.find(s => s.session_id === sessionParams?.SelectedSession)?.SESSION}
               </Text>
             <FontAwesome6 name="chevron-down" size={20} color="#5e2308ff" />
           </TouchableOpacity>
@@ -202,15 +222,13 @@ const MyCourses = ({ route }) => {
 
         {/* Course Cards Scroll */}
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.courseScroll}>
-          {courses.map((course, index) => (
-            <View>
-               <Text style={styles.filterBtnText}> Course List</Text>
+          {courses?.map((course, index) => (
+            <View key={course.course_id}>
+            <Text style={styles.filterBtnText}> Course No - {index + 1}</Text>
             <TouchableOpacity 
-                key={course.course_id} 
                 onPress={() => setSelectedCourseId(course.course_id)}
                 style={[styles.courseCard, selectedCourseId === course.course_id && styles.activeCard]}
               >
-             
               <View style={[styles.courseIcon, { backgroundColor: badgeColors[index % badgeColors.length] + '20' }]}>
                  <FontAwesome6 name="book" size={16} color={badgeColors[index % badgeColors.length]} />
               </View>
@@ -218,7 +236,6 @@ const MyCourses = ({ route }) => {
               <Text style={styles.studentCount}>{course.TotalStudents} Students</Text>
             </TouchableOpacity>
             </View>
-   
           ))}
         </ScrollView>
 
@@ -260,7 +277,7 @@ const MyCourses = ({ route }) => {
         </View>
       </ScrollView>
 
-      {/* Session Modal - Updated to use SESSION and session_id */}
+      {/* Session Modal */}
       <Modal visible={sessionModalVisible} transparent animationType="fade">
         <TouchableOpacity style={styles.modalOverlay} onPress={() => setSessionModalVisible(false)}>
           <View style={styles.pickerContainer}>
@@ -274,7 +291,7 @@ const MyCourses = ({ route }) => {
         </TouchableOpacity>
       </Modal>
 
-      {/* Semester Modal - Updated to use Semester and semester_id */}
+      {/* Semester Modal */}
       <Modal visible={semesterModalVisible} transparent animationType="fade">
         <TouchableOpacity style={styles.modalOverlay} onPress={() => setSemesterModalVisible(false)}>
           <View style={styles.pickerContainer}>
@@ -324,6 +341,356 @@ const styles = StyleSheet.create({
 });
 
 export default MyCourses;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import React, { useEffect, useState, useCallback, useMemo } from 'react';
+// import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert, TextInput, Dimensions, Modal } from 'react-native';
+// import { SafeAreaView } from 'react-native-safe-area-context';
+// import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+// import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
+// // Components & Services
+// import Header from '../layout/Header/Header';
+// import FooterNav from '../layout/Footer/Footer';
+// import SessionService from '../../common/Services/SessionService';
+// import getApiList from '../config/Api/adminApiList';
+// import { HttpService } from '../../common/Services/HttpService';
+// import MyModal from '../layout/MyModal';
+// import CustomSpinner from '../../common/Services/alert/CustomSpinner';
+// import colors from '../../common/config/colors';
+
+// const { width } = Dimensions.get('window');
+// const badgeColors = ['#6366f1', '#a855f7', '#ec4899', '#f97316'];
+
+// // Updated Data Format
+// const STATIC_SEMESTERS = [
+//   { semester_id: 1, Semester: 'I Semester' },
+//   { semester_id: 2, Semester: 'II Semester' }
+// ];
+
+// const STATIC_SESSION_DATA = [
+//   { session_id: 26, SESSION: '2026-27' },
+//   { session_id: 25, SESSION: '2025-26' },
+//   { session_id: 24, SESSION: '2024-25' },
+//   { session_id: 23, SESSION: '2023-24' }
+// ];
+
+// const MyCourses = ({ route }) => {
+//   // --- States ---
+//   const [courses, setCourses] = useState([]);
+//   const [students, setStudents] = useState([]);
+//   const [selectedCourseId, setSelectedCourseId] = useState(null);
+//   const [sessionParams, setSessionParams] = useState(null);
+//   const [empId, setEmpId] = useState(null);
+  
+//   const [loading, setLoading] = useState(true);
+//   const [studentLoading, setStudentLoading] = useState(false);
+//   const [modalVisible, setModalVisible] = useState(false);
+//   const [sessionModalVisible, setSessionModalVisible] = useState(false);
+//   const [semesterModalVisible, setSemesterModalVisible] = useState(false);
+//   const [selectedStudent, setSelectedStudent] = useState(null);
+//   const [searchTerm, setSearchTerm] = useState('');
+
+//     // --- Rendering ---
+//     const handleRefresh = useCallback(() => {
+//      fetchStudents(), 
+//      fetchMyCourses()
+//     }, [
+//       fetchStudents, fetchMyCourses
+//     ]);
+  
+
+
+//   // --- 1. Fetch Courses API ---
+//   const fetchMyCourses = useCallback(async (id, session, semester) => {
+//     try {
+//       if (!id) return;
+//       const payload = { 
+//         Semester_Id: semester, 
+//         Academic_session: session, 
+//         Emp_Id: id 
+//       };
+//       const response = await HttpService.get(getApiList().getCourseWiseDashCount, payload);
+      
+//       if (response?.status === 200) {
+//         const courseData = response.data?.CourseWiseStudentCount || [];
+//         setCourses(courseData);
+//         if (courseData.length > 0) {
+//           setSelectedCourseId(courseData[0].course_id);
+//         } else {
+//           setStudents([]);
+//           setSelectedCourseId(null);
+//         }
+//       }
+//     } catch (error) {
+//       console.error("fetchMyCourses failed:", error);
+//     }
+//   }, []);
+
+//   // --- 2. Fetch Students API ---
+//   const fetchStudents = useCallback(async (courseId, params) => {
+//     if (!empId || !params || !courseId) return;
+//     const courseObj = courses.find(c => c.course_id === courseId);
+//     if (!courseObj) return;
+
+//     try {
+//       setStudentLoading(true);
+//       const payload = {
+//         Academic_session: params.SelectedSession,
+//         Semester_Id: params.SelectedSemester,
+//         Emp_Id: empId,
+//         Course_Id: courseObj.course_id,
+//         Degree_Programme_Id: courseObj.Degree_Programme_Id,
+//         Degree_Programme_Type_Id: courseObj.Degree_Programme_Type_Id,
+//         Subject_Id: '',
+//       };
+//       console.log(payload,"payload");
+//       const response = await HttpService.get(getApiList().getCourseWiseStudentList, payload);
+//       console.log(response,"response");
+//       setStudents(response?.data.StudentList || []);
+//     } catch (error) {
+//       console.error("fetchStudents failed");
+//     } finally {
+//       setStudentLoading(false);
+//     }
+//   }, [empId, courses]);
+
+  
+
+//   // --- 3. Initial Load ---
+//   useEffect(() => {
+//     console.log(route.params,"route.params")
+//     const init = async () => {
+//       const sessionData = await SessionService.getSession();
+//       const profile = sessionData?.LoginDetail?.[0];
+//       const initialEmpId = profile?.Emp_Id;
+//       const initialSession = route.params?.session || sessionData?.SelectedSession || STATIC_SESSION_DATA[0].session_id;
+//       const initialSem = route.params?.semester || sessionData?.SelectedSemester || STATIC_SEMESTERS[0].semester_id;
+//       setEmpId(initialEmpId);
+//       setSessionParams({ SelectedSession: initialSession, SelectedSemester: initialSem });
+//       await fetchMyCourses(initialEmpId, initialSession, initialSem);
+//       setLoading(false);
+//     };
+//     init();
+//   }, [fetchMyCourses]);
+
+//   // Sync Student list when Course or Filters change
+//   useEffect(() => {
+//     if (selectedCourseId && sessionParams) {
+//       fetchStudents(selectedCourseId, sessionParams);
+//     }
+//   }, [selectedCourseId, sessionParams, fetchStudents]);
+
+//   // --- 4. Persistent Selection Handlers ---
+//   const handleUpdateFilter = async (newSession, newSem) => {
+//     try {
+//       setStudentLoading(true);
+//       const currentSession = await SessionService.getSession();
+//       const updatedSession = {
+//         ...currentSession,
+//         SelectedSemester: newSem,
+//         SelectedSession: newSession,
+//       };
+//       await SessionService.saveSession(updatedSession);
+//       setSessionParams({ SelectedSession: newSession, SelectedSemester: newSem });
+      
+//       await fetchMyCourses(empId, newSession, newSem);
+//     } catch (error) {
+//       console.error("Update failed:", error);
+//     } finally {
+//       setStudentLoading(false);
+//     }
+//   };
+
+
+//     const handleStudentClick = useCallback(async (student) => {
+//     setSelectedStudent(student);
+//     try {
+//       const currentSession = await SessionService.getSession();
+//       if (!currentSession) return;
+//       const updatedSession = {
+//         LoginDetail: currentSession.LoginDetail,
+//         SelectedSemester: currentSession.SelectedSemester,
+//         SelectedSession: currentSession.SelectedSession,
+//         student: student,
+//         STUDENT_ID: student?.Student_ID,
+//         LOGIN_TYPE: student?.LOGIN_TYPE
+//       };
+//       await SessionService.saveSession(updatedSession);
+//     } catch (error) {
+//       console.error("Failed to update session:", error);
+//     }
+//     setModalVisible(true);
+//   }, []);
+
+
+//   const filteredStudents = useMemo(() => {
+//     return students.filter(s => (s.Name || '').toLowerCase().includes(searchTerm.toLowerCase()));
+//   }, [students, searchTerm]);
+
+//   return (
+//     <SafeAreaView style={styles.container}
+    
+//     >
+//       <Header title='My Courses' />
+      
+//       <ScrollView showsVerticalScrollIndicator={false}>
+//         {/* Filter Selection Row */}
+//         <View style={styles.filterRow}>
+//           <TouchableOpacity style={styles.filterBtn} onPress={() => setSessionModalVisible(true)}>
+//             {/* <Text style={styles.filterBtnText}>{sessionParams?.SelectedSession}</Text> */}
+//             <Text style={styles.filterBtnText}>
+//               {STATIC_SESSION_DATA.find(s => s.session_id === sessionParams?.SelectedSession)?.SESSION}
+//               </Text>
+//             <FontAwesome6 name="chevron-down" size={20} color="#5e2308ff" />
+//           </TouchableOpacity>
+
+//           <TouchableOpacity style={styles.filterBtn} onPress={() => setSemesterModalVisible(true)}>
+//             <Text style={styles.filterBtnText}>
+//               {STATIC_SEMESTERS.find(s => s.semester_id === sessionParams?.SelectedSemester)?.Semester}
+//             </Text>
+//             <FontAwesome6 name="chevron-down" size={20} color="#c03d00ff" />
+//           </TouchableOpacity>
+//         </View>
+
+//         {/* Course Cards Scroll */}
+//         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.courseScroll}>
+             
+//           {courses?.map((course, index) => (
+//             <View>
+//             <Text style={styles.filterBtnText}> Course No - {index + 1}</Text>
+//             <TouchableOpacity 
+//                 key={course.course_id} 
+//                 onPress={() => setSelectedCourseId(course.course_id)}
+//                 style={[styles.courseCard, selectedCourseId === course.course_id && styles.activeCard]}
+//               >
+             
+//               <View style={[styles.courseIcon, { backgroundColor: badgeColors[index % badgeColors.length] + '20' }]}>
+//                  <FontAwesome6 name="book" size={16} color={badgeColors[index % badgeColors.length]} />
+//               </View>
+//               <Text style={styles.courseCode}>{course.Course_code}</Text>
+//               <Text style={styles.studentCount}>{course.TotalStudents} Students</Text>
+//             </TouchableOpacity>
+//             </View>
+   
+//           ))}
+//         </ScrollView>
+
+//         {/* Search Bar */}
+//         <View style={styles.searchBox}>
+//           <FontAwesome6 name="magnifying-glass" size={16} color="#94a3b8" />
+//           <TextInput
+//             style={styles.input}
+//             placeholder="Search student names..."
+//             value={searchTerm}
+//             onChangeText={setSearchTerm}
+//             placeholderTextColor="#94a3b8"
+//           />
+//         </View>
+
+//         {/* Student List Area */}
+//         <View style={styles.listContainer}>
+//           {studentLoading ? (
+//             <CustomSpinner size={40} color={colors.primary} type="dots" />
+//           ) : filteredStudents.length > 0 ? (
+//             filteredStudents.map((item, index) => (
+//               <TouchableOpacity key={index} style={styles.studentCard} onPress={() => { handleStudentClick(item); setModalVisible(true); }}>
+//                 <View style={[styles.avatar, { backgroundColor: badgeColors[index % badgeColors.length] }]}>
+//                   <Text style={styles.avatarText}>{item.Name.charAt(0)}</Text>
+//                 </View>
+//                 <View style={styles.studentDetails}>
+//                   <Text style={styles.studentName}>{item.Name}</Text>
+//                   <Text style={styles.studentId}>{item.Degree_Programme_Short_Name_E}</Text>
+//                 </View>
+//                 <FontAwesome6 name="chevron-right" size={14} color="#cbd5e1" />
+//               </TouchableOpacity>
+//             ))
+//           ) : (
+//             <View style={styles.emptyState}>
+//               <FontAwesome6 name="circle-info" size={40} color="#cbd5e1" />
+//               <Text style={styles.emptyText}>No students available</Text>
+//             </View>
+//           )}
+//         </View>
+//       </ScrollView>
+
+//       {/* Session Modal - Updated to use SESSION and session_id */}
+//       <Modal visible={sessionModalVisible} transparent animationType="fade">
+//         <TouchableOpacity style={styles.modalOverlay} onPress={() => setSessionModalVisible(false)}>
+//           <View style={styles.pickerContainer}>
+//             <Text style={styles.pickerTitle}>Academic Session</Text>
+//             {STATIC_SESSION_DATA.map(item => (
+//               <TouchableOpacity key={item.session_id} style={styles.pickerItem} onPress={() => handleUpdateFilter(item.session_id, sessionParams.SelectedSemester).then(() => setSessionModalVisible(false))}>
+//                 <Text style={styles.pickerText}>{item.SESSION}</Text>
+//               </TouchableOpacity>
+//             ))}
+//           </View>
+//         </TouchableOpacity>
+//       </Modal>
+
+//       {/* Semester Modal - Updated to use Semester and semester_id */}
+//       <Modal visible={semesterModalVisible} transparent animationType="fade">
+//         <TouchableOpacity style={styles.modalOverlay} onPress={() => setSemesterModalVisible(false)}>
+//           <View style={styles.pickerContainer}>
+//             <Text style={styles.pickerTitle}>Semester</Text>
+//             {STATIC_SEMESTERS.map(item => (
+//               <TouchableOpacity key={item.semester_id} style={styles.pickerItem} onPress={() => handleUpdateFilter(sessionParams.SelectedSession, item.semester_id).then(() => setSemesterModalVisible(false))}>
+//                 <Text style={styles.pickerText}>{item.Semester}</Text>
+//               </TouchableOpacity>
+//             ))}
+//           </View>
+//         </TouchableOpacity>
+//       </Modal>
+
+//       <MyModal visible={modalVisible} onClose={() => setModalVisible(false)} studentData={selectedStudent} />
+//       <FooterNav />
+//     </SafeAreaView>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: { flex: 1, backgroundColor: '#f8fafc', paddingTop: -39, },
+//   filterRow: { flexDirection: 'row', padding: 20, justifyContent: 'space-between' },
+//   filterBtn: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', padding: 12, borderRadius: 12, width: '48%', borderWidth: 1, borderColor: '#e2e8f0', elevation: 1 },
+//   filterBtnText: { flex: 1, color: '#1e293b', fontWeight: 'bold' },
+//   courseScroll: { paddingLeft: 20, paddingBottom: 10 },
+//   courseCard: { backgroundColor: '#fff', width: width * 0.38, padding: 15, borderRadius: 16, marginRight: 12, borderWidth: 1, borderColor: '#e2e8f0' },
+//   activeCard: { borderColor: '#6366f1', borderWidth: 2, backgroundColor: '#f5f3ff' },
+//   courseIcon: { width: 32, height: 32, borderRadius: 8, justifyContent: 'center', alignItems: 'center', marginBottom: 8 },
+//   courseCode: { fontWeight: 'bold', color: '#1e293b', fontSize: 14 },
+//   studentCount: { fontSize: 11, color: '#64748b' },
+//   searchBox: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', margin: 20, paddingHorizontal: 15, height: 50, borderRadius: 12, borderWidth: 1, borderColor: '#e2e8f0' },
+//   input: { flex: 1, marginLeft: 10, color: '#1e293b' },
+//   listContainer: { paddingHorizontal: 20, paddingBottom: 120 },
+//   studentCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', padding: 12, borderRadius: 14, marginBottom: 10, elevation: 1 },
+//   avatar: { width: 44, height: 44, borderRadius: 22, justifyContent: 'center', alignItems: 'center' },
+//   avatarText: { color: '#fff', fontWeight: 'bold' },
+//   studentDetails: { flex: 1, marginLeft: 12 },
+//   studentName: { fontWeight: '600', color: '#1e293b' },
+//   studentId: { fontSize: 11, color: '#94a3b8' },
+//   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'center', alignItems: 'center' },
+//   pickerContainer: { backgroundColor: '#fff', width: '85%', borderRadius: 20, padding: 20 },
+//   pickerTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 15, textAlign: 'center' },
+//   pickerItem: { paddingVertical: 15, borderBottomWidth: 1, borderBottomColor: '#f1f5f9' },
+//   pickerText: { fontSize: 16, textAlign: 'center' },
+//   emptyState: { alignItems: 'center', marginTop: 40 },
+//   emptyText: { color: '#94a3b8', marginTop: 10 }
+// });
+
+// export default MyCourses;
 
 
 

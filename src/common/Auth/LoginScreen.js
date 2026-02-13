@@ -487,7 +487,7 @@ const LoginScreen = () => {
                       style={styles.input}
                       value={userid}
                       onChangeText={setuserid}
-                      placeholder="User ID"
+                      placeholder="MIS ID Or STUDENT ID"
                       placeholderTextColor="#A0A0A0"
                       autoCapitalize="characters"
                     />

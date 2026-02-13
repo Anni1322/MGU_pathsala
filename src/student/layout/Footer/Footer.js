@@ -405,10 +405,10 @@ const styles = StyleSheet.create({
     marginBottom: 35,
   },
   homeBtnCircle: {
-    width: 70,
-    height: 70,
+    width: 65,
+    height: 65,
     borderRadius: 38,
-    backgroundColor: '#cececeff',
+    backgroundColor: colors.bgcolor,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 4,

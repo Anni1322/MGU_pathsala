@@ -37,7 +37,7 @@ const menuSections = [
     title: "Discovery",
     items: [
       // { id: 12, title: "Meet the Team", icon: "👥", screen: "TeamMembers" },
-      { id: 12, title: "Meet the Team", icon: "👥", screen: "Maintenance" },
+      { id: 12, title: "Meet the Team", icon: "👥", screen: "Team" },
       { id: 15, title: "Privacy Policy", icon: "🛡️", screen: "PrivacyPolicy" },
     ]
   },

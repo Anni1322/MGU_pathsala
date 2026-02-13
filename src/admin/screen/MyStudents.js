@@ -145,8 +145,6 @@ const MyStudents = () => {
   }, []);
 
 
-
-
   const filteredStudents = useMemo(() => {
     return studentsList.filter(s => (s.Name || '').toLowerCase().includes(searchTerm.toLowerCase()));
   }, [studentsList, searchTerm]);
@@ -155,7 +153,8 @@ const MyStudents = () => {
     <SafeAreaView style={styles.container}>
    
       <LinearGradient colors={['#F8FAFC', '#F1F5F9']} style={styles.flex1}>
-   <Header title='My Students' />
+        <Header title='My Students' />
+        
         {/* Modern Filter Selectors */}
         <View style={styles.selectorRow}>
           <TouchableOpacity style={styles.modernSelector} onPress={() => setSessionModalVisible(true)}>

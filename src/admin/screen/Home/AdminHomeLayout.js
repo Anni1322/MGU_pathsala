@@ -20,6 +20,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import UpdateChecker from "../../../common/UpdateChecker";
 import colors from '../../../common/config/colors';
 import { G } from 'react-native-svg';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // --- Memoized Sub-Component ---
 const IconMap = {
@@ -219,9 +220,11 @@ const AdminHomeLayout = () => {
       const getCurrentAcademicSessionApi = getApiList().getCurrentAcademicSession;
       const payload = {};
       const response = await HttpService.get(getCurrentAcademicSessionApi, payload);
+      
       console.log(response.data.AccadmicSession, "current session")
       if (response?.status === 200) {
         setSelectedSession(response?.data?.AccadmicSession);
+          await AsyncStorage.setItem('currentSession', response?.data?.AccadmicSession)
       }
     } catch (error) {
       console.error("fetchMystudents failed:", error);
